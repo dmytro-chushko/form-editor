@@ -25,12 +25,13 @@ model User {
 }
 
 model Session {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  expiresAt DateTime
-  data      Json?
+  id            String   @id @default(uuid())
+  sessionToken  String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+  data          Json?
   @@index([userId])
 }
 
