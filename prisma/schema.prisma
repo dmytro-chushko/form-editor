@@ -22,6 +22,7 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   sessions       Session[]
+  accounts       Account[]
 }
 
 model Session {
@@ -30,7 +31,7 @@ model Session {
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
-  expiresAt     DateTime
+  expires       DateTime
   data          Json?
   @@index([userId])
 }
@@ -49,4 +50,21 @@ model PasswordReset {
   tokenHash String
   createdAt DateTime @default(now())
   expiresAt DateTime
+}
+
+model Account {
+  id                 String  @id @default(uuid())
+  userId             String
+  user               User    @relation(fields: [userId], references: [id])
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? 
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  @@unique([provider, providerAccountId])
 }
