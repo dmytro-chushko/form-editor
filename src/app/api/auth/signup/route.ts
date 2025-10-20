@@ -2,18 +2,9 @@ import crypto from 'crypto';
 
 import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 
 import prisma from '@/lib/prisma';
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_SMTP_HOST,
-  port: Number(process.env.EMAIL_SMTP_PORT || 587),
-  auth: {
-    user: process.env.EMAIL_SMTP_USER,
-    pass: process.env.EMAIL_SMTP_PASS,
-  },
-});
+import sendVerificationEmail from '@/src/lib/resend';
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
@@ -45,12 +36,7 @@ export async function POST(req: Request) {
 
   const verifyUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify?token=${token}&email=${encodeURIComponent(email)}`;
 
-  await transporter.sendMail({
-    from: process.env.FROM_EMAIL,
-    to: email,
-    subject: 'Підтвердіть email',
-    html: `Натисніть <a href="${verifyUrl}">тут</a> щоб підтвердити email (діє 24 години).`,
-  });
+  await sendVerificationEmail(email, verifyUrl);
 
   return NextResponse.json({ ok: true });
 }
