@@ -9,7 +9,7 @@ export default async function sendVerificationEmail(
   await resend.emails.send({
     from: 'onboarding@resend.dev',
     to: email,
-    subject: 'Test from localhost',
+    subject: 'Verify your email',
     html: `Натисніть <a href="${verifyUrl}">тут</a> щоб підтвердити email (діє 24 години).`,
   });
 }
