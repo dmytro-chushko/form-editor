@@ -10,7 +10,10 @@ export async function POST(req: Request) {
   const { email, password } = await req.json();
 
   if (!email || !password)
-    return NextResponse.json({ error: 'Missing' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Email or password not provided' },
+      { status: 400 }
+    );
 
   const existing = await prisma.user.findUnique({ where: { email } });
 
