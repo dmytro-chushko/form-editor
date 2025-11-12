@@ -1,4 +1,5 @@
 'use client';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 export default function SignUpPage() {
@@ -75,6 +76,23 @@ export default function SignUpPage() {
           {loading ? 'Signing up...' : 'Sign up'}
         </button>
       </form>
+      <hr className="my-4" />
+      <div className="space-x-2">
+        <button
+          type="button"
+          onClick={() => signIn('google')}
+          className="rounded border px-4 py-2"
+        >
+          Continue with Google
+        </button>
+        <button
+          type="button"
+          onClick={() => signIn('github')}
+          className="rounded border px-4 py-2"
+        >
+          Continue with GitHub
+        </button>
+      </div>
       <p className="mt-3 text-sm text-gray-600">
         Already have an account?{' '}
         <a className="text-blue-600" href="/auth/sign-in">
