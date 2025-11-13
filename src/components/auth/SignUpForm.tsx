@@ -19,7 +19,7 @@ export function SignUpForm({ onSuccess }: Props) {
 
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: '', password: '', confirmPassword: '' },
     mode: 'onTouched',
   });
 
@@ -27,10 +27,11 @@ export function SignUpForm({ onSuccess }: Props) {
     setSubmitting(true);
     setError(null);
     try {
+      const { email, password } = values;
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
@@ -69,6 +70,13 @@ export function SignUpForm({ onSuccess }: Props) {
             placeholder="you@example.com"
             type="email"
             autoComplete="email"
+          />
+          <FormInputField
+            name="confirmPassword"
+            label="Confirm password"
+            placeholder="Re-enter your password"
+            type="password"
+            autoComplete="new-password"
           />
           <FormInputField
             name="password"
