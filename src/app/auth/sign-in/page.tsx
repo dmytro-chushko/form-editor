@@ -1,37 +1,17 @@
 'use client';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { SignInForm } from '@/components/auth/SignInForm';
 
 export default function SignInPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    await signIn('credentials', { email, password, callbackUrl: '/' });
-  }
-
   return (
-    <form onSubmit={submit}>
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Sign in</button>
-      <hr />
-      <button type="button" onClick={() => signIn('google')}>
-        Sign in with Google
-      </button>
-      <button type="button" onClick={() => signIn('github')}>
-        Sign in with GitHub
-      </button>
-    </form>
+    <main className="mx-auto max-w-md p-6">
+      <h1 className="mb-4 text-2xl font-semibold">Sign in</h1>
+      <SignInForm />
+      <p className="mt-3 text-sm text-gray-600">
+        Don&apos;t have an account?{' '}
+        <a className="text-blue-600" href="/auth/sign-up">
+          Sign up
+        </a>
+      </p>
+    </main>
   );
 }
