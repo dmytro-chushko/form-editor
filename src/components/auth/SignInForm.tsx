@@ -46,6 +46,11 @@ export function SignInForm({
             type="password"
             autoComplete="current-password"
           />
+          <div className="flex justify-end">
+            <a className="text-sm text-blue-600" href="/auth/forgot-password">
+              Forgot password?
+            </a>
+          </div>
           <Button type="submit" className="w-full">
             Sign in
           </Button>
