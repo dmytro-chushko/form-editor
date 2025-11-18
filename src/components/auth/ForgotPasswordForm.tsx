@@ -1,20 +1,19 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { useForgotPasswordMutation } from '@/features/auth/api';
 import {
   forgotPasswordSchema,
   type ForgotPasswordValues,
 } from '@/lib/validation/reset';
 
 export function ForgotPasswordForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { mutate, isPending, isSuccess, error } = useForgotPasswordMutation();
 
   const form = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -23,24 +22,10 @@ export function ForgotPasswordForm() {
   });
 
   async function onSubmit(values: ForgotPasswordValues) {
-    setError(null);
-    try {
-      const res = await fetch('/api/auth/reset/request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
-
-      if (!res.ok) {
-        throw new Error('Request failed');
-      }
-      setSubmitted(true);
-    } catch (e: any) {
-      setError(e?.message || 'Unexpected error');
-    }
+    mutate(values);
   }
 
-  if (submitted) {
+  if (isSuccess) {
     return (
       <p className="text-sm">
         If the email exists, we have sent a password reset link.
@@ -58,8 +43,10 @@ export function ForgotPasswordForm() {
           type="email"
           autoComplete="email"
         />
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
-        <Button type="submit" className="w-full">
+        {error ? (
+          <p className="text-sm text-red-600">{(error as Error).message}</p>
+        ) : null}
+        <Button type="submit" className="w-full" disabled={isPending}>
           Send reset link
         </Button>
       </form>

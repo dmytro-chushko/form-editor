@@ -1,12 +1,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { useResetPasswordMutation } from '@/features/auth/api';
 import {
   resetPasswordSchema,
   type ResetPasswordValues,
@@ -15,8 +15,7 @@ import {
 type Props = { token: string };
 
 export function ResetPasswordForm({ token }: Props) {
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { mutate, isPending, isSuccess, error } = useResetPasswordMutation();
 
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
@@ -25,25 +24,10 @@ export function ResetPasswordForm({ token }: Props) {
   });
 
   async function onSubmit(values: ResetPasswordValues) {
-    setError(null);
-    try {
-      const res = await fetch('/api/auth/reset/confirm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error || 'Reset failed');
-      }
-      setSubmitted(true);
-    } catch (e: any) {
-      setError(e?.message || 'Unexpected error');
-    }
+    mutate(values);
   }
 
-  if (submitted) {
+  if (isSuccess) {
     return (
       <p className="text-sm">
         Your password has been reset. You can now{' '}
@@ -72,8 +56,10 @@ export function ResetPasswordForm({ token }: Props) {
           type="password"
           autoComplete="new-password"
         />
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
-        <Button type="submit" className="w-full">
+        {error ? (
+          <p className="text-sm text-red-600">{(error as Error).message}</p>
+        ) : null}
+        <Button type="submit" className="w-full" disabled={isPending}>
           Reset password
         </Button>
       </form>

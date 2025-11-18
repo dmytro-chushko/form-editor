@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { useSignInMutation } from '@/features/auth/api';
 import { signInSchema, type SignInValues } from '@/lib/validation/auth';
 
 type Props = {
@@ -25,8 +26,10 @@ export function SignInForm({
   });
 
   async function onSubmit(values: SignInValues) {
-    await signIn('credentials', { ...values, callbackUrl: onSuccessRedirect });
+    mutate(values);
   }
+
+  const { mutate, isPending, error } = useSignInMutation(onSuccessRedirect);
 
   return (
     <>
@@ -51,7 +54,10 @@ export function SignInForm({
               Forgot password?
             </a>
           </div>
-          <Button type="submit" className="w-full">
+          {error ? (
+            <p className="text-sm text-red-600">{(error as Error).message}</p>
+          ) : null}
+          <Button type="submit" className="w-full" disabled={isPending}>
             Sign in
           </Button>
         </form>

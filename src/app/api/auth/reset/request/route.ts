@@ -15,7 +15,6 @@ export async function POST(req: Request) {
     }
     const { email } = parsed.data;
 
-    // Anti-enumeration: always respond 200
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
