@@ -2,9 +2,10 @@ import crypto from 'crypto';
 
 import { NextResponse } from 'next/server';
 
+import { withErrors } from '@/lib/http';
 import prisma from '@/lib/prisma';
 
-export async function GET(req: Request) {
+export const GET = withErrors(async (req: Request) => {
   const url = new URL(req.url);
   const token = url.searchParams.get('token');
   const email = url.searchParams.get('email');
@@ -37,4 +38,4 @@ export async function GET(req: Request) {
   return NextResponse.redirect(
     new URL('/auth/verify-success', process.env.NEXTAUTH_URL)
   );
-}
+});

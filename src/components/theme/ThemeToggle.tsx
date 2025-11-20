@@ -1,8 +1,10 @@
 'use client';
 
+import { SunDimIcon, MoonIcon, MonitorIcon } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 type Theme = 'light' | 'dark' | 'system';
 const STORAGE_KEY = 'theme';
@@ -56,25 +58,36 @@ export function ThemeToggle() {
   return (
     <div className="inline-flex gap-2">
       <Button
+        className={cn(
+          is('light') ? 'text-foreground' : 'text-muted-foreground'
+        )}
         type="button"
-        variant={is('light') ? 'default' : 'outline'}
+        variant="outline"
+        size="icon"
         onClick={() => update('light')}
       >
-        Light
+        <SunDimIcon />
       </Button>
       <Button
+        className={cn(is('dark') ? 'text-foreground' : 'text-muted-foreground')}
         type="button"
-        variant={is('dark') ? 'default' : 'outline'}
+        variant="outline"
+        size="icon"
         onClick={() => update('dark')}
       >
-        Dark
+        <MoonIcon />
       </Button>
+
       <Button
+        className={cn(
+          is('system') ? 'text-foreground' : 'text-muted-foreground'
+        )}
         type="button"
-        variant={is('system') ? 'default' : 'outline'}
+        variant="outline"
+        size="icon"
         onClick={() => update('system')}
       >
-        System
+        <MonitorIcon />
       </Button>
     </div>
   );

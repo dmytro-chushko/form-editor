@@ -3,25 +3,23 @@ import crypto from 'crypto';
 import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
+import { BadRequestError, ConflictError } from '@/lib/errors';
+import { withErrors } from '@/lib/http';
 import prisma from '@/lib/prisma';
 import sendVerificationEmail from '@/src/lib/resend';
 
-export async function POST(req: Request) {
+export const POST = withErrors(async (req: Request) => {
   const { email, password } = await req.json();
 
-  if (!email || !password)
-    return NextResponse.json(
-      { error: 'Email or password not provided' },
-      { status: 400 }
-    );
+  if (!email || !password) {
+    throw new BadRequestError('Email or password not provided');
+  }
 
   const existing = await prisma.user.findUnique({ where: { email } });
 
-  if (existing)
-    return NextResponse.json(
-      { error: 'Email allready exist' },
-      { status: 400 }
-    );
+  if (existing) {
+    throw new ConflictError('Email already exists');
+  }
 
   const passwordHash = await hash(password, 10);
   const user = await prisma.user.create({
@@ -45,4 +43,4 @@ export async function POST(req: Request) {
   await sendVerificationEmail(email, verifyUrl);
 
   return NextResponse.json({ ok: true });
-}
+});
