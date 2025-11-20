@@ -9,12 +9,22 @@ export function useSignInMutation(onSuccessRedirect = '/') {
 
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
-      await signIn('credentials', { ...data, callbackUrl: onSuccessRedirect });
+      const result = await signIn('credentials', {
+        ...data,
+        callbackUrl: onSuccessRedirect,
+        redirect: false,
+      });
 
-      return true;
+      if (result?.error) {
+        throw new Error('Invalid email or password');
+      }
+
+      return result?.url ?? onSuccessRedirect;
     },
-    onSuccess: () => {
+    onSuccess: (url) => {
       qc.invalidateQueries({ queryKey: qk.me() });
+
+      if (url) window.location.assign(url);
     },
   });
 }

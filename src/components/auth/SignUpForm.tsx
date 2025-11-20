@@ -2,7 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
@@ -27,11 +29,21 @@ export function SignUpForm({ onSuccess }: Props) {
       { email, password },
       {
         onSuccess: () => {
+          toast.success('Verification email sent. Check your inbox.');
           onSuccess?.();
+        },
+        onError: (err) => {
+          toast.error((err as Error).message);
         },
       }
     );
   }
+
+  useEffect(() => {
+    if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [error]);
 
   if (isSuccess) {
     return (
