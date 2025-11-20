@@ -2,7 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
@@ -31,6 +33,12 @@ export function SignInForm({
 
   const { mutate, isPending, error } = useSignInMutation(onSuccessRedirect);
 
+  useEffect(() => {
+    if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [error]);
+
   return (
     <>
       <Form {...form}>
@@ -54,9 +62,6 @@ export function SignInForm({
               Forgot password?
             </a>
           </div>
-          {error ? (
-            <p className="text-sm text-red-600">{(error as Error).message}</p>
-          ) : null}
           <Button type="submit" className="w-full" disabled={isPending}>
             Sign in
           </Button>

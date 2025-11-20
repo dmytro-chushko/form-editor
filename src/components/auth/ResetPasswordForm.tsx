@@ -1,7 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
@@ -24,8 +26,21 @@ export function ResetPasswordForm({ token }: Props) {
   });
 
   async function onSubmit(values: ResetPasswordValues) {
-    mutate(values);
+    mutate(values, {
+      onSuccess: () => {
+        toast.success('Password reset successfully. You can now sign in.');
+      },
+      onError: (err) => {
+        toast.error((err as Error).message);
+      },
+    });
   }
+
+  useEffect(() => {
+    if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [error]);
 
   if (isSuccess) {
     return (

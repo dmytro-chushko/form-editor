@@ -1,7 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
@@ -22,8 +24,21 @@ export function ForgotPasswordForm() {
   });
 
   async function onSubmit(values: ForgotPasswordValues) {
-    mutate(values);
+    mutate(values, {
+      onSuccess: () => {
+        toast.success('If the email exists, we sent a reset link.');
+      },
+      onError: (err) => {
+        toast.error((err as Error).message);
+      },
+    });
   }
+
+  useEffect(() => {
+    if (error) {
+      toast.error((error as Error).message);
+    }
+  }, [error]);
 
   if (isSuccess) {
     return (
