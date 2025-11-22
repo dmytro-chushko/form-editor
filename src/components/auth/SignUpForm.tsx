@@ -70,19 +70,20 @@ export function SignUpForm({ onSuccess }: Props) {
             autoComplete="email"
           />
           <FormInputField
-            name="confirmPassword"
-            label="Confirm password"
-            placeholder="Re-enter your password"
-            type="password"
-            autoComplete="new-password"
-          />
-          <FormInputField
             name="password"
             label="Password"
             placeholder="At least 8 characters"
             type="password"
             autoComplete="new-password"
           />
+          <FormInputField
+            name="confirmPassword"
+            label="Confirm password"
+            placeholder="Re-enter your password"
+            type="password"
+            autoComplete="new-password"
+          />
+
           {error ? (
             <p className="text-sm text-red-600">{(error as Error).message}</p>
           ) : null}
