@@ -17,19 +17,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (
+          !credentials ||
+          typeof credentials.email !== 'string' ||
+          typeof credentials.password !== 'string'
+        ) {
+          return null;
+        }
+        const email = credentials.email;
+        const password = credentials.password;
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email },
         });
 
         if (!user) return null;
 
         if (!user.emailVerified) throw new Error('Email not verified');
 
-        const isValid = await compare(credentials.password, user.passwordHash);
+        if (user?.passwordHash) {
+          const isValid = await compare(password, user.passwordHash);
 
-        if (!isValid) return null;
+          if (!isValid) return null;
+        }
 
         return { id: user.id, email: user.email };
       },
@@ -38,6 +48,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitHub,
   ],
   // debug: process.env.NODE_ENV !== 'production',
+  session: {
+    strategy: 'database',
+    maxAge: 60 * 60 * 24 * 7,
+  },
 });
 
 export const { GET, POST } = handlers;

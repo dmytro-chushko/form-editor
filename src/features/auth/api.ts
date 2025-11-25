@@ -8,10 +8,12 @@ export function useSignInMutation(onSuccessRedirect = '/') {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { email: string; password: string }) => {
+    mutationFn: async (
+      data: { email: string; password: string } | FormData
+    ) => {
       const result = await signIn('credentials', {
         ...data,
-        callbackUrl: onSuccessRedirect,
+        redirectTo: onSuccessRedirect,
         redirect: false,
       });
 
@@ -21,10 +23,13 @@ export function useSignInMutation(onSuccessRedirect = '/') {
 
       return result?.url ?? onSuccessRedirect;
     },
-    onSuccess: (url) => {
+    onSuccess: (urlOrTrue) => {
       qc.invalidateQueries({ queryKey: qk.me() });
 
-      if (url) window.location.assign(url);
+      if (typeof urlOrTrue === 'string' && urlOrTrue) {
+        window.location.assign(urlOrTrue);
+      }
+      // for FormData path, NextAuth controls redirect by default
     },
   });
 }
