@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
-import { AppError, BadRequestError } from './errors';
+import { AppError } from './errors';
 
 export type Handler<T = any> = (req: Request) => Promise<NextResponse<T>>;
 

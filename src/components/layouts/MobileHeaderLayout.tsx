@@ -1,5 +1,6 @@
 'use client';
 
+import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ export default function MobileHeaderLayout({
   menu,
 }: MobileHeaderLayoutProps) {
   const [open, setOpen] = useState(false);
+  const { data } = useSession();
 
   useEffect(() => {
     const body = document.body;
@@ -79,6 +81,7 @@ export default function MobileHeaderLayout({
           <div className="flex flex-col items-center justify-center gap-6">
             <div className="p-4">{menu}</div>
             <ThemeToggle />
+            {data && <Button onClick={() => signOut()}>Sign out</Button>}
           </div>
         </div>
       ) : null}

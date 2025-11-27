@@ -1,3 +1,5 @@
+import { ROUTES } from '@/lib/constants/routes';
+
 export default function VerifyFailedPage() {
   return (
     <main className="mx-auto max-w-md p-6">
@@ -8,7 +10,7 @@ export default function VerifyFailedPage() {
       </p>
       <a
         className="mt-4 inline-block text-blue-600"
-        href="/auth/verify-request"
+        href={ROUTES.VerifyRequest}
       >
         Request new email
       </a>
