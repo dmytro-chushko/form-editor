@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 
-import { apiGet, apiPost } from '@/lib/apiClient';
-import { queryKeys as qk } from '@/lib/queryKeys';
+import { apiGet, apiPost } from '@/lib/api/apiClient';
+import { queryKeys as qk } from '@/lib/api/queryKeys';
 
 export function useSignInMutation(onSuccessRedirect = '/') {
   const qc = useQueryClient();

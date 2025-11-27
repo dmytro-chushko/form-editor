@@ -2,7 +2,8 @@ import crypto from 'crypto';
 
 import { NextResponse } from 'next/server';
 
-import { withErrors } from '@/lib/http';
+import { ROUTES } from '@/lib/constants/routes';
+import { withErrors } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
 
 export const GET = withErrors(async (req: Request) => {
@@ -12,7 +13,7 @@ export const GET = withErrors(async (req: Request) => {
 
   if (!token || !email) {
     return NextResponse.redirect(
-      new URL('/auth/verify-failed', process.env.NEXTAUTH_URL)
+      new URL(ROUTES.VerifyFaild, process.env.NEXTAUTH_URL)
     );
   }
 
@@ -24,18 +25,18 @@ export const GET = withErrors(async (req: Request) => {
 
   if (!ev || ev.expiresAt < new Date()) {
     return NextResponse.redirect(
-      new URL('/auth/verify-failed', process.env.NEXTAUTH_URL)
+      new URL(ROUTES.VerifyFaild, process.env.NEXTAUTH_URL)
     );
   }
 
   await prisma.user.update({
     where: { id: ev.userId },
-    data: { emailVerified: true },
+    data: { emailVerified: new Date() },
   });
 
   await prisma.emailVerification.delete({ where: { id: ev.id } });
 
   return NextResponse.redirect(
-    new URL('/auth/verify-success', process.env.NEXTAUTH_URL)
+    new URL(ROUTES.VerifySuccess, process.env.NEXTAUTH_URL)
   );
 });

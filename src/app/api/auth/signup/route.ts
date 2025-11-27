@@ -3,8 +3,8 @@ import crypto from 'crypto';
 import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
-import { BadRequestError, ConflictError } from '@/lib/errors';
-import { withErrors } from '@/lib/http';
+import { BadRequestError, ConflictError } from '@/lib/error/errors';
+import { withErrors } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
 import sendVerificationEmail from '@/src/lib/resend';
 

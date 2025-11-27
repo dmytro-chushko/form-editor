@@ -31,15 +31,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email },
         });
 
-        if (!user) return null;
+        if (!user || !user?.passwordHash) return null;
 
         if (!user.emailVerified) throw new Error('Email not verified');
 
-        if (user?.passwordHash) {
-          const isValid = await compare(password, user.passwordHash);
+        const isValid = await compare(password, user.passwordHash);
 
-          if (!isValid) return null;
-        }
+        if (!isValid) return null;
 
         return { id: user.id, email: user.email };
       },

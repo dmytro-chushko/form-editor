@@ -1,8 +1,8 @@
 import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
-import { BadRequestError } from '@/lib/errors';
-import { withErrors } from '@/lib/http';
+import { BadRequestError } from '@/lib/error/errors';
+import { withErrors } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
 import { hashToken } from '@/lib/tokens';
 import { resetPasswordSchema } from '@/lib/validation/reset';
