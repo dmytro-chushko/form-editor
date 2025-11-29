@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { signIn } from 'next-auth/react';
 
 import { apiGet, apiPost } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
@@ -8,28 +7,15 @@ export function useSignInMutation(onSuccessRedirect = '/') {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (
-      data: { email: string; password: string } | FormData
-    ) => {
-      const result = await signIn('credentials', {
-        ...data,
-        redirectTo: onSuccessRedirect,
-        redirect: false,
-      });
+    mutationFn: async (data: { email: string; password: string }) => {
+      await apiPost('/api/auth/credentials/login', data);
 
-      if (result?.error) {
-        throw new Error('Invalid email or password');
-      }
-
-      return result?.url ?? onSuccessRedirect;
+      return onSuccessRedirect;
     },
-    onSuccess: (urlOrTrue) => {
+    onSuccess: (url) => {
       qc.invalidateQueries({ queryKey: qk.me() });
 
-      if (typeof urlOrTrue === 'string' && urlOrTrue) {
-        window.location.assign(urlOrTrue);
-      }
-      // for FormData path, NextAuth controls redirect by default
+      if (url) window.location.assign(url);
     },
   });
 }
