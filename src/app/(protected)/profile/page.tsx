@@ -1,14 +1,7 @@
-import { redirect } from 'next/navigation';
-
 import { auth } from '@/lib/auth';
-import { ROUTES } from '@/lib/constants/routes';
 
 export default async function ProfilePage() {
   const session = await auth();
-
-  // if (!session) {
-  //   redirect(ROUTES.SignIn);
-  // }
 
   return (
     <div className="mx-auto max-w-2xl p-6">
