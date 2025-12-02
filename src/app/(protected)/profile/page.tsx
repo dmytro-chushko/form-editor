@@ -1,3 +1,4 @@
+import ProfileCard from '@/components/profile/ProfileCard';
 import { auth } from '@/lib/auth';
 
 export default async function ProfilePage() {
@@ -9,6 +10,7 @@ export default async function ProfilePage() {
       <p className="mt-2 text-gray-600">
         Profile of {session?.user?.email ?? 'user'}.
       </p>
+      <ProfileCard />
     </div>
   );
 }
