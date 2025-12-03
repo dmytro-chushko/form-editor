@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { apiGet, apiPost } from '@/lib/api/apiClient';
+import { apiGet, apiPost, apiPatch } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
 
 import type {
@@ -23,22 +23,14 @@ export function useUpdateNameMutation() {
 
   return useMutation({
     mutationFn: (data: UpdateNameInput) =>
-      fetch('/api/profile/name', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      }).then(async (r) => {
-        if (!r.ok) {
-          let message = 'Request failed';
-          try {
-            const j = await r.json();
-            message = j?.error || message;
-          } catch {}
-          throw new Error(message);
-        }
-
-        return r.json();
-      }),
+      apiPatch<{
+        ok: true;
+        user: {
+          id: string;
+          firstName?: string | null;
+          lastName?: string | null;
+        };
+      }>('/api/profile/name', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.profile() });
       qc.invalidateQueries({ queryKey: qk.me() });
@@ -61,22 +53,7 @@ export function useUpdateAvatarMutation() {
 
   return useMutation({
     mutationFn: (data: AvatarUpdateInput) =>
-      fetch('/api/profile/avatar', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      }).then(async (r) => {
-        if (!r.ok) {
-          let message = 'Request failed';
-          try {
-            const j = await r.json();
-            message = j?.error || message;
-          } catch {}
-          throw new Error(message);
-        }
-
-        return r.json();
-      }),
+      apiPatch<{ ok: true; image: string }>('/api/profile/avatar', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.profile() });
       qc.invalidateQueries({ queryKey: qk.me() });

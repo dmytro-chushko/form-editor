@@ -1,8 +1,18 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { useUpdateNameMutation } from '@/features/profile/profile.api';
 import { updateNameSchema } from '@/features/profile/profile.schema';
 
@@ -22,33 +32,50 @@ export default function EditableField({
   placeholder = '—',
 }: Props) {
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState(value ?? '');
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const form = useForm<{ firstName?: string; lastName?: string }>({
+    resolver: zodResolver(updateNameSchema),
+    defaultValues:
+      field === 'firstName'
+        ? { firstName: value ?? '' }
+        : { lastName: value ?? '' },
+    mode: 'onBlur',
+  });
+
+  // sync external value changes
   useEffect(() => {
-    setText(value ?? '');
+    if (field === 'firstName') form.reset({ firstName: value ?? '' });
+    else form.reset({ lastName: value ?? '' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const { mutateAsync, isPending } = useUpdateNameMutation();
 
   const payload = useMemo(() => {
+    const current =
+      field === 'firstName'
+        ? (form.getValues().firstName ?? '').trim()
+        : (form.getValues().lastName ?? '').trim();
+
     return field === 'firstName'
-      ? { firstName: text.trim() }
-      : { lastName: text.trim() };
-  }, [field, text]);
+      ? { firstName: current }
+      : { lastName: current };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field, form.watch(field)]);
 
   async function save() {
-    const trimmed = text.trim();
+    const current =
+      field === 'firstName'
+        ? (form.getValues().firstName ?? '').trim()
+        : (form.getValues().lastName ?? '').trim();
     const original = (value ?? '').trim();
 
-    if (trimmed === original) {
+    if (current === original) {
       setEditing(false);
 
       return;
     }
     try {
-      // validate payload with zod
-      updateNameSchema.parse(payload);
       await mutateAsync(payload);
       toast.success('Saved');
       setEditing(false);
@@ -56,7 +83,7 @@ export default function EditableField({
       const message = e?.message || 'Failed to save';
       toast.error(message);
       // keep editing so user can correct
-      inputRef.current?.focus();
+      form.setFocus(field as any);
     }
   }
 
@@ -65,7 +92,8 @@ export default function EditableField({
       e.preventDefault();
       void save();
     } else if (e.key === 'Escape') {
-      setText(value ?? '');
+      if (field === 'firstName') form.reset({ firstName: value ?? '' });
+      else form.reset({ lastName: value ?? '' });
       setEditing(false);
     }
   }
@@ -76,37 +104,59 @@ export default function EditableField({
       {!editing ? (
         <button
           type="button"
-          className="text-left text-sm hover:bg-gray-50 rounded px-1 py-0.5"
+          className="text-left text-sm hover:bg-gray-50 cursor-pointer rounded px-1 py-0.5"
           onClick={() => setEditing(true)}
         >
-          {text ? (
-            <span className="text-gray-900">{text}</span>
+          {(
+            (field === 'firstName'
+              ? form.getValues().firstName
+              : form.getValues().lastName) || ''
+          ).trim() ? (
+            <span className="text-gray-600">
+              {field === 'firstName'
+                ? form.getValues().firstName
+                : form.getValues().lastName}
+            </span>
           ) : (
             <span className="text-gray-400">{placeholder}</span>
           )}
         </button>
       ) : (
-        <div className="flex items-center gap-2">
-          <input
-            ref={inputRef}
-            className="w-full rounded border px-2 py-1 text-sm outline-none focus:ring"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={onKeyDown}
-            onBlur={() => void save()}
-            disabled={isPending}
-            autoFocus
-          />
-          <button
-            type="button"
-            className="rounded bg-gray-900 px-2 py-1 text-xs text-white disabled:opacity-50"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => void save()}
-            disabled={isPending}
+        <Form {...form}>
+          <form
+            className="flex items-center gap-2"
+            onSubmit={form.handleSubmit(() => void save())}
           >
-            {isPending ? 'Saving…' : 'Save'}
-          </button>
-        </div>
+            <FormField
+              control={form.control}
+              name={field}
+              render={({ field: rhf }) => (
+                <FormItem className="flex-1">
+                  <FormControl>
+                    <Input
+                      {...rhf}
+                      value={(rhf.value as string) ?? ''}
+                      onChange={(e) => rhf.onChange(e.target.value)}
+                      onKeyDown={onKeyDown}
+                      onBlur={() => form.handleSubmit(() => void save())()}
+                      disabled={isPending}
+                      autoFocus
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <button
+              type="submit"
+              className="rounded bg-gray-900 px-2 py-1 text-xs text-white disabled:opacity-50"
+              onMouseDown={(e) => e.preventDefault()}
+              disabled={isPending}
+            >
+              {isPending ? 'Saving…' : 'Save'}
+            </button>
+          </form>
+        </Form>
       )}
     </div>
   );
