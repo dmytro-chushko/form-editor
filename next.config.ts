@@ -3,6 +3,9 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@phosphor-icons/react'],
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
   },
   serverExternalPackages: ['@prisma/client', '@prisma/adapter-pg', 'pg'],
   webpack: (config) => {
@@ -12,6 +15,11 @@ const nextConfig: NextConfig = {
     };
 
     return config;
+  },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'jrvahgupsifnchwwzflu.supabase.co' },
+    ],
   },
 };
 
