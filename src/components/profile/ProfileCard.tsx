@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+import AvatarUploader from '@/components/profile/AvatarUploader';
 import EditableField from '@/components/profile/EditableField';
 import { useProfileQuery } from '@/features/profile/profile.api';
 
@@ -42,6 +43,7 @@ export default function ProfileCard() {
           <div className="text-base font-medium">{user?.name ?? '—'}</div>
           <div className="text-sm text-gray-600">{user?.email ?? '—'}</div>
         </div>
+        <AvatarUploader />
       </div>
 
       <div className="grid grid-cols-2 gap-4">

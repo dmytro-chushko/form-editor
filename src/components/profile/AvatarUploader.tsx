@@ -1,0 +1,82 @@
+'use client';
+
+import { useRef, useState } from 'react';
+import { toast } from 'sonner';
+
+import {
+  useAvatarUploadUrlMutation,
+  useUpdateAvatarMutation,
+} from '@/features/profile/profile.api';
+
+export default function AvatarUploader() {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [busy, setBusy] = useState(false);
+  const { mutateAsync: getUrl } = useAvatarUploadUrlMutation();
+  const { mutateAsync: saveAvatar } = useUpdateAvatarMutation();
+
+  async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Only images are allowed');
+
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Max 5MB');
+
+      return;
+    }
+
+    setBusy(true);
+    try {
+      const { uploadUrl, objectPath, url } = await getUrl({
+        filename: file.name,
+        contentType: file.type,
+      });
+
+      const putRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'content-type': file.type,
+          'x-upsert': 'true',
+        },
+        body: file,
+      });
+
+      if (!putRes.ok) {
+        throw new Error('Upload failed');
+      }
+
+      // prefer provided public url; otherwise save by objectPath (server will resolve)
+      if (url) {
+        await saveAvatar({ image: url });
+      } else {
+        await saveAvatar({ image: '' /* fallback path */ } as any);
+        await saveAvatar({ image: '', objectPath } as any);
+      }
+      toast.success('Avatar updated');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to update avatar');
+    } finally {
+      setBusy(false);
+
+      if (inputRef.current) inputRef.current.value = '';
+    }
+  }
+
+  return (
+    <div className="mt-2">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={onFileChange}
+        disabled={busy}
+      />
+    </div>
+  );
+}
