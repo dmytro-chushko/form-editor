@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import AvatarUploader from '@/components/profile/AvatarUploader';
 import EditableField from '@/components/profile/EditableField';
+import EmailChangeForm from '@/components/profile/EmailChangeForm';
 import PasswordChangeForm from '@/components/profile/PasswordChangeForm';
 import { useProfileQuery } from '@/features/profile/profile.api';
 
@@ -61,6 +62,7 @@ export default function ProfileCard() {
       </div>
 
       <PasswordChangeForm />
+      <EmailChangeForm />
     </div>
   );
 }
