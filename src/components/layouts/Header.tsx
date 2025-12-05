@@ -8,7 +8,7 @@ type HeaderProps = {
 
 export default function Header({ title, menu }: HeaderProps) {
   return (
-    <header>
+    <header className="sticky top-0 z-40">
       <div className="md:hidden">
         <MobileHeaderLayout title={title} menu={menu} />
       </div>

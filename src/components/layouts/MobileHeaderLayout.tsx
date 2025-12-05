@@ -1,5 +1,7 @@
 'use client';
 
+import { UserCircleIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -18,6 +20,7 @@ export default function MobileHeaderLayout({
 }: MobileHeaderLayoutProps) {
   const [open, setOpen] = useState(false);
   const { data } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     const body = document.body;
@@ -81,7 +84,15 @@ export default function MobileHeaderLayout({
           <div className="flex flex-col items-center justify-center gap-6">
             <div className="p-4">{menu}</div>
             <ThemeToggle />
-            {data && <Button onClick={() => signOut()}>Sign out</Button>}
+            {data && (
+              <div className="flex flex-col gap-4">
+                <Button onClick={() => router.push('/profile')}>
+                  Profile
+                  <UserCircleIcon size={32} />
+                </Button>
+                <Button onClick={() => signOut()}>Sign out</Button>
+              </div>
+            )}
           </div>
         </div>
       ) : null}
