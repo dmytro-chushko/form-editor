@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -15,10 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  useConfirmEmailChangeQuery,
-  useRequestEmailChangeMutation,
-} from '@/features/profile/profile.api';
+import { useRequestEmailChangeMutation } from '@/features/profile/profile.api';
 import {
   requestEmailChangeSchema,
   type RequestEmailChangeInput,
@@ -28,36 +25,49 @@ export default function EmailChangeForm() {
   const form = useForm<RequestEmailChangeInput>({
     resolver: zodResolver(requestEmailChangeSchema),
     defaultValues: { newEmail: '' },
-    mode: 'onSubmit',
+    mode: 'onBlur',
   });
 
   const { mutateAsync, isPending } = useRequestEmailChangeMutation();
+  const router = useRouter();
+  const params = useSearchParams();
 
   async function onSubmit(values: RequestEmailChangeInput) {
     try {
       await mutateAsync(values);
-      toast.success('We sent a confirmation link to your new email');
+      toast.success("We've sent a confirmation link to your new email");
       form.reset();
     } catch (e: any) {
       toast.error(e?.message || 'Failed to request email change');
     }
   }
 
-  // confirm by token in query (after user clicks email link)
-  const params = useSearchParams();
-  const token = params.get('emailChangeToken');
-  const confirm = useConfirmEmailChangeQuery(token);
+  // React to server-side redirect flags after user clicks email confirmation link
   useEffect(() => {
-    if (confirm.isSuccess && token) {
-      toast.success('Email changed successfully');
-    } else if (confirm.isError && token) {
-      toast.error('Email change failed');
+    const status = params.get('emailChanged');
+
+    if (!status) return;
+
+    if (status === '1') {
+      toast.success('Email successfully changed');
+    } else if (status === 'conflict') {
+      toast.error('This email is already in use');
+    } else if (status === '0') {
+      toast.error('Invalid or expired confirmation link');
     }
-  }, [confirm.isSuccess, confirm.isError, token]);
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete('emailChanged');
+    router.replace(
+      url.pathname + (url.search ? `?${url.searchParams.toString()}` : ''),
+      { scroll: false }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   return (
     <div className="mt-6 rounded-md border p-4">
-      <h2 className="mb-3 text-base font-medium">Change e‑mail</h2>
+      <h2 className="mb-3 text-lg font-semibold">Change e‑mail</h2>
       <Form {...form}>
         <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

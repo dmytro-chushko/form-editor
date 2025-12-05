@@ -1,5 +1,7 @@
 'use client';
 
+import { UserCircleIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 
 import { ThemeToggle } from '../theme/ThemeToggle';
@@ -12,9 +14,10 @@ type DesktopHeaderProps = {
 
 export default function DesktopHeader({ title, menu }: DesktopHeaderProps) {
   const { data } = useSession();
+  const router = useRouter();
 
   return (
-    <div className="sticky top-0 z-40 bg-background/80 backdrop-blur border-b">
+    <div className=" bg-background/80 backdrop-blur border-b">
       <div className="h-16 px-6 flex items-center justify-between">
         <div className="flex items-center gap-4 min-w-0">
           {title ? (
@@ -24,7 +27,14 @@ export default function DesktopHeader({ title, menu }: DesktopHeaderProps) {
         <div className="flex items-center gap-4">
           {menu}
           <ThemeToggle />
-          {data && <Button onClick={() => signOut()}>Sign out</Button>}
+          {data && (
+            <div className="flex gap-2">
+              <Button size="icon" onClick={() => router.push('/profile')}>
+                <UserCircleIcon size={32} />
+              </Button>
+              <Button onClick={() => signOut()}>Sign out</Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -99,7 +99,7 @@ export default function EditableField({
   }
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 max-sm:text-center">
       <div className="text-xs uppercase text-gray-500">{label}</div>
       {!editing ? (
         <button

@@ -1,5 +1,6 @@
 'use client';
 
+import { UploadSimpleIcon } from '@phosphor-icons/react';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -7,6 +8,8 @@ import {
   useAvatarUploadUrlMutation,
   useUpdateAvatarMutation,
 } from '@/features/profile/profile.api';
+
+import { Button } from '../ui/button';
 
 export default function AvatarUploader() {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -69,9 +72,19 @@ export default function AvatarUploader() {
   }
 
   return (
-    <div className="mt-2">
+    <div className="mt-4 text-center">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => inputRef.current?.click()}
+        disabled={busy}
+      >
+        Upload
+        <UploadSimpleIcon size={32} />
+      </Button>
       <input
         ref={inputRef}
+        className="hidden"
         type="file"
         accept="image/*"
         onChange={onFileChange}
