@@ -4,11 +4,11 @@ export const profileResponseSchema = z.object({
   user: z
     .object({
       id: z.string(),
-      email: z.string().email().nullable().optional(),
+      email: z.email().nullable().optional(),
       name: z.string().nullable().optional(),
       firstName: z.string().nullable().optional(),
       lastName: z.string().nullable().optional(),
-      image: z.string().url().nullable().optional(),
+      image: z.url().nullable().optional(),
     })
     .nullable(),
 });
@@ -42,12 +42,12 @@ export const avatarUploadRequestSchema = z.object({
 export type AvatarUploadRequest = z.infer<typeof avatarUploadRequestSchema>;
 
 export const avatarUpdateSchema = z.object({
-  image: z.string().url(),
+  image: z.url(),
 });
 export type AvatarUpdateInput = z.infer<typeof avatarUpdateSchema>;
 
 export const requestEmailChangeSchema = z.object({
-  newEmail: z.string().email(),
+  newEmail: z.email(),
 });
 export type RequestEmailChangeInput = z.infer<typeof requestEmailChangeSchema>;
 

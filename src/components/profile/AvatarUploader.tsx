@@ -8,6 +8,10 @@ import {
   useAvatarUploadUrlMutation,
   useUpdateAvatarMutation,
 } from '@/features/profile/profile.api';
+import {
+  avatarUpdateSchema,
+  avatarUploadRequestSchema,
+} from '@/features/profile/profile.schema';
 
 import { Button } from '../ui/button';
 
@@ -36,10 +40,11 @@ export default function AvatarUploader() {
 
     setBusy(true);
     try {
-      const { uploadUrl, objectPath, url } = await getUrl({
+      const validatedFileData = avatarUploadRequestSchema.parse({
         filename: file.name,
         contentType: file.type,
       });
+      const { uploadUrl, objectPath, url } = await getUrl(validatedFileData);
 
       const putRes = await fetch(uploadUrl, {
         method: 'PUT',
@@ -56,7 +61,8 @@ export default function AvatarUploader() {
 
       // prefer provided public url; otherwise save by objectPath (server will resolve)
       if (url) {
-        await saveAvatar({ image: url });
+        const validatedImageUrl = avatarUpdateSchema.parse({ image: url });
+        await saveAvatar(validatedImageUrl);
       } else {
         await saveAvatar({ image: '' /* fallback path */ } as any);
         await saveAvatar({ image: '', objectPath } as any);

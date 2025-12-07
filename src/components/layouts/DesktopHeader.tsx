@@ -1,6 +1,7 @@
 'use client';
 
 import { UserCircleIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 
@@ -21,7 +22,15 @@ export default function DesktopHeader({ title, menu }: DesktopHeaderProps) {
       <div className="h-16 px-6 flex items-center justify-between">
         <div className="flex items-center gap-4 min-w-0">
           {title ? (
-            <h1 className="text-lg font-semibold truncate">{title}</h1>
+            <Link
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push('/');
+              }}
+            >
+              <h1 className="text-lg font-semibold truncate">{title}</h1>
+            </Link>
           ) : null}
         </div>
         <div className="flex items-center gap-4">
