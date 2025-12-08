@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
 
+import { createFormSchema } from '@/features/forms/forms.schema';
+import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
-
-import { withAuth } from '../../../lib/error/http';
 
 export const GET = withAuth(
   async (req: NextRequest, { session }: { session: Session }) => {
@@ -19,13 +19,14 @@ export const GET = withAuth(
 export const POST = withAuth(
   async (req: NextRequest, { session }: { session: Session }) => {
     const body = await req.json();
+    const validatedPayload = createFormSchema.parse({
+      userId: session.user.id,
+      title: body.title || 'Untitled',
+      description: body.description,
+      content: body.content || {},
+    });
     const form = await prisma.form.create({
-      data: {
-        userId: session.user.id,
-        title: body.title || 'Untitled',
-        description: body.description || '',
-        content: body.content || {},
-      },
+      data: validatedPayload,
     });
 
     return NextResponse.json(form);
