@@ -1,3 +1,5 @@
+import BackButton from '@/components/ui/back-button';
+
 export default async function FormEditPage({
   params,
 }: {
@@ -5,5 +7,10 @@ export default async function FormEditPage({
 }) {
   const { id } = await params;
 
-  return <p>{id}</p>;
+  return (
+    <div>
+      <BackButton backTo="/dashboard" />
+      <p>{id}</p>;
+    </div>
+  );
 }
