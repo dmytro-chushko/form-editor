@@ -1,7 +1,14 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-import { apiPost } from '@/lib/api/apiClient';
+import { apiGet, apiPost } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
+
+import { FormListResponse } from './forms.schema';
 
 export function useCreateForm() {
   const qc = useQueryClient();
@@ -12,5 +19,13 @@ export function useCreateForm() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.forms() });
     },
+  });
+}
+
+export function useGetFormList() {
+  return useQuery({
+    queryKey: qk.forms(),
+    queryFn: () => apiGet<FormListResponse[]>('api/forms'),
+    placeholderData: keepPreviousData,
   });
 }

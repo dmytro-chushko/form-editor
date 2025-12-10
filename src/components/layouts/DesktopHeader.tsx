@@ -38,7 +38,11 @@ export default function DesktopHeader({ title, menu }: DesktopHeaderProps) {
           <ThemeToggle />
           {data && (
             <div className="flex gap-2">
-              <Button size="icon" onClick={() => router.push('/profile')}>
+              <Button
+                size="icon"
+                onClick={() => router.push('/profile')}
+                aria-label="profile-page"
+              >
                 <UserCircleIcon size={32} />
               </Button>
               <Button onClick={() => signOut()}>Sign out</Button>
