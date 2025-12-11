@@ -1,3 +1,4 @@
+import FormEditor from '@/components/form-editor/FormEditor';
 import BackButton from '@/components/ui/back-button';
 
 export default async function FormEditPage({
@@ -11,6 +12,7 @@ export default async function FormEditPage({
     <div>
       <BackButton backTo="/dashboard" />
       <p>{id}</p>;
+      <FormEditor />
     </div>
   );
 }
