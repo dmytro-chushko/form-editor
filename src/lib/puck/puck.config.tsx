@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { PUCK_CATEGORIES } from '../constants/puck-categories';
 import { cn } from '../utils';
 
+import PuckButton from './components/PuckButton';
 import PuckCheckbox from './components/PuckCheckbox';
 import PuckContainer from './components/PuckContainer';
 import PuckFlex from './components/PuckFlex';
@@ -384,6 +385,69 @@ export const config: Config<object, RootProps> = {
           align={align}
           weight={weight}
           padding={padding}
+        />
+      ),
+    },
+    Button: {
+      fields: {
+        variant: {
+          type: 'radio',
+          options: [
+            { label: 'Primary', value: 'default' },
+            { label: 'Secondary', value: 'outline' },
+          ],
+        },
+        size: {
+          type: 'radio',
+          options: [
+            { label: 'Medium', value: 'default' },
+            { label: 'Small', value: 'sm' },
+            { label: 'Larg', value: 'lg' },
+          ],
+        },
+        fullWidth: {
+          type: 'radio',
+          options: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        },
+        buttonType: {
+          type: 'radio',
+          label: 'type',
+          options: [
+            { label: 'Submit', value: 'submit' },
+            { label: 'Button', value: 'button' },
+          ],
+        },
+        buttonText: {
+          type: 'text',
+          label: 'text',
+        },
+      },
+      defaultProps: {
+        variant: 'default',
+        size: 'default',
+        fullWidth: false,
+        buttonType: 'submit',
+        buttonText: 'Submit',
+      },
+      inline: true,
+      render: ({
+        variant,
+        size,
+        fullWidth,
+        buttonType,
+        buttonText,
+        puck,
+      }: any) => (
+        <PuckButton
+          puckRef={puck.dragRef}
+          variant={variant}
+          size={size}
+          fullWidth={fullWidth}
+          buttonType={buttonType}
+          buttonText={buttonText}
         />
       ),
     },
