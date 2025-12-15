@@ -2,11 +2,14 @@ import { Config } from '@measured/puck';
 import { ReactNode } from 'react';
 
 import { PUCK_CATEGORIES } from '../constants/puck-categories';
+import { cn } from '../utils';
 
 import PuckCheckbox from './components/PuckCheckbox';
 import PuckContainer from './components/PuckContainer';
 import PuckFlex from './components/PuckFlex';
+import PuckHeading from './components/PuckHeading';
 import PuckInput from './components/PuckInput';
+import PuckParagraph from './components/PuckParagraph';
 import PuckRadio from './components/PuckRadio';
 import PuckSelect from './components/PuckSelect';
 import PuckTextarea from './components/PuckTextarea';
@@ -26,12 +29,29 @@ export const config: Config<object, RootProps> = {
     [PUCK_CATEGORIES.Layout]: {
       components: ['Flex', 'Container'],
     },
+    [PUCK_CATEGORIES.InfoBlocks]: {
+      components: ['Heading', 'Paragraph'],
+    },
   },
   components: {
     Input: {
       fields: {
         label: { type: 'text' },
         placeholder: { type: 'text' },
+        inputType: {
+          label: 'input type',
+          type: 'select',
+          options: [
+            { label: 'Text', value: 'text' },
+            { label: 'Number', value: 'number' },
+            { label: 'E-mail', value: 'email' },
+          ],
+        },
+      },
+      defaultProps: {
+        label: 'Input',
+        placeholder: 'Input',
+        inputType: 'text',
       },
       inline: true,
       render: ({ label, placeholder, puck }) => (
@@ -57,8 +77,9 @@ export const config: Config<object, RootProps> = {
         label: 'I agree',
         checked: false,
       },
-      render: ({ label, checked }: any) => (
-        <PuckCheckbox label={label} checked={checked} />
+      inline: true,
+      render: ({ label, checked, puck }: any) => (
+        <PuckCheckbox puckRef={puck.dragRef} label={label} checked={checked} />
       ),
     },
     Radio: {
@@ -80,9 +101,11 @@ export const config: Config<object, RootProps> = {
         ],
         selected: 'Option A',
       },
-      render: ({ groupLabel, name, options, selected }: any) => {
+      inline: true,
+      render: ({ groupLabel, name, options, selected, puck }: any) => {
         return (
           <PuckRadio
+            puckRef={puck.dragRef}
             groupLabel={groupLabel}
             groupName={name}
             options={options}
@@ -96,9 +119,21 @@ export const config: Config<object, RootProps> = {
       fields: {
         label: { type: 'text' },
         placeholder: { type: 'text' },
+        rows: { type: 'number' },
       },
-      render: ({ label, placeholder }: any) => (
-        <PuckTextarea label={label} placeholder={placeholder} />
+      defaultProps: {
+        label: 'Textarea',
+        placeholder: 'Some text...',
+        rows: 3,
+      },
+      inline: true,
+      render: ({ label, placeholder, rows, puck }: any) => (
+        <PuckTextarea
+          puckRef={puck.dragRef}
+          label={label}
+          placeholder={placeholder}
+          rows={rows}
+        />
       ),
     },
 
@@ -117,8 +152,9 @@ export const config: Config<object, RootProps> = {
           { value: 'option_b', label: 'Option B' },
         ],
       },
-      render: ({ label, options }: any) => (
-        <PuckSelect label={label} options={options} />
+      inline: true,
+      render: ({ label, options, puck }: any) => (
+        <PuckSelect puckRef={puck.dragRef} label={label} options={options} />
       ),
     },
     Flex: {
@@ -178,14 +214,12 @@ export const config: Config<object, RootProps> = {
         wrap,
         content: Content,
       }: any) => (
-        <PuckFlex
-          direction={direction}
-          gap={gap}
-          justify={justify}
-          align={align}
-          wrap={wrap}
-        >
+        <PuckFlex>
           <Content
+            className={cn(
+              'w-full min-h-10',
+              direction === 'column' ? 'flex-col' : 'flex-row'
+            )}
             style={{
               display: 'flex',
               flexDirection: direction === 'column' ? 'flex-col' : 'flex-row',
@@ -220,15 +254,137 @@ export const config: Config<object, RootProps> = {
             { label: 'Right', value: 'ml-auto' },
           ],
         },
+        gap: {
+          type: 'select',
+          options: [
+            { label: 'sm', value: 'gap-2' },
+            { label: 'md', value: 'gap-4' },
+            { label: 'lg', value: 'gap-6' },
+            { label: 'xl', value: 'gap-8' },
+          ],
+        },
+        padding: {
+          type: 'select',
+          options: [
+            { label: 'none', value: 'p-0' },
+            { label: 'sm', value: 'p-2' },
+            { label: 'md', value: 'p-4' },
+            { label: 'lg', value: 'p-6' },
+            { label: 'xl', value: 'p-8' },
+          ],
+        },
       },
       defaultProps: {
         width: 'w-full',
         align: 'mr-auto',
+        gap: 'gap-2',
+        padding: 'none',
       },
-      render: ({ align, width, content: Content }: any) => (
+      render: ({ align, width, gap, padding, content: Content }: any) => (
         <PuckContainer align={align} width={width}>
-          <Content />
+          <Content className={cn('grid', gap, padding)} />
         </PuckContainer>
+      ),
+    },
+    Heading: {
+      fields: {
+        tag: {
+          type: 'select',
+          options: [
+            { label: 'H1', value: 'h1' },
+            { label: 'H2', value: 'h2' },
+            { label: 'H3', value: 'h3' },
+            { label: 'H4', value: 'h4' },
+            { label: 'H5', value: 'h5' },
+          ],
+        },
+        headingText: {
+          type: 'text',
+          label: 'heading text',
+        },
+        align: {
+          type: 'radio',
+          options: [
+            { label: 'Left', value: 'text-left' },
+            { label: 'Center', value: 'text-center' },
+            { label: 'Right', value: 'text-right' },
+          ],
+        },
+        weight: {
+          type: 'radio',
+          options: [
+            { label: 'Regular', value: 'font-normal' },
+            { label: 'Semi Bold', value: 'font-semibold' },
+            { label: 'Bold', value: 'font-bold' },
+          ],
+        },
+      },
+      defaultProps: {
+        tag: 'h1',
+        headingText: 'Title',
+        align: 'text-left',
+        weight: 'font-normal',
+      },
+      inline: true,
+      render: ({ tag, headingText, align, weight, puck }: any) => (
+        <PuckHeading
+          puckRef={puck.dragRef}
+          tag={tag}
+          align={align}
+          weight={weight}
+          headingText={headingText}
+        />
+      ),
+    },
+    Paragraph: {
+      fields: {
+        paragraphText: {
+          type: 'textarea',
+          label: 'paragraph text',
+          contentEditable: true,
+        },
+        align: {
+          type: 'radio',
+          options: [
+            { label: 'Left', value: 'text-left' },
+            { label: 'Center', value: 'text-center' },
+            { label: 'Right', value: 'text-right' },
+          ],
+        },
+        weight: {
+          type: 'radio',
+          options: [
+            { label: 'Regular', value: 'font-normal' },
+            { label: 'Semi Bold', value: 'font-semibold' },
+            { label: 'Bold', value: 'font-bold' },
+          ],
+        },
+        padding: {
+          type: 'select',
+          options: [
+            { label: 'none', value: 'p-0' },
+            { label: 'sm', value: 'p-2' },
+            { label: 'md', value: 'p-4' },
+            { label: 'lg', value: 'p-6' },
+            { label: 'xl', value: 'p-8' },
+          ],
+        },
+      },
+      defaultProps: {
+        paragraphText: 'Some text...',
+        align: 'text-left',
+        weight: 'font-normal',
+        padding: 'p-0',
+      },
+      inline: true,
+      render: ({ paragraphText, align, weight, padding, puck }: any) => (
+        <PuckParagraph
+          puckRef={puck.dragRef}
+          paragraphText={paragraphText}
+          align={align}
+          weight={weight}
+          padding={padding}
+        />
       ),
     },
   },

@@ -14,7 +14,7 @@ export default function PuckInput({
       <label className="block font-medium">{label}</label>
       <input
         placeholder={placeholder}
-        className="w-full border border-neutral-900 rounded px-3 py-2 bg-gray-100"
+        className="w-full border border-foreground rounded px-3 py-2"
       />
     </div>
   );
