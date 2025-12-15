@@ -13,9 +13,5 @@ export default function PuckContainer({
   width,
   children,
 }: PuckContainerProps) {
-  return (
-    <div className={cn('p-4 bg-amber-50 min-h-12', width, align)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('min-h-12', width, align)}>{children}</div>;
 }
