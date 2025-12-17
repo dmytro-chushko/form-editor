@@ -1,10 +1,11 @@
 'use client';
 
 import { Puck, Render } from '@measured/puck';
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 import '@measured/puck/puck.css';
-import { config } from '@/lib/puck/puck.config';
+import { config } from '@/features/puck/puck.config';
 
 type FormContent = any;
 

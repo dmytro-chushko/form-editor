@@ -3,7 +3,7 @@
 import { FileArrowUpIcon } from '@phosphor-icons/react';
 
 import { Button } from '@/components/ui/button';
-import { useAddFile } from '@/features/forms/use-upload-file';
+import { useAddFile } from '@/features/forms/lib/use-upload-file';
 
 interface PuckFileBlockProps {
   label: string;

@@ -9,6 +9,15 @@ export const createFormSchema = z.object({
 
 export type CreateFormSchema = z.infer<typeof createFormSchema>;
 
+export const updateFormSchema = z.object({
+  formaId: z.string().min(1),
+  title: z.string().min(1).optional(),
+  description: z.string().nullable().optional(),
+  content: z.record(z.any(), z.any()).default({}),
+});
+
+export type UpdateFormSchema = z.infer<typeof updateFormSchema>;
+
 export const formListResponse = z.object({
   userId: z.string(),
   title: z.string(),
