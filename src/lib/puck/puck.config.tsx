@@ -7,6 +7,7 @@ import { cn } from '../utils';
 import PuckButton from './components/PuckButton';
 import PuckCheckbox from './components/PuckCheckbox';
 import PuckContainer from './components/PuckContainer';
+import PuckFileBlock from './components/PuckFileBlock';
 import PuckFlex from './components/PuckFlex';
 import PuckHeading from './components/PuckHeading';
 import PuckInput from './components/PuckInput';
@@ -32,6 +33,12 @@ export const config: Config<object, RootProps> = {
     },
     [PUCK_CATEGORIES.InfoBlocks]: {
       components: ['Heading', 'Paragraph'],
+    },
+    [PUCK_CATEGORIES.Buttons]: {
+      components: ['Button'],
+    },
+    [PUCK_CATEGORIES.Files]: {
+      components: ['File'],
     },
   },
   components: {
@@ -449,6 +456,20 @@ export const config: Config<object, RootProps> = {
           buttonType={buttonType}
           buttonText={buttonText}
         />
+      ),
+    },
+    File: {
+      fields: {
+        label: {
+          type: 'text',
+        },
+      },
+      defaultProps: {
+        label: 'Add file',
+      },
+      inline: true,
+      render: ({ label, puck }: any) => (
+        <PuckFileBlock label={label} puckRef={puck.dragRef} />
       ),
     },
   },
