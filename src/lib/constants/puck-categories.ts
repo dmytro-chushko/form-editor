@@ -3,4 +3,6 @@ export const PUCK_CATEGORIES = {
   SelectFields: 'SELECT FIELDS',
   Layout: 'LAYOUT',
   InfoBlocks: 'INFO BLOCKS',
+  Buttons: 'BUTTONS',
+  Files: 'FILE',
 };
