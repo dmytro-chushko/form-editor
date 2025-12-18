@@ -1,12 +1,12 @@
 'use client';
 
-import { useGetForms } from '@/features/forms/use-get-forms';
+import { useFormsApi } from '@/features/forms/lib/use-api-forms';
 
 import { CreateForm } from './CreateForm';
 import { FormTable } from './FormTable';
 
 export function FormList() {
-  const { formList } = useGetForms();
+  const { formList } = useFormsApi();
 
   return (
     <div>

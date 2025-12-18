@@ -96,7 +96,7 @@ export function withErrors(handler: Handler): Handler {
 
 type HandlerWithAuth<T = unknown> = (
   req: NextRequest,
-  ctx: { session: Session }
+  ctx: { session: Session; params?: Record<string, string> }
 ) => Promise<Response | NextResponse<T>>;
 
 export function withAuth<T = unknown>(handler: HandlerWithAuth<T>) {

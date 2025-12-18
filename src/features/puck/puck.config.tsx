@@ -1,8 +1,8 @@
 import { Config } from '@measured/puck';
 import { ReactNode } from 'react';
 
-import { PUCK_CATEGORIES } from '../constants/puck-categories';
-import { cn } from '../utils';
+import { PUCK_CATEGORIES } from '../../lib/constants/puck-categories';
+import { cn } from '../../lib/utils';
 
 import PuckButton from './components/PuckButton';
 import PuckCheckbox from './components/PuckCheckbox';
