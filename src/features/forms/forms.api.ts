@@ -8,7 +8,7 @@ import {
 import { apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
 
-import { FormListResponse } from './forms.schema';
+import { FormListResponse, UpdateFormSchema } from './forms.schema';
 
 export function useCreateForm() {
   const qc = useQueryClient();
@@ -34,7 +34,7 @@ export function useUpdateForm() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { id: string }) =>
+    mutationFn: (data: UpdateFormSchema) =>
       apiPatch<FormListResponse>('api/forms', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.forms() });

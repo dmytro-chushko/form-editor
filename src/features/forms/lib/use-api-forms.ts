@@ -1,13 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { formatErrorMessage } from '@/lib/utils';
 
 import { useGetFormList, useUpdateForm } from '../forms.api';
+import { UpdateFormSchema } from '../forms.schema';
 
-export function useFormsApi() {
+export function useApiForms() {
+  const { id } = useParams();
+  const [content, setContent] = useState({});
   const {
     data,
     isError: isErrorGetFormLIst,
@@ -46,9 +50,19 @@ export function useFormsApi() {
     updateFormError,
   ]);
 
+  const onPublishForm = useCallback(
+    async (updateParams: UpdateFormSchema) => {
+      setContent(updateParams.content);
+      await updateForm(updateParams);
+    },
+    [updateForm]
+  );
+
   return {
     formList: data,
     updateForm,
+    onPublishForm,
+    content,
     isLoading: isLoadingFormList || isUpdateFormPending,
   };
 }
