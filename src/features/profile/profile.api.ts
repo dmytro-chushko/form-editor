@@ -13,7 +13,7 @@ import type {
 
 export function useProfileQuery() {
   return useQuery({
-    queryKey: qk.profile(),
+    queryKey: qk.profile,
     queryFn: () => apiGet<ProfileResponse>('/api/profile'),
   });
 }
@@ -32,8 +32,8 @@ export function useUpdateNameMutation() {
         };
       }>('/api/profile/name', data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.profile() });
-      qc.invalidateQueries({ queryKey: qk.me() });
+      qc.invalidateQueries({ queryKey: qk.profile });
+      qc.invalidateQueries({ queryKey: qk.me });
     },
   });
 }
@@ -55,8 +55,8 @@ export function useUpdateAvatarMutation() {
     mutationFn: (data: AvatarUpdateInput) =>
       apiPatch<{ ok: true; image: string }>('/api/profile/avatar', data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.profile() });
-      qc.invalidateQueries({ queryKey: qk.me() });
+      qc.invalidateQueries({ queryKey: qk.profile });
+      qc.invalidateQueries({ queryKey: qk.me });
     },
   });
 }

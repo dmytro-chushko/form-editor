@@ -1,11 +1,18 @@
 import { cn } from '@/lib/utils';
 
+import {
+  HeadingTags,
+  TextWeight,
+  PuckRefType,
+  TextAlign,
+} from '../types/components.type';
+
 interface PuckHeadingProps {
-  tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
+  tag: HeadingTags;
   headingText: string;
-  align: 'text-left' | 'text-center' | 'text-right';
-  weight: 'font-normal' | 'font-semibold' | 'font-bold';
-  puckRef: ((element: Element | null) => void) | null;
+  align: TextAlign;
+  weight: TextWeight;
+  puckRef: PuckRefType;
 }
 
 const variants = {

@@ -1,5 +1,4 @@
 import { Config } from '@measured/puck';
-import { ReactNode } from 'react';
 
 import { PUCK_CATEGORIES } from '../../lib/constants/puck-categories';
 import { cn } from '../../lib/utils';
@@ -15,12 +14,9 @@ import PuckParagraph from './components/PuckParagraph';
 import PuckRadio from './components/PuckRadio';
 import PuckSelect from './components/PuckSelect';
 import PuckTextarea from './components/PuckTextarea';
+import { Components, RootProps } from './types';
 
-type RootProps = {
-  children: ReactNode;
-};
-
-export const config: Config<object, RootProps> = {
+export const config: Config<Components, RootProps> = {
   categories: {
     [PUCK_CATEGORIES.TextFields]: {
       components: ['Input', 'Textarea'],
@@ -86,7 +82,7 @@ export const config: Config<object, RootProps> = {
         checked: false,
       },
       inline: true,
-      render: ({ label, checked, puck }: any) => (
+      render: ({ label, checked, puck }) => (
         <PuckCheckbox puckRef={puck.dragRef} label={label} checked={checked} />
       ),
     },
@@ -110,7 +106,7 @@ export const config: Config<object, RootProps> = {
         selected: 'Option A',
       },
       inline: true,
-      render: ({ groupLabel, name, options, selected, puck }: any) => {
+      render: ({ groupLabel, name, options, selected, puck }) => {
         return (
           <PuckRadio
             puckRef={puck.dragRef}
@@ -135,7 +131,7 @@ export const config: Config<object, RootProps> = {
         rows: 3,
       },
       inline: true,
-      render: ({ label, placeholder, rows, puck }: any) => (
+      render: ({ label, placeholder, rows, puck }) => (
         <PuckTextarea
           puckRef={puck.dragRef}
           label={label}
@@ -161,7 +157,7 @@ export const config: Config<object, RootProps> = {
         ],
       },
       inline: true,
-      render: ({ label, options, puck }: any) => (
+      render: ({ label, options, puck }) => (
         <PuckSelect puckRef={puck.dragRef} label={label} options={options} />
       ),
     },
@@ -214,29 +210,28 @@ export const config: Config<object, RootProps> = {
         align: 'stretch',
         wrap: false,
       },
-      render: ({
-        direction,
-        gap,
-        justify,
-        align,
-        wrap,
-        content: Content,
-      }: any) => (
+      render: ({ direction, gap, justify, align, wrap, content: Content }) => (
         <PuckFlex>
-          <Content
-            className={cn(
-              'w-full min-h-10',
-              direction === 'column' ? 'flex-col' : 'flex-row'
-            )}
-            style={{
-              display: 'flex',
-              flexDirection: direction === 'column' ? 'flex-col' : 'flex-row',
-              wrap: wrap ? 'flex-wrap' : 'flex-nowrap',
-              gap: typeof gap === 'number' ? `${gap}px` : gap,
-              justifyContent: justify,
-              alignItems: align,
-            }}
-          />
+          {(() => {
+            const Slot = (Content ?? (() => null)) as any;
+
+            return (
+              <Slot
+                className={cn(
+                  'w-full min-h-10',
+                  direction === 'column' ? 'flex-col' : 'flex-row'
+                )}
+                style={{
+                  display: 'flex',
+                  flexDirection: direction === 'column' ? 'column' : 'row',
+                  flexWrap: wrap ? 'wrap' : 'nowrap',
+                  gap: typeof gap === 'number' ? `${gap}px` : gap,
+                  justifyContent: justify,
+                  alignItems: align,
+                }}
+              />
+            );
+          })()}
         </PuckFlex>
       ),
     },
@@ -287,10 +282,15 @@ export const config: Config<object, RootProps> = {
         align: 'mr-auto',
         gap: 'gap-2',
         padding: 'none',
+        content: [],
       },
-      render: ({ align, width, gap, padding, content: Content }: any) => (
+      render: ({ align, width, gap, padding, content: Content }) => (
         <PuckContainer align={align} width={width}>
-          <Content className={cn('grid', gap, padding)} />
+          {(() => {
+            const Slot = (Content ?? (() => null)) as any;
+
+            return <Slot className={cn('grid', gap, padding)} />;
+          })()}
         </PuckContainer>
       ),
     },
@@ -334,7 +334,7 @@ export const config: Config<object, RootProps> = {
         weight: 'font-normal',
       },
       inline: true,
-      render: ({ tag, headingText, align, weight, puck }: any) => (
+      render: ({ tag, headingText, align, weight, puck }) => (
         <PuckHeading
           puckRef={puck.dragRef}
           tag={tag}
@@ -385,7 +385,7 @@ export const config: Config<object, RootProps> = {
         padding: 'p-0',
       },
       inline: true,
-      render: ({ paragraphText, align, weight, padding, puck }: any) => (
+      render: ({ paragraphText, align, weight, padding, puck }) => (
         <PuckParagraph
           puckRef={puck.dragRef}
           paragraphText={paragraphText}
@@ -468,12 +468,20 @@ export const config: Config<object, RootProps> = {
         label: 'Add file',
       },
       inline: true,
-      render: ({ label, puck }: any) => (
+      render: ({ label, puck }) => (
         <PuckFileBlock label={label} puckRef={puck.dragRef} />
       ),
     },
   },
   root: {
+    fields: {
+      title: {
+        type: 'text',
+      },
+      description: {
+        type: 'text',
+      },
+    },
     render: ({ children }) => {
       return <div className="h-full bg-background">{children}</div>;
     },

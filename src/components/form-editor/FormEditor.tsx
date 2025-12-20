@@ -1,23 +1,20 @@
 'use client';
 
 import { Puck, Render } from '@measured/puck';
-import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 import '@measured/puck/puck.css';
+import { useFormItem } from '@/features/forms/lib/use-form-item';
 import { config } from '@/features/puck/puck.config';
 
-type FormContent = any;
-
-const initialContent: FormContent = {
-  content: [],
-};
-
 export default function FormEditor() {
-  const [content, setContent] = useState<FormContent>(initialContent);
+  const { content, currentForm, onPublishForm, setContent, isLoading } =
+    useFormItem();
   const [isPreview, setIsPreview] = useState(false);
 
-  return (
+  return isLoading ? (
+    <div>...loading</div>
+  ) : (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Редактор форми</h1>
 
@@ -39,26 +36,30 @@ export default function FormEditor() {
             </div>
           </div>
         ) : (
-          <Puck
-            config={config}
-            data={content}
-            onPublish={setContent}
-            overrides={{
-              // Add a Preview button next to default Publish button
-              headerActions: ({ children }) => (
-                <>
-                  {children}
-                  <button
-                    type="button"
-                    className="ml-2 rounded bg-gray-900 px-3 py-1 text-xs text-white"
-                    onClick={() => setIsPreview(true)}
-                  >
-                    Preview
-                  </button>
-                </>
-              ),
-            }}
-          />
+          currentForm && (
+            <Puck
+              key={`${currentForm?.id ?? 'new'}:${currentForm?.updatedAt ?? ''}`}
+              config={config}
+              data={currentForm.content}
+              onPublish={onPublishForm}
+              onChange={setContent}
+              overrides={{
+                // Add a Preview button next to default Publish button
+                headerActions: ({ children }) => (
+                  <>
+                    {children}
+                    <button
+                      type="button"
+                      className="ml-2 rounded bg-gray-900 px-3 py-1 text-xs text-white"
+                      onClick={() => setIsPreview(true)}
+                    >
+                      Preview
+                    </button>
+                  </>
+                ),
+              }}
+            />
+          )
         )}
       </div>
     </div>
