@@ -1,11 +1,18 @@
 import { cn } from '@/lib/utils';
 
+import {
+  BlockPaddings,
+  PuckRefType,
+  TextAlign,
+  TextWeight,
+} from '../types/components.type';
+
 interface PuckParagraphProps {
   paragraphText: string;
-  align: 'text-left' | 'text-center' | 'text-right';
-  weight: 'font-normal' | 'font-semibold' | 'font-bold';
-  padding: 'p-0' | 'p-2' | 'p-4' | 'p-6' | 'p-8';
-  puckRef: ((element: Element | null) => void) | null;
+  align: TextAlign;
+  weight: TextWeight;
+  padding: BlockPaddings;
+  puckRef: PuckRefType;
 }
 
 export default function PuckParagraph({

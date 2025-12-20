@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '../ui/table';
 
-export function FormTable({ forms }: { forms: FormListResponse[] }) {
+export function FormTable({ forms }: { forms: FormListResponse }) {
   const router = useRouter();
 
   return (
@@ -38,7 +38,7 @@ export function FormTable({ forms }: { forms: FormListResponse[] }) {
         {forms.map(({ id, title, createdAt, isPublished }) => (
           <TableRow key={id}>
             <TableCell>{title}</TableCell>
-            <TableCell>{createdAt}</TableCell>
+            <TableCell>{createdAt.toISOString()}</TableCell>
             <TableCell>
               {isPublished ? (
                 <CheckCircleIcon size={32} className="text-green-700" />

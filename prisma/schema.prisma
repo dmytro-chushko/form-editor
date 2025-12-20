@@ -109,4 +109,6 @@ model Form {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@unique([id, userId])
+  @@map("forms")
 }

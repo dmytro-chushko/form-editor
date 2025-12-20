@@ -2,9 +2,11 @@ import { ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
 
+import { ContainerAlign, ContainerWidth } from '../types/components.type';
+
 interface PuckContainerProps {
-  width: 'w-1/4' | 'w-1/2' | 'w-3/4';
-  align: 'mr-auto' | 'mx-auto' | 'ml-auto';
+  width: ContainerWidth;
+  align: ContainerAlign;
   children: ReactNode;
 }
 

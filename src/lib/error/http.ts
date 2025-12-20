@@ -8,13 +8,14 @@ import { auth } from '../auth';
 import { AppError, UnauthorizedError } from './errors';
 
 export type Handler<T = unknown> = (
-  req: NextRequest
+  req: NextRequest,
+  ctx: any
 ) => Promise<Response | NextResponse<T>>;
 
 export function withErrors(handler: Handler): Handler {
-  return async (req) => {
+  return async (req, ctx) => {
     try {
-      return await handler(req);
+      return await handler(req, ctx);
     } catch (e: unknown) {
       // TODO: integrate logger later
       // Prisma ORM errors
@@ -96,17 +97,18 @@ export function withErrors(handler: Handler): Handler {
 
 type HandlerWithAuth<T = unknown> = (
   req: NextRequest,
-  ctx: { session: Session; params?: Record<string, string> }
+  ctx: any,
+  session: { session: Session }
 ) => Promise<Response | NextResponse<T>>;
 
 export function withAuth<T = unknown>(handler: HandlerWithAuth<T>) {
-  return withErrors(async (req: NextRequest) => {
+  return withErrors(async (req: NextRequest, ctx: any) => {
     const session = await auth();
 
     if (!session?.user?.id) {
       throw new UnauthorizedError();
     }
 
-    return handler(req, { session });
+    return handler(req, ctx, { session });
   });
 }
