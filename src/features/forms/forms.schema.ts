@@ -42,10 +42,10 @@ export const createFormSchema = z.object({
 export type CreateFormSchema = z.infer<typeof createFormSchema>;
 
 export const updateFormSchema = z.object({
-  formId: z.string().min(1),
   title: z.string().min(1).optional(),
   description: z.string().nullable().optional(),
   content: formContentSchema,
+  isPublished: z.boolean().optional(),
 });
 
 export type UpdateFormSchema = z.infer<typeof updateFormSchema>;

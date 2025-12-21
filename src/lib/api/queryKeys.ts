@@ -3,5 +3,5 @@ export const queryKeys = {
   session: ['session'] as const,
   profile: ['profile'] as const,
   forms: ['forms'] as const,
-  form: ['form'] as const,
+  form: (id: string) => ['form', id] as const,
 };

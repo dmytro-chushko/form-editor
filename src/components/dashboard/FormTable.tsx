@@ -2,6 +2,7 @@
 
 import {
   CheckCircleIcon,
+  CopyIcon,
   MinusCircleIcon,
   PencilSimpleIcon,
   XCircleIcon,
@@ -9,6 +10,7 @@ import {
 import { useRouter } from 'next/navigation';
 
 import { FormListResponse } from '@/features/forms/forms.schema';
+import { useFormCommon } from '@/features/forms/lib/use-form-common';
 
 import { Button } from '../ui/button';
 import { ButtonGroup } from '../ui/button-group';
@@ -23,6 +25,7 @@ import {
 
 export function FormTable({ forms }: { forms: FormListResponse }) {
   const router = useRouter();
+  const { onDelete, onTogglePublish, onCopy } = useFormCommon();
 
   return (
     <Table>
@@ -38,7 +41,7 @@ export function FormTable({ forms }: { forms: FormListResponse }) {
         {forms.map(({ id, title, createdAt, isPublished }) => (
           <TableRow key={id}>
             <TableCell>{title}</TableCell>
-            <TableCell>{createdAt.toISOString()}</TableCell>
+            <TableCell>{String(createdAt)}</TableCell>
             <TableCell>
               {isPublished ? (
                 <CheckCircleIcon size={32} className="text-green-700" />
@@ -54,7 +57,20 @@ export function FormTable({ forms }: { forms: FormListResponse }) {
                 >
                   <PencilSimpleIcon size={32} />
                 </Button>
-                <Button size="icon">
+                <Button
+                  size="icon"
+                  onClick={() => onTogglePublish(id, !isPublished)}
+                >
+                  {!isPublished ? (
+                    <CheckCircleIcon size={32} className="text-green-700" />
+                  ) : (
+                    <MinusCircleIcon size={32} className="text-red-600" />
+                  )}
+                </Button>
+                <Button size="icon" onClick={() => onCopy(id)}>
+                  <CopyIcon size={32} />
+                </Button>
+                <Button size="icon" onClick={() => onDelete(id)}>
                   <XCircleIcon size={32} />
                 </Button>
               </ButtonGroup>

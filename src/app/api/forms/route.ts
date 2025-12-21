@@ -6,7 +6,6 @@ import {
   createFormSchema,
   formItemSchema,
   formListResponse,
-  updateFormSchema,
 } from '@/features/forms/forms.schema';
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
@@ -41,31 +40,6 @@ export const POST = withAuth(
     });
 
     const validatedResponse = formItemSchema.parse(form);
-
-    return NextResponse.json(validatedResponse);
-  }
-);
-
-export const PATCH = withAuth(
-  async (req: NextRequest, _ctx, { session }: { session: Session }) => {
-    const body = await req.json();
-    const validatedBody = updateFormSchema.parse(body);
-
-    const { formId, ...data } = validatedBody;
-
-    const updated = await prisma.form.update({
-      where: {
-        id: formId,
-        userId: session.user.id,
-      },
-      data: {
-        title: data.title,
-        description: data.description,
-        content: data.content as Prisma.InputJsonValue,
-      },
-    });
-
-    const validatedResponse = formItemSchema.parse(updated);
 
     return NextResponse.json(validatedResponse);
   }

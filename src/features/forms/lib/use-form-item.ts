@@ -1,9 +1,10 @@
 'use client';
 
 import { Data } from '@measured/puck';
-import { notFound, useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { ZodError } from 'zod';
 
 import { Components, RootProps } from '@/features/puck/types';
 import { formatErrorMessage } from '@/lib/utils';
@@ -19,10 +20,11 @@ import {
 
 interface UseFormItem {
   currentForm?: FormItemSchema;
-  onPublishForm: (data: FormContentSchema) => Promise<void>;
+  onSaveForm: (data: FormContentSchema) => Promise<void>;
   content: FormContent;
   setContent: (data: FormContentSchema) => void;
-  isLoading: boolean;
+  isUpdateFormPending: boolean;
+  isFormProcessing: boolean;
 }
 
 const initialContent: Data<Components, RootProps> = {
@@ -36,7 +38,6 @@ const initialContent: Data<Components, RootProps> = {
 };
 
 export function useFormItem(): UseFormItem {
-  const { id } = useParams<{ id: string }>();
   const [content, setContent] = useState<FormContent>(initialContent);
 
   const {
@@ -80,14 +81,22 @@ export function useFormItem(): UseFormItem {
     errorGetFormById,
   ]);
 
-  const onPublishForm = useCallback(
+  const onSaveForm = useCallback(
     async (data: FormContentSchema) => {
-      if (!id) return;
-
-      const validatedData = formContentSchema.parse(data);
+      let validatedData = data;
+      try {
+        validatedData = formContentSchema.parse(data);
+      } catch (e: unknown) {
+        toast.error(
+          `Ivalid form content ${
+            e instanceof ZodError
+              ? e.issues.map(({ message }) => message).join(', ')
+              : ''
+          }`
+        );
+      }
 
       const payload: UpdateFormSchema = {
-        formId: id,
         title: validatedData.root.props?.title,
         description: validatedData.root.props?.description,
         content: validatedData,
@@ -96,14 +105,15 @@ export function useFormItem(): UseFormItem {
       setContent(data);
       await updateForm(payload);
     },
-    [id, updateForm]
+    [updateForm]
   );
 
   return {
     currentForm,
-    onPublishForm,
+    onSaveForm,
     content,
     setContent,
-    isLoading: isUpdateFormPending || isLoadingFormById,
+    isUpdateFormPending,
+    isFormProcessing: isLoadingFormById,
   };
 }
