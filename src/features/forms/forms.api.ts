@@ -7,8 +7,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
 
-import { apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
+import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
 
 import {
@@ -33,7 +34,6 @@ export function useGetFormList() {
   return useQuery({
     queryKey: qk.forms,
     queryFn: () => apiGet<FormListResponse>('/api/forms'),
-    placeholderData: keepPreviousData,
   });
 }
 
@@ -41,20 +41,68 @@ export function useGetFormById() {
   const { id } = useParams<{ id: string }>();
 
   return useQuery({
-    queryKey: qk.form,
+    queryKey: qk.form(id),
     queryFn: () => apiGet<FormItemSchema>(`/api/forms/${id}`),
     placeholderData: keepPreviousData,
   });
 }
 
 export function useUpdateForm() {
+  const { id } = useParams<{ id: string }>();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (data: UpdateFormSchema) =>
-      apiPatch<FormListResponse>('/api/forms', data),
+      apiPatch<FormItemSchema>(`/api/forms/${id}`, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.form(id) });
+      toast.success('Form saved');
+    },
+  });
+}
+
+export function useDeleteForm() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formId: string) => apiDelete(`/api/forms/${formId}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: qk.forms });
+      qc.refetchQueries({ queryKey: qk.forms });
+      toast.success('Form deleted');
+    },
+  });
+}
+
+export function useTogglePublish() {
+  const { id } = useParams<{ id: string }>();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      isPublished,
+      formId,
+    }: {
+      isPublished: boolean;
+      formId: string;
+    }) => apiPatch<FormItemSchema>(`/api/forms/${formId}`, { isPublished }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.form(id) });
+    },
+  });
+}
+
+export function useCopyForm() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formId: string) =>
+      apiPost<FormItemSchema>(`/api/forms/${formId}/copy`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: qk.forms });
+      toast.success('Form copied');
     },
   });
 }

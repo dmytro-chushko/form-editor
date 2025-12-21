@@ -1,18 +1,39 @@
 'use client';
 
-import { Puck, Render } from '@measured/puck';
-import { useState } from 'react';
+import { Puck, Render, useGetPuck } from '@measured/puck';
+import { CheckCircleIcon } from '@phosphor-icons/react';
+import { MinusCircleIcon } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import '@measured/puck/puck.css';
+
+import { FormContent } from '@/features/forms/forms.schema';
+import { useFormCommon } from '@/features/forms/lib/use-form-common';
 import { useFormItem } from '@/features/forms/lib/use-form-item';
 import { config } from '@/features/puck/puck.config';
 
+import ActionsDropDownMenu from './ActionsDropdownMenu';
+
 export default function FormEditor() {
-  const { content, currentForm, onPublishForm, setContent, isLoading } =
-    useFormItem();
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+
+  const [isFormLoaded, setIsFormLoaded] = useState<boolean>(false);
+  const { content, currentForm, onSaveForm, setContent } = useFormItem();
+  const { onDelete, onTogglePublish, onCopy } = useFormCommon();
   const [isPreview, setIsPreview] = useState(false);
 
-  return isLoading ? (
+  const handleDelete = async () => {
+    await onDelete(id);
+    router.push('/dashboard');
+  };
+
+  useEffect(() => {
+    if (currentForm) setIsFormLoaded(true);
+  }, [currentForm]);
+
+  return !isFormLoaded ? (
     <div>...loading</div>
   ) : (
     <div className="p-6">
@@ -38,25 +59,43 @@ export default function FormEditor() {
         ) : (
           currentForm && (
             <Puck
-              key={`${currentForm?.id ?? 'new'}:${currentForm?.updatedAt ?? ''}`}
               config={config}
               data={currentForm.content}
-              onPublish={onPublishForm}
+              onPublish={onSaveForm}
               onChange={setContent}
               overrides={{
-                // Add a Preview button next to default Publish button
-                headerActions: ({ children }) => (
-                  <>
-                    {children}
-                    <button
-                      type="button"
-                      className="ml-2 rounded bg-gray-900 px-3 py-1 text-xs text-white"
-                      onClick={() => setIsPreview(true)}
-                    >
-                      Preview
-                    </button>
-                  </>
-                ),
+                headerActions: () => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const getPuck = useGetPuck();
+                  const { appState } = getPuck();
+
+                  return (
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="flex items-center justify-between gap-2">
+                        {currentForm.isPublished ? 'Publised' : 'Unpublished'}
+                        {currentForm.isPublished ? (
+                          <CheckCircleIcon
+                            className="text-emerald-600"
+                            size={32}
+                          />
+                        ) : (
+                          <MinusCircleIcon className="text-red-600" size={32} />
+                        )}
+                      </span>
+                      <ActionsDropDownMenu
+                        onPreview={() => setIsPreview(true)}
+                        onSave={async () =>
+                          await onSaveForm(appState.data as FormContent)
+                        }
+                        onTogglePublish={async () =>
+                          await onTogglePublish(id, !currentForm.isPublished)
+                        }
+                        onDelete={handleDelete}
+                        onCopy={async () => await onCopy(id)}
+                      />
+                    </div>
+                  );
+                },
               }}
             />
           )
