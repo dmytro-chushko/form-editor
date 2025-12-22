@@ -36,7 +36,15 @@ export default function FormEditor() {
   return !isFormLoaded ? (
     <div>...loading</div>
   ) : (
-    <div className="p-6">
+    <div
+      className="p-6 
+    [--puck-color-white:--background]
+    [--puck-color-black:--foreground]
+    [--puck-color-grey-09:var(--border)!important]
+    [--puck-color-grey-11:--accent]
+    [--puck-color-grey-12:--muted] 
+    "
+    >
       <h1 className="text-2xl font-semibold mb-4">Редактор форми</h1>
 
       <div className="border rounded shadow-sm">
@@ -72,7 +80,7 @@ export default function FormEditor() {
                   return (
                     <div className="flex items-center justify-between gap-2">
                       <span className="flex items-center justify-between gap-2">
-                        {currentForm.isPublished ? 'Publised' : 'Unpublished'}
+                        {currentForm.isPublished ? 'Published' : 'Unpublished'}
                         {currentForm.isPublished ? (
                           <CheckCircleIcon
                             className="text-emerald-600"
@@ -83,6 +91,7 @@ export default function FormEditor() {
                         )}
                       </span>
                       <ActionsDropDownMenu
+                        isPublish={currentForm.isPublished}
                         onPreview={() => setIsPreview(true)}
                         onSave={async () =>
                           await onSaveForm(appState.data as FormContent)

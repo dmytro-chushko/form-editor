@@ -9,19 +9,49 @@ import { cn } from '@/lib/utils';
 type Theme = 'light' | 'dark' | 'system';
 const STORAGE_KEY = 'theme';
 
-function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-
+function computeIsDark(theme: Theme) {
   if (theme === 'light') {
-    root.classList.remove('dark');
-  } else if (theme === 'dark') {
-    root.classList.add('dark');
-  } else {
-    const systemDark = window.matchMedia(
-      '(prefers-color-scheme: dark)'
-    ).matches;
-    root.classList.toggle('dark', systemDark);
+    return false;
   }
+
+  if (theme === 'dark') {
+    return true;
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+function applyThemeToPuckIframe(isDark: boolean) {
+  const frames = document.querySelectorAll<HTMLIFrameElement>(
+    '#preview-frame, iframe[data-rfd-iframe="true"]'
+  );
+
+  frames.forEach((frame) => {
+    const apply = () => {
+      try {
+        const doc = frame.contentDocument || frame.contentWindow?.document;
+
+        if (!doc) {
+          return;
+        }
+        doc.documentElement.classList.toggle('dark', isDark);
+      } catch {
+        // cross-origin, skip
+      }
+    };
+
+    if (frame.contentDocument?.readyState === 'complete') {
+      apply();
+    } else {
+      frame.addEventListener('load', apply, { once: true });
+    }
+  });
+}
+
+function applyTheme(theme: Theme) {
+  const isDark = computeIsDark(theme);
+  document.documentElement.classList.toggle('dark', isDark);
+  applyThemeToPuckIframe(isDark);
 }
 
 export function ThemeToggle() {
@@ -43,6 +73,14 @@ export function ThemeToggle() {
     mql.addEventListener?.('change', onChange);
 
     return () => mql.removeEventListener?.('change', onChange);
+  }, [theme]);
+
+  // Re-apply theme when Puck recreates its iframe (e.g., editor state changes)
+  useEffect(() => {
+    const mo = new MutationObserver(() => applyTheme(theme));
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => mo.disconnect();
   }, [theme]);
 
   function update(next: Theme) {
