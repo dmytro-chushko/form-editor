@@ -12,6 +12,7 @@ import {
 } from '../ui/dropdown-menu';
 
 interface ActionsDropdownMenuProps {
+  isPublish: boolean;
   onTogglePublish: () => void;
   onPreview: () => void;
   onSave: () => void;
@@ -20,6 +21,7 @@ interface ActionsDropdownMenuProps {
 }
 
 export default function ActionsDropDownMenu({
+  isPublish,
   onTogglePublish,
   onPreview,
   onSave,
@@ -36,8 +38,9 @@ export default function ActionsDropDownMenu({
       <DropdownMenuContent className="w-40" align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem onClick={onPreview}>Preview</DropdownMenuItem>
-        <DropdownMenuItem onClick={onTogglePublish}>Publish</DropdownMenuItem>
-        <DropdownMenuItem onClick={onTogglePublish}>Unpublish</DropdownMenuItem>
+        <DropdownMenuItem onClick={onTogglePublish}>
+          {isPublish ? 'Unpublish' : 'Publish'}
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={onSave}>Save</DropdownMenuItem>
         <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
         <DropdownMenuItem onClick={onCopy}>Copy</DropdownMenuItem>
