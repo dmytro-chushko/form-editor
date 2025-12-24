@@ -31,7 +31,7 @@ export function FormInputField({
 
   return (
     <FormField
-      control={form.control}
+      control={form?.control}
       name={name}
       render={({ field }) => (
         <FormItem>
