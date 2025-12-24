@@ -16,7 +16,9 @@ import PuckSelect from './components/PuckSelect';
 import PuckTextarea from './components/PuckTextarea';
 import { Components, RootProps } from './types';
 
-export const config: Config<Components, RootProps> = {
+export type PuckConfig = Config<Components, RootProps>;
+
+export const config: PuckConfig = {
   categories: {
     [PUCK_CATEGORIES.TextFields]: {
       components: ['Input', 'Textarea'],
