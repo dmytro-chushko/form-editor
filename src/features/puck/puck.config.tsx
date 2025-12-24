@@ -1,4 +1,5 @@
 import { Config } from '@measured/puck';
+import { nanoid } from 'nanoid';
 
 import { PUCK_CATEGORIES } from '../../lib/constants/puck-categories';
 import { cn } from '../../lib/utils';
@@ -42,6 +43,7 @@ export const config: PuckConfig = {
   components: {
     Input: {
       fields: {
+        name: { type: 'text' },
         label: { type: 'text' },
         placeholder: { type: 'text' },
         inputType: {
@@ -55,14 +57,16 @@ export const config: PuckConfig = {
         },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'Input',
         placeholder: 'Input',
         inputType: 'text',
       },
       inline: true,
-      render: ({ label, placeholder, puck }) => (
+      render: ({ name, label, placeholder, puck }) => (
         <PuckInput
           puckRef={puck.dragRef}
+          name={name}
           label={label}
           placeholder={placeholder}
         />
@@ -70,6 +74,7 @@ export const config: PuckConfig = {
     },
     Checkbox: {
       fields: {
+        name: { type: 'text' },
         label: { type: 'text' },
         checked: {
           type: 'radio',
@@ -80,12 +85,18 @@ export const config: PuckConfig = {
         },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'I agree',
         checked: false,
       },
       inline: true,
-      render: ({ label, checked, puck }) => (
-        <PuckCheckbox puckRef={puck.dragRef} label={label} checked={checked} />
+      render: ({ name, label, checked, puck }) => (
+        <PuckCheckbox
+          puckRef={puck.dragRef}
+          name={name}
+          label={label}
+          checked={checked}
+        />
       ),
     },
     Radio: {

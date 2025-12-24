@@ -27,7 +27,9 @@ export default function FormPreview({
         </button>
       </div>
       <div className="p-3">
-        <Render config={config} data={content} />
+        <form>
+          <Render config={config} data={content} />
+        </form>
       </div>
     </div>
   );

@@ -10,11 +10,13 @@ export type PuckRefType = ((element: Element | null) => void) | null;
 
 export type Components = {
   Input: {
+    name: string;
     label: string;
     placeholder: string;
     inputType: string;
   };
   Checkbox: {
+    name: string;
     label: string;
     checked: boolean;
   };
