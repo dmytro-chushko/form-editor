@@ -111,7 +111,7 @@ export const config: PuckConfig = {
       },
       defaultProps: {
         groupLabel: 'Choose one',
-        name: 'radio-group',
+        name: nanoid(),
         options: [
           { value: 'option_one', label: 'Option one' },
           { value: 'option_two', label: 'Option two' },
@@ -135,19 +135,25 @@ export const config: PuckConfig = {
     Textarea: {
       fields: {
         label: { type: 'text' },
+        name: { type: 'text' },
         placeholder: { type: 'text' },
         rows: { type: 'number' },
+        defaultValue: { type: 'text' },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'Textarea',
         placeholder: 'Some text...',
         rows: 3,
+        defaultValue: '',
       },
       inline: true,
-      render: ({ label, placeholder, rows, puck }) => (
+      render: ({ name, label, placeholder, defaultValue, rows, puck }) => (
         <PuckTextarea
           puckRef={puck.dragRef}
+          name={name}
           label={label}
+          defaultValue={defaultValue}
           placeholder={placeholder}
           rows={rows}
         />
@@ -156,22 +162,35 @@ export const config: PuckConfig = {
 
     Select: {
       fields: {
+        name: { type: 'text' },
         label: { type: 'text' },
+        placeholder: { type: 'text' },
         options: {
           type: 'array',
           arrayFields: { value: { type: 'text' }, label: { type: 'text' } },
         },
+        defaultValue: { type: 'text' },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'Select',
+        placeholder: 'Select value',
         options: [
           { value: 'option_a', label: 'Option A' },
           { value: 'option_b', label: 'Option B' },
         ],
+        defaultValue: '',
       },
       inline: true,
-      render: ({ label, options, puck }) => (
-        <PuckSelect puckRef={puck.dragRef} label={label} options={options} />
+      render: ({ name, label, options, defaultValue, placeholder, puck }) => (
+        <PuckSelect
+          puckRef={puck.dragRef}
+          name={name}
+          defaultValue={defaultValue}
+          label={label}
+          placeholder={placeholder}
+          options={options}
+        />
       ),
     },
     Flex: {
