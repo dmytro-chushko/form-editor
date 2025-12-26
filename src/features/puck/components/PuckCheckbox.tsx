@@ -1,33 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldLabel } from '@/components/ui/field';
 
 interface PuckCheckboxProps {
+  name: string;
   label: string;
   checked: boolean;
   puckRef: ((element: Element | null) => void) | null;
 }
 
 export default function PuckCheckbox({
+  name,
   label,
   checked,
   puckRef,
 }: PuckCheckboxProps) {
-  const [isChecked, setIsChecked] = useState(checked);
+  const { control, setValue } = useFormContext();
 
   useEffect(() => {
-    setIsChecked(checked);
-  }, [checked]);
+    setValue(name, checked);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div ref={puckRef} className="flex-1">
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          className="h-4 w-4"
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-        />
-        <span>{label}</span>
-      </label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <Field orientation="horizontal">
+            <Checkbox
+              id={field.name}
+              name={field.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+          </Field>
+        )}
+      />
     </div>
   );
 }

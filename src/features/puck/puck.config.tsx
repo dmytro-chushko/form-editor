@@ -1,4 +1,5 @@
 import { Config } from '@measured/puck';
+import { nanoid } from 'nanoid';
 
 import { PUCK_CATEGORIES } from '../../lib/constants/puck-categories';
 import { cn } from '../../lib/utils';
@@ -42,6 +43,7 @@ export const config: PuckConfig = {
   components: {
     Input: {
       fields: {
+        name: { type: 'text' },
         label: { type: 'text' },
         placeholder: { type: 'text' },
         inputType: {
@@ -55,14 +57,16 @@ export const config: PuckConfig = {
         },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'Input',
         placeholder: 'Input',
         inputType: 'text',
       },
       inline: true,
-      render: ({ label, placeholder, puck }) => (
+      render: ({ name, label, placeholder, puck }) => (
         <PuckInput
           puckRef={puck.dragRef}
+          name={name}
           label={label}
           placeholder={placeholder}
         />
@@ -70,6 +74,7 @@ export const config: PuckConfig = {
     },
     Checkbox: {
       fields: {
+        name: { type: 'text' },
         label: { type: 'text' },
         checked: {
           type: 'radio',
@@ -80,12 +85,18 @@ export const config: PuckConfig = {
         },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'I agree',
         checked: false,
       },
       inline: true,
-      render: ({ label, checked, puck }) => (
-        <PuckCheckbox puckRef={puck.dragRef} label={label} checked={checked} />
+      render: ({ name, label, checked, puck }) => (
+        <PuckCheckbox
+          puckRef={puck.dragRef}
+          name={name}
+          label={label}
+          checked={checked}
+        />
       ),
     },
     Radio: {
@@ -100,7 +111,7 @@ export const config: PuckConfig = {
       },
       defaultProps: {
         groupLabel: 'Choose one',
-        name: 'radio-group',
+        name: nanoid(),
         options: [
           { value: 'option_one', label: 'Option one' },
           { value: 'option_two', label: 'Option two' },
@@ -124,19 +135,25 @@ export const config: PuckConfig = {
     Textarea: {
       fields: {
         label: { type: 'text' },
+        name: { type: 'text' },
         placeholder: { type: 'text' },
         rows: { type: 'number' },
+        defaultValue: { type: 'text' },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'Textarea',
         placeholder: 'Some text...',
         rows: 3,
+        defaultValue: '',
       },
       inline: true,
-      render: ({ label, placeholder, rows, puck }) => (
+      render: ({ name, label, placeholder, defaultValue, rows, puck }) => (
         <PuckTextarea
           puckRef={puck.dragRef}
+          name={name}
           label={label}
+          defaultValue={defaultValue}
           placeholder={placeholder}
           rows={rows}
         />
@@ -145,22 +162,35 @@ export const config: PuckConfig = {
 
     Select: {
       fields: {
+        name: { type: 'text' },
         label: { type: 'text' },
+        placeholder: { type: 'text' },
         options: {
           type: 'array',
           arrayFields: { value: { type: 'text' }, label: { type: 'text' } },
         },
+        defaultValue: { type: 'text' },
       },
       defaultProps: {
+        name: nanoid(),
         label: 'Select',
+        placeholder: 'Select value',
         options: [
           { value: 'option_a', label: 'Option A' },
           { value: 'option_b', label: 'Option B' },
         ],
+        defaultValue: '',
       },
       inline: true,
-      render: ({ label, options, puck }) => (
-        <PuckSelect puckRef={puck.dragRef} label={label} options={options} />
+      render: ({ name, label, options, defaultValue, placeholder, puck }) => (
+        <PuckSelect
+          puckRef={puck.dragRef}
+          name={name}
+          defaultValue={defaultValue}
+          label={label}
+          placeholder={placeholder}
+          options={options}
+        />
       ),
     },
     Flex: {

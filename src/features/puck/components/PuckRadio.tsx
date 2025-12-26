@@ -1,3 +1,10 @@
+import { useEffect } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import { Field } from '@/components/ui/field';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
 interface PuckRadioProps {
   groupLabel: string;
   groupName: string;
@@ -13,25 +20,30 @@ export default function PuckRadio({
   selected,
   puckRef,
 }: PuckRadioProps) {
+  const { control, setValue } = useFormContext();
+
+  useEffect(() => {
+    setValue(groupName, selected);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div ref={puckRef} className="flex-1">
-      <fieldset className="">
-        <legend className="block font-medium mb-1">{groupLabel}</legend>
-        <div className="flex flex-col gap-2">
-          {options.map(({ value, label }) => (
-            <label key={value} className="inline-flex items-center gap-2">
-              <input
-                type="radio"
-                name={groupName}
-                value={value}
-                defaultChecked={value === selected}
-                className="h-4 w-4"
-              />
-              <span>{label}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    </div>
+    <Field ref={puckRef} orientation="vertical" className="flex-1">
+      <legend className="block font-medium mb-1">{groupLabel}</legend>
+      <Controller
+        name={groupName}
+        control={control}
+        render={({ field }) => (
+          <RadioGroup value={field.value} onValueChange={field.onChange}>
+            {options.map(({ value, label }) => (
+              <Field key={value} orientation="horizontal" className="gap-1">
+                <RadioGroupItem value={value} id={`${groupName}-${value}`} />
+                <Label htmlFor={`${groupName}-${value}`}>{label}</Label>
+              </Field>
+            ))}
+          </RadioGroup>
+        )}
+      />
+    </Field>
   );
 }

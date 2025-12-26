@@ -10,11 +10,13 @@ export type PuckRefType = ((element: Element | null) => void) | null;
 
 export type Components = {
   Input: {
+    name: string;
     label: string;
     placeholder: string;
     inputType: string;
   };
   Checkbox: {
+    name: string;
     label: string;
     checked: boolean;
   };
@@ -26,12 +28,17 @@ export type Components = {
   };
   Textarea: {
     label: string;
+    name: string;
+    defaultValue: string;
     placeholder: string;
     rows: number;
   };
   Select: {
+    name: string;
     label: string;
+    placeholder: string;
     options: { value: string; label: string }[];
+    defaultValue: string;
   };
   Flex: {
     direction: string;
