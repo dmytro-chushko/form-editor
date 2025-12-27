@@ -16,7 +16,7 @@ import {
   FormItemSchema,
   FormListResponse,
   UpdateFormSchema,
-} from './forms.schema';
+} from './model/forms.schema';
 
 export function useCreateForm() {
   const qc = useQueryClient();

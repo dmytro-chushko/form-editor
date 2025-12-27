@@ -79,6 +79,7 @@ export type Components = {
   };
 
   File: {
+    name: string;
     label: string;
   };
 };

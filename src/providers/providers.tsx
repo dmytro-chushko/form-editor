@@ -5,13 +5,15 @@ import { SessionProvider } from 'next-auth/react';
 import * as React from 'react';
 import { Toaster } from 'sonner';
 
+import { ModalProvider } from './modal-provider';
+
 export function Providers({ children }: { children: React.ReactNode }) {
   const [client] = React.useState(() => new QueryClient());
 
   return (
     <SessionProvider>
       <QueryClientProvider client={client}>
-        {children}
+        <ModalProvider>{children}</ModalProvider>
         <Toaster
           richColors
           closeButton

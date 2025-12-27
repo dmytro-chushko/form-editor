@@ -4,6 +4,7 @@ import { compare } from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+import { withErrors } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
 
 export const runtime = 'nodejs';
@@ -15,7 +16,7 @@ const SESSION_COOKIE_NAME =
 
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 днів — має збігатися з auth session.maxAge
 
-export const POST = async (req: Request) => {
+export const POST = withErrors(async (req: Request) => {
   const { email, password } = await req.json();
 
   if (!email || !password) {
@@ -64,4 +65,4 @@ export const POST = async (req: Request) => {
   });
 
   return NextResponse.json({ ok: true });
-};
+});
