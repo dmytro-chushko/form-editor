@@ -1,7 +1,9 @@
 import { Render } from '@measured/puck';
 
-import { FormContent } from '@/features/forms/forms.schema';
+import { FormContent } from '@/features/forms/model/forms.schema';
 import { PuckConfig } from '@/features/puck/puck.config';
+
+import { Button } from '../ui/button';
 
 interface FormPreviewProps {
   content: FormContent;
@@ -18,13 +20,9 @@ export default function FormPreview({
     <div className="relative">
       <div className="flex items-center justify-between border-b px-3 py-2">
         <div className="text-sm text-muted-foreground">Preview</div>
-        <button
-          type="button"
-          className="rounded bg-gray-900 px-3 py-1 text-xs text-white"
-          onClick={() => onClose(false)}
-        >
+        <Button type="button" onClick={() => onClose(false)}>
           Back to editor
-        </button>
+        </Button>
       </div>
       <div className="p-3">
         <form>

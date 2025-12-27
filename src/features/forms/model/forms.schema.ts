@@ -61,6 +61,12 @@ export const formItemSchema = z.object({
   updatedAt: z.date(),
 });
 
+export const sendFormSchema = z.object({
+  userEmail: z.email(),
+});
+
+export type SendFormSchema = z.infer<typeof sendFormSchema>;
+
 export type FormItemSchema = z.infer<typeof formItemSchema>;
 
 export const formListResponse = z.array(formItemSchema);

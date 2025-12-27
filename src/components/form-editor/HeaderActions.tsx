@@ -4,8 +4,11 @@ import { useGetPuck } from '@measured/puck';
 import { CheckCircleIcon, MinusCircleIcon } from '@phosphor-icons/react';
 import { useParams, useRouter } from 'next/navigation';
 
-import { FormContent, FormContentSchema } from '@/features/forms/forms.schema';
 import { useFormCommon } from '@/features/forms/lib/use-form-common';
+import {
+  FormContent,
+  FormContentSchema,
+} from '@/features/forms/model/forms.schema';
 
 import ActionsDropDownMenu from './ActionsDropdownMenu';
 

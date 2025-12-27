@@ -5,7 +5,7 @@ import { Session } from 'next-auth';
 import {
   formItemSchema,
   updateFormSchema,
-} from '@/features/forms/forms.schema';
+} from '@/features/forms/model/forms.schema';
 import { NotFoundError } from '@/lib/error/errors';
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';

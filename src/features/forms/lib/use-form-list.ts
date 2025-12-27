@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { formatErrorMessage } from '@/lib/utils';
 
 import { useGetFormList } from '../forms.api';
-import { FormListResponse } from '../forms.schema';
+import { FormListResponse } from '../model/forms.schema';
 
 interface UseFormList {
   formList?: FormListResponse;

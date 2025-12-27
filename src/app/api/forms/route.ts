@@ -6,7 +6,7 @@ import {
   createFormSchema,
   formItemSchema,
   formListResponse,
-} from '@/features/forms/forms.schema';
+} from '@/features/forms/model/forms.schema';
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
 

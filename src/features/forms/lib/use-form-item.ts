@@ -16,7 +16,7 @@ import {
   FormContentSchema,
   FormItemSchema,
   UpdateFormSchema,
-} from '../forms.schema';
+} from '../model/forms.schema';
 
 interface UseFormItem {
   currentForm?: FormItemSchema;

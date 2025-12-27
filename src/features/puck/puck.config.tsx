@@ -492,16 +492,18 @@ export const config: PuckConfig = {
     },
     File: {
       fields: {
+        name: { type: 'text' },
         label: {
           type: 'text',
         },
       },
       defaultProps: {
         label: 'Add file',
+        name: nanoid(),
       },
       inline: true,
-      render: ({ label, puck }) => (
-        <PuckFileBlock label={label} puckRef={puck.dragRef} />
+      render: ({ name, label, puck }) => (
+        <PuckFileBlock name={name} label={label} puckRef={puck.dragRef} />
       ),
     },
   },
