@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
 
+import { FormTokenSchema } from './model/form-token.schema';
 import {
   FormItemSchema,
   FormListResponse,
@@ -104,5 +105,26 @@ export function useCopyForm() {
       qc.invalidateQueries({ queryKey: qk.forms });
       toast.success('Form copied');
     },
+  });
+}
+export function useGetSharingLink() {
+  return useMutation({
+    mutationFn: (data: FormTokenSchema) =>
+      apiPost<{ shareFormLink: string; message?: string }>(
+        `/api/forms/sharing`,
+        data
+      ),
+    onSuccess: (data) => {
+      if (data.message) {
+        toast.success(data.message);
+      }
+    },
+  });
+}
+
+export function useGetSharedForm(token: string) {
+  return useQuery({
+    queryKey: qk.sharedForm(token),
+    queryFn: () => apiGet<FormListResponse>(`/api/shared-form?token=${token}`),
   });
 }

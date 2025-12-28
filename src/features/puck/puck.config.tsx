@@ -4,18 +4,18 @@ import { nanoid } from 'nanoid';
 import { PUCK_CATEGORIES } from '../../lib/constants/puck-categories';
 import { cn } from '../../lib/utils';
 
-import PuckButton from './components/PuckButton';
-import PuckCheckbox from './components/PuckCheckbox';
-import PuckContainer from './components/PuckContainer';
-import PuckFileBlock from './components/PuckFileBlock';
-import PuckFlex from './components/PuckFlex';
-import PuckHeading from './components/PuckHeading';
-import PuckInput from './components/PuckInput';
-import PuckParagraph from './components/PuckParagraph';
-import PuckRadio from './components/PuckRadio';
-import PuckSelect from './components/PuckSelect';
-import PuckTextarea from './components/PuckTextarea';
 import { Components, RootProps } from './types';
+import PuckButton from './ui/PuckButton';
+import PuckCheckbox from './ui/PuckCheckbox';
+import PuckContainer from './ui/PuckContainer';
+import PuckFileBlock from './ui/PuckFileBlock';
+import PuckFlex from './ui/PuckFlex';
+import PuckHeading from './ui/PuckHeading';
+import PuckInput from './ui/PuckInput';
+import PuckParagraph from './ui/PuckParagraph';
+import PuckRadio from './ui/PuckRadio';
+import PuckSelect from './ui/PuckSelect';
+import PuckTextarea from './ui/PuckTextarea';
 
 export type PuckConfig = Config<Components, RootProps>;
 

@@ -49,7 +49,7 @@ export default function HeaderActions({
         isPublish={isPublished}
         onPreview={onPreview}
         onSave={async () => await onSave(appState.data as FormContent)}
-        onTogglePublish={async () => await onTogglePublish(id, isPublished)}
+        onTogglePublish={async () => await onTogglePublish(id, !isPublished)}
         onDelete={handleDelete}
         onCopy={async () => await onCopy(id)}
       />

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -7,4 +8,44 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatErrorMessage(error: unknown, fallbackMessage: string) {
   return error instanceof Error ? error.message : fallbackMessage;
+}
+
+export function splitTimestamp(timeValue: number) {
+  const fullDate = new Date(timeValue);
+
+  const dateOnly = new Date(timeValue);
+  dateOnly.setHours(0, 0, 0, 0);
+
+  const hours = String(fullDate.getHours()).padStart(2, '0');
+  const minutes = String(fullDate.getMinutes()).padStart(2, '0');
+  const seconds = String(fullDate.getSeconds()).padStart(2, '0');
+
+  const timeString = `${hours}:${minutes}:${seconds}`;
+
+  return {
+    date: dateOnly,
+    time: timeString,
+  };
+}
+
+export function durationToMs(timeStr: string): number {
+  const timeArray = timeStr
+    .split(':')
+    .map(Number)
+    .filter((item) => item);
+
+  if (!timeArray.length) return 0;
+
+  const [hours, minutes, seconds] = timeArray;
+
+  return ((hours * 3600 || 0) + (minutes * 60 || 0) + (seconds || 0)) * 1000;
+}
+
+export async function copyToClipboard(body: string) {
+  try {
+    await navigator.clipboard.writeText(body);
+    toast.success('Link copied to clipboard!');
+  } catch {
+    toast.error('Could not copy');
+  }
 }
