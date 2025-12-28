@@ -22,3 +22,15 @@ export async function sendPasswordResetEmail(email: string, resetUrl: string) {
     html: `Click <a href="${resetUrl}">here</a> to reset your password. The link will expire in 30 minutes.`,
   });
 }
+
+export async function sendSharedFormLink(
+  email: string,
+  sharedFormLink: string
+) {
+  await resend.emails.send({
+    from: 'onboarding@resend.dev',
+    to: email,
+    subject: 'Submit the form',
+    html: `Click <a href="${sharedFormLink}">here</a> to fill and submit form.`,
+  });
+}
