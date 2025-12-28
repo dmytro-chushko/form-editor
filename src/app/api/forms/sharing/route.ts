@@ -57,12 +57,15 @@ export const POST = withErrors(async (req: NextRequest) => {
     },
   });
 
-  const shareFormLink = `${process.env.NEXTAUTH_URL}/api/forms/sharing?token=${token}`;
+  const shareFormLink = `${process.env.NEXTAUTH_URL}/shared-form?token=${token}`;
 
   if (userEmail) {
     await sendSharedFormLink(userEmail, shareFormLink);
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      shareFormLink,
+      message: `Link sent to the ${userEmail}`,
+    });
   }
 
   return NextResponse.json({ shareFormLink });

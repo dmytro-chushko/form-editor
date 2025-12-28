@@ -62,7 +62,8 @@ export const formItemSchema = z.object({
 });
 
 export const sendFormSchema = z.object({
-  userEmail: z.email(),
+  userEmail: z.email().optional(),
+  expiresAt: z.number(),
 });
 
 export type SendFormSchema = z.infer<typeof sendFormSchema>;

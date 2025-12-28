@@ -3,9 +3,19 @@ import { toast } from 'sonner';
 
 import { formatErrorMessage } from '@/lib/utils';
 
-import { useCopyForm, useDeleteForm, useTogglePublish } from '../forms.api';
+import {
+  useCopyForm,
+  useDeleteForm,
+  useGetSharingLink,
+  useTogglePublish,
+} from '../forms.api';
+import { FormTokenSchema } from '../model/form-token.schema';
 
 interface UseFormCommonProps {
+  getSharingLink: (data: FormTokenSchema) => Promise<{
+    shareFormLink: string;
+    message?: string;
+  }>;
   onDelete: (id: string) => Promise<void>;
   onTogglePublish: (id: string, isPublished: boolean) => Promise<void>;
   onCopy: (id: string) => Promise<void>;
@@ -31,6 +41,12 @@ export function useFormCommon(): UseFormCommonProps {
     isError: isCopyFormError,
     error: copyFormError,
   } = useCopyForm();
+  const {
+    mutateAsync: getSharingLink,
+    isPending: isSharingLinkPending,
+    isError: isSharingLinkError,
+    error: sharingLinkError,
+  } = useGetSharingLink();
 
   useEffect(() => {
     if (isDeleteFormError && deleteFormError) {
@@ -59,6 +75,15 @@ export function useFormCommon(): UseFormCommonProps {
         ),
       });
     }
+
+    if (isSharingLinkError && sharingLinkError) {
+      toast.error('Error sharing form link', {
+        description: formatErrorMessage(
+          copyFormError,
+          'Faild to get sharing form link'
+        ),
+      });
+    }
   }, [
     isDeleteFormError,
     deleteFormError,
@@ -66,6 +91,8 @@ export function useFormCommon(): UseFormCommonProps {
     togglePublishError,
     isCopyFormError,
     copyFormError,
+    isSharingLinkError,
+    sharingLinkError,
   ]);
 
   const onDelete = useCallback(
@@ -93,10 +120,14 @@ export function useFormCommon(): UseFormCommonProps {
   );
 
   return {
+    getSharingLink,
     onDelete,
     onTogglePublish,
     onCopy,
     isLoading:
-      isDeleteFormPending || isTogglePublishPending || isCopyFormPending,
+      isDeleteFormPending ||
+      isTogglePublishPending ||
+      isCopyFormPending ||
+      isSharingLinkPending,
   };
 }

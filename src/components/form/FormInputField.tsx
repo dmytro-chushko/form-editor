@@ -18,6 +18,7 @@ type Props = {
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
   autoComplete?: string;
+  disabled: boolean;
 };
 
 export function FormInputField({
@@ -26,6 +27,7 @@ export function FormInputField({
   placeholder,
   type = 'text',
   autoComplete,
+  disabled,
 }: Props) {
   const form = useFormContext();
 
@@ -42,6 +44,7 @@ export function FormInputField({
               type={type}
               placeholder={placeholder}
               autoComplete={autoComplete}
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />
