@@ -62,8 +62,14 @@ export const formItemSchema = z.object({
 });
 
 export const sendFormSchema = z.object({
-  userEmail: z.email().optional(),
-  expiresAt: z.number(),
+  userEmail: z.email().trim().or(z.literal('')).optional(),
+  expiresAt: z
+    .number()
+    .int()
+    .min(Date.now(), { message: 'Only a further date' })
+    .max(Date.now() + 1000 * 60 * 60 * 24 * 365, {
+      message: 'Not more than 1 year',
+    }),
 });
 
 export type SendFormSchema = z.infer<typeof sendFormSchema>;

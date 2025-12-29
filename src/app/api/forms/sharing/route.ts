@@ -25,7 +25,10 @@ export const GET = withErrors(async (req: NextRequest) => {
     throw new BadRequestError(validatedToken.error || 'Invalid token');
   }
 
-  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const tokenHash = crypto
+    .createHash('sha256')
+    .update(encodeURIComponent(token))
+    .digest('hex');
 
   const formLink = await prisma.formLink.findUnique({
     where: { tokenHash },

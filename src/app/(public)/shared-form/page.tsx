@@ -1,3 +1,5 @@
+import { SharedFormLayout } from '@/components/shared-form/shared-form-layout';
+
 export default function SharedFormPage() {
-  return <div>Page</div>;
+  return <SharedFormLayout />;
 }
