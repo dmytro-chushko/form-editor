@@ -6,7 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
@@ -122,9 +122,12 @@ export function useGetSharingLink() {
   });
 }
 
-export function useGetSharedForm(token: string) {
+export function useGetFormByToken() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token') || '';
+
   return useQuery({
     queryKey: qk.sharedForm(token),
-    queryFn: () => apiGet<FormListResponse>(`/api/shared-form?token=${token}`),
+    queryFn: () => apiGet<FormItemSchema>(`/api/forms/sharing?token=${token}`),
   });
 }
