@@ -55,20 +55,47 @@ export const config: PuckConfig = {
             { label: 'E-mail', value: 'email' },
           ],
         },
+        validation: {
+          type: 'object',
+          objectFields: {
+            required: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+            maxLength: { type: 'number' },
+            minLength: { type: 'number' },
+            min: { type: 'number' },
+            max: { type: 'number' },
+            email: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+          },
+        },
       },
       defaultProps: {
         name: nanoid(),
         label: 'Input',
         placeholder: 'Input',
         inputType: 'text',
+        validation: {
+          required: false,
+        },
       },
       inline: true,
-      render: ({ name, label, placeholder, puck }) => (
+      render: ({ name, label, placeholder, validation, puck }) => (
         <PuckInput
           puckRef={puck.dragRef}
           name={name}
           label={label}
           placeholder={placeholder}
+          validation={validation}
         />
       ),
     },
@@ -83,19 +110,35 @@ export const config: PuckConfig = {
             { label: 'False', value: false },
           ],
         },
+        validation: {
+          type: 'object',
+          objectFields: {
+            required: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+          },
+        },
       },
       defaultProps: {
         name: nanoid(),
         label: 'I agree',
         checked: false,
+        validation: {
+          required: false,
+        },
       },
       inline: true,
-      render: ({ name, label, checked, puck }) => (
+      render: ({ name, label, checked, validation, puck }) => (
         <PuckCheckbox
           puckRef={puck.dragRef}
           name={name}
           label={label}
           checked={checked}
+          validation={validation}
         />
       ),
     },
@@ -108,6 +151,18 @@ export const config: PuckConfig = {
           arrayFields: { value: { type: 'text' }, label: { type: 'text' } },
         },
         selected: { type: 'text' },
+        validation: {
+          type: 'object',
+          objectFields: {
+            required: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+          },
+        },
       },
       defaultProps: {
         groupLabel: 'Choose one',
@@ -117,9 +172,12 @@ export const config: PuckConfig = {
           { value: 'option_two', label: 'Option two' },
         ],
         selected: 'Option A',
+        validation: {
+          required: false,
+        },
       },
       inline: true,
-      render: ({ groupLabel, name, options, selected, puck }) => {
+      render: ({ groupLabel, name, options, selected, validation, puck }) => {
         return (
           <PuckRadio
             puckRef={puck.dragRef}
@@ -127,6 +185,7 @@ export const config: PuckConfig = {
             groupName={name}
             options={options}
             selected={selected}
+            validation={validation}
           />
         );
       },
@@ -139,6 +198,20 @@ export const config: PuckConfig = {
         placeholder: { type: 'text' },
         rows: { type: 'number' },
         defaultValue: { type: 'text' },
+        validation: {
+          type: 'object',
+          objectFields: {
+            required: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+            maxLength: { type: 'number' },
+            minLength: { type: 'number' },
+          },
+        },
       },
       defaultProps: {
         name: nanoid(),
@@ -146,9 +219,20 @@ export const config: PuckConfig = {
         placeholder: 'Some text...',
         rows: 3,
         defaultValue: '',
+        validation: {
+          required: false,
+        },
       },
       inline: true,
-      render: ({ name, label, placeholder, defaultValue, rows, puck }) => (
+      render: ({
+        name,
+        label,
+        placeholder,
+        defaultValue,
+        validation,
+        rows,
+        puck,
+      }) => (
         <PuckTextarea
           puckRef={puck.dragRef}
           name={name}
@@ -156,6 +240,7 @@ export const config: PuckConfig = {
           defaultValue={defaultValue}
           placeholder={placeholder}
           rows={rows}
+          validation={validation}
         />
       ),
     },
@@ -170,6 +255,18 @@ export const config: PuckConfig = {
           arrayFields: { value: { type: 'text' }, label: { type: 'text' } },
         },
         defaultValue: { type: 'text' },
+        validation: {
+          type: 'object',
+          objectFields: {
+            required: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+          },
+        },
       },
       defaultProps: {
         name: nanoid(),
@@ -180,9 +277,20 @@ export const config: PuckConfig = {
           { value: 'option_b', label: 'Option B' },
         ],
         defaultValue: '',
+        validation: {
+          required: false,
+        },
       },
       inline: true,
-      render: ({ name, label, options, defaultValue, placeholder, puck }) => (
+      render: ({
+        name,
+        label,
+        options,
+        defaultValue,
+        placeholder,
+        validation,
+        puck,
+      }) => (
         <PuckSelect
           puckRef={puck.dragRef}
           name={name}
@@ -190,6 +298,7 @@ export const config: PuckConfig = {
           label={label}
           placeholder={placeholder}
           options={options}
+          validation={validation}
         />
       ),
     },
@@ -496,14 +605,34 @@ export const config: PuckConfig = {
         label: {
           type: 'text',
         },
+        validation: {
+          type: 'object',
+          objectFields: {
+            required: {
+              type: 'radio',
+              options: [
+                { label: 'True', value: true },
+                { label: 'False', value: false },
+              ],
+            },
+          },
+        },
       },
       defaultProps: {
         label: 'Add file',
         name: nanoid(),
+        validation: {
+          required: false,
+        },
       },
       inline: true,
-      render: ({ name, label, puck }) => (
-        <PuckFileBlock name={name} label={label} puckRef={puck.dragRef} />
+      render: ({ name, label, validation, puck }) => (
+        <PuckFileBlock
+          name={name}
+          label={label}
+          puckRef={puck.dragRef}
+          validation={validation}
+        />
       ),
     },
   },
@@ -517,7 +646,7 @@ export const config: PuckConfig = {
       },
     },
     render: ({ children }) => {
-      return <div className="h-full bg-background">{children}</div>;
+      return <div className="bg-background">{children}</div>;
     },
   },
 };
