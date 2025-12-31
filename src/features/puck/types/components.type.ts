@@ -8,23 +8,35 @@ export type HeadingTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
 export type BlockPaddings = 'p-0' | 'p-2' | 'p-4' | 'p-6' | 'p-8';
 export type PuckRefType = ((element: Element | null) => void) | null;
 
+export type ValidationField = {
+  required: boolean;
+  maxLength?: number;
+  minLength?: number;
+  min?: number;
+  max?: number;
+  email?: boolean;
+};
+
 export type Components = {
   Input: {
     name: string;
     label: string;
     placeholder: string;
     inputType: string;
+    validation: ValidationField;
   };
   Checkbox: {
     name: string;
     label: string;
     checked: boolean;
+    validation: ValidationField;
   };
   Radio: {
     groupLabel: string;
     name: string;
     options: { value: string; label: string }[];
     selected: string;
+    validation: ValidationField;
   };
   Textarea: {
     label: string;
@@ -32,6 +44,7 @@ export type Components = {
     defaultValue: string;
     placeholder: string;
     rows: number;
+    validation: ValidationField;
   };
   Select: {
     name: string;
@@ -39,6 +52,7 @@ export type Components = {
     placeholder: string;
     options: { value: string; label: string }[];
     defaultValue: string;
+    validation: ValidationField;
   };
   Flex: {
     direction: string;
@@ -46,7 +60,6 @@ export type Components = {
     justify: string;
     align: string;
     wrap: false;
-    // In render this becomes SlotComponent, but in defaultProps it's ComponentData[]
     content?: SlotComponent | ComponentData[];
   };
   Container: {
@@ -54,7 +67,6 @@ export type Components = {
     align: ContainerAlign;
     gap: string;
     padding: string;
-    // In render this becomes SlotComponent, but in defaultProps it's ComponentData[]
     content?: SlotComponent | ComponentData[];
   };
   Heading: {
@@ -81,5 +93,6 @@ export type Components = {
   File: {
     name: string;
     label: string;
+    validation: ValidationField;
   };
 };

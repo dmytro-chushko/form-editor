@@ -10,18 +10,16 @@ import { Form } from '../ui/form';
 
 export function SharedFormLayout() {
   const { form, sharedForm, isLoading } = useFormByToken();
+  console.warn(form.formState);
 
   return isLoading && !sharedForm ? (
     <div>...loading</div>
   ) : (
     <Field className="gap-4 container mx-auto">
       <div className="relative">
-        <div className="flex items-center justify-between border-b px-3 py-2">
-          <div className="text-sm text-muted-foreground">Preview</div>
-        </div>
         <div className="p-3">
           <Form {...form}>
-            <form>
+            <form onSubmit={form.handleSubmit((data) => console.warn(data))}>
               {sharedForm && (
                 <Render config={config} data={sharedForm.content} />
               )}

@@ -1,9 +1,17 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { Field } from '@/components/ui/field';
-import { Label } from '@/components/ui/label';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
+import { ValidationField } from '../types';
 
 interface PuckRadioProps {
   groupLabel: string;
@@ -11,6 +19,7 @@ interface PuckRadioProps {
   options: { value: string; label: string }[];
   selected: string;
   puckRef: ((element: Element | null) => void) | null;
+  validation: ValidationField;
 }
 
 export default function PuckRadio({
@@ -19,8 +28,9 @@ export default function PuckRadio({
   options,
   selected,
   puckRef,
+  validation,
 }: PuckRadioProps) {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, formState } = useFormContext();
 
   useEffect(() => {
     setValue(groupName, selected);
@@ -29,19 +39,38 @@ export default function PuckRadio({
 
   return (
     <Field ref={puckRef} orientation="vertical" className="flex-1">
-      <legend className="block font-medium mb-1">{groupLabel}</legend>
-      <Controller
+      <FormField
         name={groupName}
         control={control}
+        rules={validation}
         render={({ field }) => (
-          <RadioGroup value={field.value} onValueChange={field.onChange}>
-            {options.map(({ value, label }) => (
-              <Field key={value} orientation="horizontal" className="gap-1">
-                <RadioGroupItem value={value} id={`${groupName}-${value}`} />
-                <Label htmlFor={`${groupName}-${value}`}>{label}</Label>
-              </Field>
-            ))}
-          </RadioGroup>
+          <FormItem>
+            <FormLabel className="block font-medium mb-1">
+              {groupLabel}
+            </FormLabel>
+            <FormControl>
+              <RadioGroup
+                value={field.value}
+                onValueChange={field.onChange}
+                aria-invalid={!!formState.errors?.[groupName]}
+              >
+                {options.map(({ value, label }) => (
+                  <Field key={value} orientation="horizontal" className="gap-1">
+                    <RadioGroupItem
+                      value={value}
+                      id={`${groupName}-${value}`}
+                      aria-invalid={!!formState.errors?.[groupName]}
+                    />
+                    <FormLabel htmlFor={`${groupName}-${value}`}>
+                      {label}
+                    </FormLabel>
+                  </Field>
+                ))}
+              </RadioGroup>
+            </FormControl>
+
+            <FormMessage />
+          </FormItem>
         )}
       />
     </Field>

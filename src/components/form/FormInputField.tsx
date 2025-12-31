@@ -1,7 +1,7 @@
 'use client';
 
 import { HTMLInputTypeAttribute } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, ValidationRule } from 'react-hook-form';
 
 import {
   FormControl,
@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { ValidationField } from '@/features/puck/types';
 
 type Props = {
   name: string;
@@ -18,7 +19,8 @@ type Props = {
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
   autoComplete?: string;
-  disabled: boolean;
+  disabled?: boolean;
+  validation?: ValidationField & { pattern?: ValidationRule<RegExp> };
 };
 
 export function FormInputField({
@@ -27,6 +29,7 @@ export function FormInputField({
   placeholder,
   type = 'text',
   autoComplete,
+  validation,
   disabled,
 }: Props) {
   const form = useFormContext();
@@ -35,6 +38,7 @@ export function FormInputField({
     <FormField
       control={form?.control}
       name={name}
+      rules={validation}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>

@@ -1,8 +1,16 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
-import { FieldLabel } from '@/components/ui/field';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+
+import { ValidationField } from '../types';
 
 interface PuckTextareaProps {
   label: string;
@@ -11,6 +19,7 @@ interface PuckTextareaProps {
   defaultValue: string;
   name: string;
   puckRef: ((element: Element | null) => void) | null;
+  validation: ValidationField;
 }
 
 export default function PuckTextarea({
@@ -20,6 +29,7 @@ export default function PuckTextarea({
   puckRef,
   defaultValue,
   name,
+  validation,
 }: PuckTextareaProps) {
   const { control, setValue } = useFormContext();
 
@@ -30,18 +40,24 @@ export default function PuckTextarea({
 
   return (
     <div ref={puckRef} className="flex-1">
-      <FieldLabel>{label}</FieldLabel>
-      <Controller
+      <FormField
         name={name}
         control={control}
+        rules={validation}
         render={({ field }) => (
-          <Textarea
-            {...field}
-            id="form-rhf-textarea-about"
-            placeholder={placeholder}
-            rows={rows}
-            className="min-h-[120px] w-full px-3 py-2"
-          />
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <Textarea
+                {...field}
+                id="form-rhf-textarea-about"
+                placeholder={placeholder}
+                rows={rows}
+                className="min-h-[120px] w-full px-3 py-2"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
     </div>

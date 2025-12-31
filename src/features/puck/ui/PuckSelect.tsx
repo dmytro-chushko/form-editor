@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
-import { FieldLabel } from '@/components/ui/field';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -10,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { ValidationField } from '../types';
+
 interface PuckSelectProps {
   name: string;
   label: string;
@@ -17,6 +25,7 @@ interface PuckSelectProps {
   defaultValue: string;
   options: { value: string; label: string }[];
   puckRef: ((element: Element | null) => void) | null;
+  validation: ValidationField;
 }
 
 export default function PuckSelect({
@@ -26,8 +35,9 @@ export default function PuckSelect({
   defaultValue,
   placeholder,
   options,
+  validation,
 }: PuckSelectProps) {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, formState } = useFormContext();
 
   useEffect(() => {
     setValue(name, defaultValue);
@@ -36,27 +46,37 @@ export default function PuckSelect({
 
   return (
     <div ref={puckRef} className="flex-1">
-      <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <Controller
+      <FormField
         name={name}
         control={control}
+        rules={validation}
         render={({ field }) => (
-          <Select
-            name={field.name}
-            value={field.value}
-            onValueChange={field.onChange}
-          >
-            <SelectTrigger id={name} className="min-w-[120px]">
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map(({ value, label }) => (
-                <SelectItem key={`${name}-${value}`} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <FormItem>
+            <FormLabel htmlFor={name}>{label}</FormLabel>
+            <FormControl>
+              <Select
+                name={field.name}
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <SelectTrigger
+                  id={name}
+                  className="min-w-[120px]"
+                  aria-invalid={!!formState?.errors?.[name]}
+                >
+                  <SelectValue placeholder={placeholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map(({ value, label }) => (
+                    <SelectItem key={`${name}-${value}`} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
       />
     </div>
