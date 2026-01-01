@@ -33,7 +33,12 @@ export default function PuckHeading({
   const Comp = tag || 'h1';
 
   return (
-    <div ref={puckRef} className="flex-1">
+    <div
+      ref={puckRef}
+      className="flex-1"
+      onKeyDownCapture={(e) => e.stopPropagation()}
+      onKeyUpCapture={(e) => e.stopPropagation()}
+    >
       <Comp className={cn(align, variants[tag], weight)}>{headingText}</Comp>
     </div>
   );

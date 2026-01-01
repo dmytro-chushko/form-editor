@@ -4,13 +4,20 @@ import { Render } from '@measured/puck';
 
 import { useFormByToken } from '@/features/forms/lib/use-form-by-token';
 import { config } from '@/features/puck/puck.config';
+import { formatErrorMessage } from '@/lib/utils';
 
 import { Field } from '../ui/field';
 import { Form } from '../ui/form';
+import { LoadError } from '../ui/load-error';
 
 export function SharedFormLayout() {
-  const { form, sharedForm, isLoading } = useFormByToken();
-  console.warn(form.formState);
+  const { form, sharedForm, isLoading, isError, error } = useFormByToken();
+
+  if (isError) {
+    return (
+      <LoadError message={formatErrorMessage(error, 'Failed to load form')} />
+    );
+  }
 
   return isLoading && !sharedForm ? (
     <div>...loading</div>

@@ -1,3 +1,5 @@
+import { useFormContext } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -18,6 +20,8 @@ export default function PuckButton({
   buttonText,
   puckRef,
 }: PuckButtonProps) {
+  const { reset } = useFormContext();
+
   return (
     <div ref={puckRef} className={cn(fullWidth && 'flex-1')}>
       <Button
@@ -25,6 +29,7 @@ export default function PuckButton({
         type={buttonType}
         variant={variant}
         size={size}
+        {...(buttonType === 'button' && { onClick: () => reset() })}
       >
         {buttonText}
       </Button>

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 
+import { addMessages } from '../lib/add-messages';
 import { ValidationField } from '../types';
 
 interface PuckTextareaProps {
@@ -39,11 +40,16 @@ export default function PuckTextarea({
   }, []);
 
   return (
-    <div ref={puckRef} className="flex-1">
+    <div
+      ref={puckRef}
+      className="flex-1"
+      onKeyDownCapture={(e) => e.stopPropagation()}
+      onKeyUpCapture={(e) => e.stopPropagation()}
+    >
       <FormField
         name={name}
         control={control}
-        rules={validation}
+        rules={addMessages(validation)}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{label}</FormLabel>

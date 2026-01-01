@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { addMessages } from '../lib/add-messages';
 import { ValidationField } from '../types';
 
 interface PuckSelectProps {
@@ -45,18 +46,23 @@ export default function PuckSelect({
   }, []);
 
   return (
-    <div ref={puckRef} className="flex-1">
+    <div
+      ref={puckRef}
+      className="flex-1"
+      onKeyDownCapture={(e) => e.stopPropagation()}
+      onKeyUpCapture={(e) => e.stopPropagation()}
+    >
       <FormField
         name={name}
         control={control}
-        rules={validation}
+        rules={addMessages(validation)}
         render={({ field }) => (
           <FormItem>
             <FormLabel htmlFor={name}>{label}</FormLabel>
             <FormControl>
               <Select
                 name={field.name}
-                value={field.value}
+                value={field.value || ''}
                 onValueChange={field.onChange}
               >
                 <SelectTrigger

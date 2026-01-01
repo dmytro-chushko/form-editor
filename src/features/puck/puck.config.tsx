@@ -1,9 +1,9 @@
 import { Config } from '@measured/puck';
 import { nanoid } from 'nanoid';
 
-import { PUCK_CATEGORIES } from '../../lib/constants/puck-categories';
 import { cn } from '../../lib/utils';
 
+import { PUCK_CATEGORIES } from './model/puck-categories';
 import { Components, RootProps } from './types';
 import PuckButton from './ui/PuckButton';
 import PuckCheckbox from './ui/PuckCheckbox';
@@ -565,7 +565,7 @@ export const config: PuckConfig = {
           label: 'type',
           options: [
             { label: 'Submit', value: 'submit' },
-            { label: 'Button', value: 'button' },
+            { label: 'Reset', value: 'button' },
           ],
         },
         buttonText: {

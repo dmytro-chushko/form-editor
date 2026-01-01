@@ -1,5 +1,7 @@
 import { ComponentData, SlotComponent } from '@measured/puck';
 
+import { ValidationField } from './field-validation';
+
 export type ContainerAlign = 'mr-auto' | 'mx-auto' | 'ml-auto';
 export type ContainerWidth = 'w-full' | 'w-1/4' | 'w-1/2' | 'w-3/4';
 export type TextAlign = 'text-left' | 'text-center' | 'text-right';
@@ -7,15 +9,6 @@ export type TextWeight = 'font-normal' | 'font-semibold' | 'font-bold';
 export type HeadingTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
 export type BlockPaddings = 'p-0' | 'p-2' | 'p-4' | 'p-6' | 'p-8';
 export type PuckRefType = ((element: Element | null) => void) | null;
-
-export type ValidationField = {
-  required: boolean;
-  maxLength?: number;
-  minLength?: number;
-  min?: number;
-  max?: number;
-  email?: boolean;
-};
 
 export type Components = {
   Input: {

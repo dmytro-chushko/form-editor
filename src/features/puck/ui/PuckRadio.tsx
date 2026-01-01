@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
+import { addMessages } from '../lib/add-messages';
 import { ValidationField } from '../types';
 
 interface PuckRadioProps {
@@ -33,7 +34,7 @@ export default function PuckRadio({
   const { control, setValue, formState } = useFormContext();
 
   useEffect(() => {
-    setValue(groupName, selected);
+    setValue(groupName, selected || '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,7 +43,7 @@ export default function PuckRadio({
       <FormField
         name={groupName}
         control={control}
-        rules={validation}
+        rules={addMessages(validation)}
         render={({ field }) => (
           <FormItem>
             <FormLabel className="block font-medium mb-1">
@@ -50,7 +51,7 @@ export default function PuckRadio({
             </FormLabel>
             <FormControl>
               <RadioGroup
-                value={field.value}
+                value={field.value || ''}
                 onValueChange={field.onChange}
                 aria-invalid={!!formState.errors?.[groupName]}
               >
