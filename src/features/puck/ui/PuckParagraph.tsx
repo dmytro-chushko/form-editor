@@ -23,7 +23,12 @@ export default function PuckParagraph({
   puckRef,
 }: PuckParagraphProps) {
   return (
-    <div ref={puckRef} className="flex-1">
+    <div
+      ref={puckRef}
+      className="flex-1"
+      onKeyDownCapture={(e) => e.stopPropagation()}
+      onKeyUpCapture={(e) => e.stopPropagation()}
+    >
       <p className={cn(align, weight, padding)}>{paragraphText}</p>
     </div>
   );

@@ -1,5 +1,7 @@
 import { FormInputField } from '@/components/form/FormInputField';
 
+import { addMessages } from '../lib/add-messages';
+import { convertEmailValidation } from '../lib/comvert-emal-validation';
 import { ValidationField } from '../types';
 
 interface PuckInputProps {
@@ -18,17 +20,17 @@ export default function PuckInput({
   placeholder,
 }: PuckInputProps) {
   return (
-    <div ref={puckRef} className="flex-1">
+    <div
+      ref={puckRef}
+      className="flex-1"
+      onKeyDownCapture={(e) => e.stopPropagation()}
+      onKeyUpCapture={(e) => e.stopPropagation()}
+    >
       <FormInputField
         name={name}
         label={label}
         placeholder={placeholder}
-        validation={{
-          ...validation,
-          ...(validation?.email && {
-            pattern: /^[a-zA-Z0-0._%+-]+@[a-zA-Z0-0.-]+\.[a-zA-Z]{2,}$/,
-          }),
-        }}
+        validation={convertEmailValidation(addMessages(validation))}
       />
     </div>
   );

@@ -10,7 +10,9 @@ export async function apiPost<T>(url: string, body?: unknown): Promise<T> {
     try {
       const data = await res.json();
       message = data?.error || message;
-    } catch {}
+    } catch {
+      throw new Error(message);
+    }
     throw new Error(message);
   }
 
@@ -21,7 +23,14 @@ export async function apiGet<T>(url: string): Promise<T> {
   const res = await fetch(url, { method: 'GET' });
 
   if (!res.ok) {
-    throw new Error('Request failed');
+    let message = 'Request failed';
+    try {
+      const data = await res.json();
+      message = data?.error || message;
+    } catch {
+      throw new Error(message);
+    }
+    throw new Error(message);
   }
 
   return res.json();
@@ -39,7 +48,9 @@ export async function apiPatch<T>(url: string, body?: unknown): Promise<T> {
     try {
       const data = await res.json();
       message = data?.error || message;
-    } catch {}
+    } catch {
+      throw new Error(message);
+    }
     throw new Error(message);
   }
 
@@ -57,7 +68,9 @@ export async function apiDelete<T>(url: string): Promise<T> {
     try {
       const data = await res.json();
       message = data?.error || message;
-    } catch {}
+    } catch {
+      throw new Error(message);
+    }
     throw new Error(message);
   }
 

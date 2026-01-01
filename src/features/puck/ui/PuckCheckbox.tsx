@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldLabel } from '@/components/ui/field';
-import { FormItem, FormMessage } from '@/components/ui/form';
+import { Field } from '@/components/ui/field';
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 
+import { addMessages } from '../lib/add-messages';
 import { ValidationField } from '../types';
 
 interface PuckCheckboxProps {
@@ -31,20 +37,20 @@ export default function PuckCheckbox({
 
   return (
     <div ref={puckRef} className="flex-1">
-      <Controller
+      <FormField
         name={name}
         control={control}
-        rules={validation}
+        rules={addMessages(validation)}
         render={({ field }) => (
           <FormItem>
             <Field orientation="horizontal">
               <Checkbox
                 id={field.name}
                 name={field.name}
-                checked={field.value}
+                checked={field.value || false}
                 onCheckedChange={field.onChange}
               />
-              <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+              <FormLabel htmlFor={field.name}>{label}</FormLabel>
             </Field>
             <FormMessage />
           </FormItem>

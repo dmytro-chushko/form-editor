@@ -1,4 +1,5 @@
 import { Render } from '@measured/puck';
+import { useFormContext } from 'react-hook-form';
 
 import { FormContent } from '@/features/forms/model/forms.schema';
 import { PuckConfig } from '@/features/puck/puck.config';
@@ -16,6 +17,8 @@ export default function FormPreview({
   config,
   onClose,
 }: FormPreviewProps) {
+  const { handleSubmit } = useFormContext();
+
   return (
     <div className="relative">
       <div className="flex items-center justify-between border-b px-3 py-2">
@@ -25,7 +28,7 @@ export default function FormPreview({
         </Button>
       </div>
       <div className="p-3">
-        <form>
+        <form onSubmit={handleSubmit((data) => console.warn(data))}>
           <Render config={config} data={content} />
         </form>
       </div>

@@ -32,7 +32,6 @@ export function useSendFormModal() {
       });
 
       if (response.message) {
-        toast.success(response.message);
         handleClose();
 
         return;

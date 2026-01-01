@@ -1,15 +1,21 @@
 'use client';
 
 import { FileArrowUpIcon } from '@phosphor-icons/react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
-import { FormControl, FormItem, FormMessage } from '@/components/ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useAddFile } from '@/features/forms/lib/use-upload-file';
 
+import { addMessages } from '../lib/add-messages';
 import { ValidationField } from '../types';
 
 interface PuckFileBlockProps {
@@ -31,14 +37,14 @@ export default function PuckFileBlock({
 
   return (
     <div ref={puckRef} className="flex-1">
-      <Controller
+      <FormField
         name={name}
         control={control}
-        rules={validation}
+        rules={addMessages(validation)}
         render={({ field }) => (
           <Field>
             <FormItem>
-              <Label htmlFor={name}>{label}</Label>
+              <FormLabel htmlFor={name}>{label}</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-2 bg-foreground  rounded-md text-background p-2 justify-between w-full">
                   <Input
