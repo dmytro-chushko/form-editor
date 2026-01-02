@@ -1,20 +1,19 @@
-import { NextResponse } from 'next/server';
+import { nanoid } from 'nanoid';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { withAuth } from '@/lib/error/http';
+import { withValidToken } from '@/lib/error/http';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
-
-export const runtime = 'nodejs';
 
 const BUCKET = process.env.SUPABASE_BUCKET || 'dev-dc-portfolio-bucket';
 
-export const POST = withAuth(async (req, { session }) => {
+export const POST = withValidToken(async (req: NextRequest) => {
   const { filename, contentType, directory } = (await req.json()) as {
     filename?: string;
     contentType?: string;
     directory?: string;
   };
 
-  if (!filename || !contentType || !contentType.startsWith('image/')) {
+  if (!filename || !contentType || !directory) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
@@ -22,7 +21,7 @@ export const POST = withAuth(async (req, { session }) => {
 
   // sanitize filename to avoid path traversal
   const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const objectPath = `${directory || 'avatars'}/${session.user.id}-${Date.now()}-${safeName}`;
+  const objectPath = `${directory}/${nanoid()}-${Date.now()}-${safeName}`;
 
   const { data, error } = await supabase.storage
     .from(BUCKET)

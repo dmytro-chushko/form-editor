@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import {
@@ -38,12 +37,7 @@ export default function PuckSelect({
   options,
   validation,
 }: PuckSelectProps) {
-  const { control, setValue, formState } = useFormContext();
-
-  useEffect(() => {
-    setValue(name, defaultValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { control, formState } = useFormContext();
 
   return (
     <div
@@ -56,6 +50,7 @@ export default function PuckSelect({
         name={name}
         control={control}
         rules={addMessages(validation)}
+        defaultValue={defaultValue}
         render={({ field }) => (
           <FormItem>
             <FormLabel htmlFor={name}>{label}</FormLabel>

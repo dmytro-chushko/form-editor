@@ -1,11 +1,16 @@
+import crypto from 'crypto';
+
 import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
 import { ZodError } from 'zod';
 
-import { auth } from '../auth';
+import { validateToken } from '@/features/forms/lib/token-utils';
 
-import { AppError, UnauthorizedError } from './errors';
+import { auth } from '../auth';
+import prisma from '../prisma';
+
+import { AppError, BadRequestError, UnauthorizedError } from './errors';
 
 export type Handler<T = unknown> = (
   req: NextRequest,
@@ -110,5 +115,36 @@ export function withAuth<T = unknown>(handler: HandlerWithAuth<T>) {
     }
 
     return handler(req, ctx, { session });
+  });
+}
+
+export function withValidToken(handler: Handler): Handler {
+  return withErrors(async (req: NextRequest, ctx: any) => {
+    const { searchParams } = new URL(req.url);
+
+    const token = searchParams.get('token');
+
+    if (!token) {
+      throw new BadRequestError('Invalid token');
+    }
+
+    const validatedToken = validateToken(token);
+
+    if (!validatedToken.valid) {
+      throw new BadRequestError(validatedToken.error || 'Invalid token');
+    }
+
+    const tokenHash = crypto
+      .createHash('sha256')
+      .update(encodeURIComponent(token))
+      .digest('hex');
+
+    const formLink = await prisma.formLink.findUnique({ where: { tokenHash } });
+
+    if (!formLink) {
+      throw new BadRequestError(validatedToken.error || 'Invalid token');
+    }
+
+    return handler(req, ctx);
   });
 }

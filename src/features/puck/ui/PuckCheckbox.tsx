@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Checkbox } from '@/components/ui/checkbox';
@@ -28,12 +27,7 @@ export default function PuckCheckbox({
   puckRef,
   validation,
 }: PuckCheckboxProps) {
-  const { control, setValue } = useFormContext();
-
-  useEffect(() => {
-    setValue(name, checked);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { control } = useFormContext();
 
   return (
     <div ref={puckRef} className="flex-1">
@@ -41,6 +35,7 @@ export default function PuckCheckbox({
         name={name}
         control={control}
         rules={addMessages(validation)}
+        defaultValue={checked}
         render={({ field }) => (
           <FormItem>
             <Field orientation="horizontal">
