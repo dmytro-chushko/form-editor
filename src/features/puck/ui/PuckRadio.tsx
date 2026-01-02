@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Field } from '@/components/ui/field';
@@ -31,12 +30,7 @@ export default function PuckRadio({
   puckRef,
   validation,
 }: PuckRadioProps) {
-  const { control, setValue, formState } = useFormContext();
-
-  useEffect(() => {
-    setValue(groupName, selected || '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { control, formState } = useFormContext();
 
   return (
     <Field ref={puckRef} orientation="vertical" className="flex-1">
@@ -44,6 +38,7 @@ export default function PuckRadio({
         name={groupName}
         control={control}
         rules={addMessages(validation)}
+        defaultValue={selected}
         render={({ field }) => (
           <FormItem>
             <FormLabel className="block font-medium mb-1">

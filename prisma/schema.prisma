@@ -97,17 +97,18 @@ model EmailChange {
 }
 
 model Form {
-  id          String   @id @default(cuid())
-  userId      String
-  title       String
-  description String?
-  content     Json     // тут зберігаємо JSON від Puck
-  isPublished Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  title           String
+  description     String?
+  content         Json     // тут зберігаємо JSON від Puck
+  isPublished     Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  formLink    FormLink[]
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  formLink        FormLink[]
+  formSubmissions FormSubmissions[]
 
   @@index([userId])
   @@unique([id, userId])
@@ -124,4 +125,18 @@ model FormLink {
 
   @@index([tokenHash])
   @@map("form_link")
+}
+
+model FormSubmissions {
+  id            String  @id @default(cuid())
+  formId        String
+  userEmail     String
+  content       Json
+  submitted_at  DateTime
+
+  form          Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([userEmail])
+  @@index([submitted_at])
+  @@map("form_submissions")
 }

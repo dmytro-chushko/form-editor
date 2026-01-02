@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import {
@@ -32,12 +31,7 @@ export default function PuckTextarea({
   name,
   validation,
 }: PuckTextareaProps) {
-  const { control, setValue } = useFormContext();
-
-  useEffect(() => {
-    setValue(name, defaultValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { control } = useFormContext();
 
   return (
     <div
@@ -50,6 +44,7 @@ export default function PuckTextarea({
         name={name}
         control={control}
         rules={addMessages(validation)}
+        defaultValue={defaultValue}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{label}</FormLabel>

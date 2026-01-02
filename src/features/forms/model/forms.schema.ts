@@ -72,6 +72,13 @@ export const sendFormSchema = z.object({
     }),
 });
 
+export const submittedFormPayloadSchema = z.object({
+  formId: z.string(),
+  userEmail: z.email().trim(),
+  content: z.record(z.string(), z.string()),
+  submittedAt: z.string(),
+});
+
 export type SendFormSchema = z.infer<typeof sendFormSchema>;
 
 export type FormItemSchema = z.infer<typeof formItemSchema>;
@@ -79,3 +86,5 @@ export type FormItemSchema = z.infer<typeof formItemSchema>;
 export const formListResponse = z.array(formItemSchema);
 
 export type FormListResponse = z.infer<typeof formListResponse>;
+
+export type SubmittedFormPayload = z.infer<typeof submittedFormPayloadSchema>;

@@ -49,12 +49,11 @@ export default function PuckFileBlock({
                 <div className="flex items-center gap-2 bg-foreground  rounded-md text-background p-2 justify-between w-full">
                   <Input
                     ref={inputRef}
-                    value={field.value}
                     type="file"
                     hidden
                     onChange={(e) => {
                       handleAddFile(e);
-                      field.onChange(field.value);
+                      field.onChange(e.target.files?.[0] ?? null);
                     }}
                   />
                   <div>{addedFileName}</div>

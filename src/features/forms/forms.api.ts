@@ -16,6 +16,7 @@ import { FormTokenSchema } from './model/form-token.schema';
 import {
   FormItemSchema,
   FormListResponse,
+  SubmittedFormPayload,
   UpdateFormSchema,
 } from './model/forms.schema';
 
@@ -129,5 +130,37 @@ export function useGetFormByToken() {
   return useQuery({
     queryKey: qk.sharedForm(token),
     queryFn: () => apiGet<FormItemSchema>(`/api/forms/sharing?token=${token}`),
+  });
+}
+
+export function useFileUploadUrlMutation() {
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get('token');
+
+  return useMutation({
+    mutationFn: (data: {
+      fileName: string;
+      contentType: string;
+      directory: string;
+    }) =>
+      apiPost<{ uploadUrl: string; objectPath: string; url?: string }>(
+        `/api/forms/sharing/upload-url?token=${token}`,
+        data
+      ),
+  });
+}
+
+export function useSubmitSharedForm() {
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get('token');
+
+  return useMutation({
+    mutationFn: (data: SubmittedFormPayload) =>
+      apiPost<{ ok: boolean }>(
+        `/api/forms/sharing/submit-data?token=${token}`,
+        data
+      ),
   });
 }
