@@ -1,8 +1,10 @@
 'use client';
 
 import { Render } from '@measured/puck';
+import { useEffect } from 'react';
 
 import { useFormByToken } from '@/features/forms/lib/use-form-by-token';
+import { useFormSubmit } from '@/features/forms/lib/use-form-submit';
 import { addMessages } from '@/features/puck/lib/add-messages';
 import { convertEmailValidation } from '@/features/puck/lib/comvert-emal-validation';
 import { config } from '@/features/puck/puck.config';
@@ -15,6 +17,13 @@ import { LoadError } from '../ui/load-error';
 
 export function SharedFormLayout() {
   const { form, sharedForm, isLoading, isError, error } = useFormByToken();
+  const { onSubmit, isSubmitting } = useFormSubmit();
+
+  useEffect(() => {
+    document
+      .querySelectorAll('button')
+      .forEach((item) => item.disabled === isSubmitting);
+  }, [isSubmitting]);
 
   if (isError) {
     return (
@@ -29,7 +38,7 @@ export function SharedFormLayout() {
       <div className="relative">
         <div className="p-3">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit((data) => console.warn(data))}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col">
                 <div className="self-center">
                   <FormInputField
@@ -45,7 +54,6 @@ export function SharedFormLayout() {
                     )}
                   />
                 </div>
-
                 {sharedForm && (
                   <Render config={config} data={sharedForm.content} />
                 )}

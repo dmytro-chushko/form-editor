@@ -7,6 +7,7 @@ import { fileUploadRequestSchema } from '../model/form-file-uppload.schema';
 export function useAddFile() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [addedFileName, setAddedFileName] = useState<string>('file-name');
+  const [isFileUploading, setIsFileUploading] = useState(false);
   const { mutateAsync: getUrl, isPending } = useFileUploadUrlMutation();
 
   const handleOpenPicker = useCallback(() => {
@@ -26,6 +27,8 @@ export function useAddFile() {
 
         return;
       }
+
+      setIsFileUploading(true);
 
       try {
         const validatedFileData = fileUploadRequestSchema.parse({
@@ -50,7 +53,9 @@ export function useAddFile() {
 
         return url || objectPath;
       } catch (err: any) {
-        toast.error(err?.message || 'Failed to update avatar');
+        toast.error(err?.message || 'Failed to upload file');
+      } finally {
+        setIsFileUploading(false);
       }
     },
     [getUrl]
@@ -62,6 +67,6 @@ export function useAddFile() {
     addedFileName,
     handleAddFile,
     uploadFile,
-    isFileUploading: isPending,
+    isFileUploading: isPending || isFileUploading,
   };
 }

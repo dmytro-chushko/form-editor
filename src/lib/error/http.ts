@@ -118,7 +118,15 @@ export function withAuth<T = unknown>(handler: HandlerWithAuth<T>) {
   });
 }
 
-export function withValidToken(handler: Handler): Handler {
+type HandlerWithTokenPayload<T = unknown> = (
+  req: NextRequest,
+  ctx: any,
+  tokenPayload: { formId: string }
+) => Promise<Response | NextResponse<T>>;
+
+export function withValidToken<T = unknown>(
+  handler: HandlerWithTokenPayload<T>
+): Handler {
   return withErrors(async (req: NextRequest, ctx: any) => {
     const { searchParams } = new URL(req.url);
 
@@ -145,6 +153,6 @@ export function withValidToken(handler: Handler): Handler {
       throw new BadRequestError(validatedToken.error || 'Invalid token');
     }
 
-    return handler(req, ctx);
+    return handler(req, ctx, { formId: formLink.formId });
   });
 }
