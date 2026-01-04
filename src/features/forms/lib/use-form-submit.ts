@@ -55,7 +55,7 @@ export function useFormSubmit() {
         content: restOfPayload,
       });
 
-      if (res.ok) router.replace('/shared-form/confirm', {});
+      if (res.ok) router.replace('/shared-form/confirm');
     },
     [router, submitForm, uploadFile]
   );

@@ -5,7 +5,7 @@ import { withValidToken } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
 
 export const POST = withValidToken(
-  async (req: NextRequest, _ctx, { formId }) => {
+  async (req: NextRequest, _ctx, { formId, tokenHash }) => {
     const payload = await req.json();
 
     const validatedPayload = submittedFormPayloadSchema.parse(payload);
@@ -17,6 +17,8 @@ export const POST = withValidToken(
         submitted_at: new Date(),
       },
     });
+
+    await prisma.formLink.delete({ where: { tokenHash } });
 
     return NextResponse.json({ ok: true });
   }

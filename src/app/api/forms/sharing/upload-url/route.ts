@@ -7,20 +7,20 @@ import { getSupabaseAdmin } from '@/lib/supabase/server';
 const BUCKET = process.env.SUPABASE_BUCKET || 'dev-dc-portfolio-bucket';
 
 export const POST = withValidToken(async (req: NextRequest) => {
-  const { filename, contentType, directory } = (await req.json()) as {
-    filename?: string;
+  const { fileName, contentType, directory } = (await req.json()) as {
+    fileName?: string;
     contentType?: string;
     directory?: string;
   };
 
-  if (!filename || !contentType || !directory) {
+  if (!fileName || !contentType || !directory) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
   const supabase = getSupabaseAdmin();
 
   // sanitize filename to avoid path traversal
-  const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
   const objectPath = `${directory}/${nanoid()}-${Date.now()}-${safeName}`;
 
   const { data, error } = await supabase.storage

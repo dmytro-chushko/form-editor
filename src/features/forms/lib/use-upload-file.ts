@@ -32,7 +32,7 @@ export function useAddFile() {
 
       try {
         const validatedFileData = fileUploadRequestSchema.parse({
-          filename: file.name,
+          fileName: file.name,
           contentType: file.type,
           directory: 'form-files',
         });

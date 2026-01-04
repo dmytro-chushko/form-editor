@@ -121,7 +121,7 @@ export function withAuth<T = unknown>(handler: HandlerWithAuth<T>) {
 type HandlerWithTokenPayload<T = unknown> = (
   req: NextRequest,
   ctx: any,
-  tokenPayload: { formId: string }
+  tokenPayload: { formId: string; tokenHash: string }
 ) => Promise<Response | NextResponse<T>>;
 
 export function withValidToken<T = unknown>(
@@ -153,6 +153,6 @@ export function withValidToken<T = unknown>(
       throw new BadRequestError(validatedToken.error || 'Invalid token');
     }
 
-    return handler(req, ctx, { formId: formLink.formId });
+    return handler(req, ctx, { formId: formLink.formId, tokenHash });
   });
 }
