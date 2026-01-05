@@ -77,6 +77,13 @@ export const submittedFormPayloadSchema = z.object({
   content: z.record(z.string(), z.any()),
 });
 
+export const submittedFormResSchema = submittedFormPayloadSchema.extend({
+  id: z.string(),
+  formId: z.string(),
+});
+
+export const savedProgressResSchema = submittedFormPayloadSchema.extend({});
+
 export type SendFormSchema = z.infer<typeof sendFormSchema>;
 
 export type FormItemSchema = z.infer<typeof formItemSchema>;

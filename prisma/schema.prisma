@@ -124,6 +124,7 @@ model FormLink {
   form       Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
 
   @@index([tokenHash])
+  
   @@map("form_link")
 }
 
@@ -132,11 +133,13 @@ model FormSubmissions {
   formId        String
   userEmail     String
   content       Json
-  submitted_at  DateTime
+  submitted_at  DateTime?
 
   form          Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
 
   @@index([userEmail])
   @@index([submitted_at])
+  @@index([formId, userEmail])
+  @@unique([formId, userEmail])
   @@map("form_submissions")
 }
