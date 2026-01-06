@@ -49,3 +49,37 @@ export async function copyToClipboard(body: string) {
     toast.error('Could not copy');
   }
 }
+
+const isFile = (v: unknown): v is File =>
+  typeof File !== 'undefined' && v instanceof File;
+
+const isFileList = (v: unknown): v is FileList =>
+  typeof FileList !== 'undefined' && v instanceof FileList;
+
+const isPlainObject = (v: unknown): v is Record<string, unknown> =>
+  !!v &&
+  typeof v === 'object' &&
+  !Array.isArray(v) &&
+  !isFile(v) &&
+  !isFileList(v) &&
+  !(v instanceof Date);
+
+const containsFileDeep = (v: unknown): boolean => {
+  if (isFile(v) || isFileList(v)) return true;
+
+  if (Array.isArray(v)) return v.some(containsFileDeep);
+
+  if (isPlainObject(v)) return Object.values(v).some(containsFileDeep);
+
+  return false;
+};
+
+export function stripFileFields<T extends Record<string, unknown>>(
+  values: T
+): Partial<T> {
+  return Object.entries(values).reduce<Partial<T>>((acc, [key, val]) => {
+    if (!containsFileDeep(val)) acc[key as keyof T] = val as T[keyof T];
+
+    return acc;
+  }, {});
+}

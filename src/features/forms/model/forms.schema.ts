@@ -77,10 +77,12 @@ export const submittedFormPayloadSchema = z.object({
   content: z.record(z.string(), z.any()),
 });
 
-export const submittedFormResSchema = submittedFormPayloadSchema.extend({
-  id: z.string(),
-  formId: z.string(),
-});
+export const submittedFormResSchema = submittedFormPayloadSchema
+  .extend({
+    id: z.string(),
+    formId: z.string(),
+  })
+  .nullable();
 
 export const savedProgressResSchema = submittedFormPayloadSchema.extend({});
 
@@ -93,3 +95,5 @@ export const formListResponse = z.array(formItemSchema);
 export type FormListResponse = z.infer<typeof formListResponse>;
 
 export type SubmittedFormPayload = z.infer<typeof submittedFormPayloadSchema>;
+
+export type ProgressFormResponse = z.infer<typeof submittedFormResSchema>;

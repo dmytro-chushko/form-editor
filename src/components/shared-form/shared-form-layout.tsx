@@ -11,12 +11,21 @@ import { config } from '@/features/puck/puck.config';
 import { formatErrorMessage } from '@/lib/utils';
 
 import { FormInputField } from '../form/FormInputField';
+import { Button } from '../ui/button';
 import { Field } from '../ui/field';
 import { Form } from '../ui/form';
 import { LoadError } from '../ui/load-error';
 
 export function SharedFormLayout() {
-  const { form, sharedForm, isLoading, isError, error } = useFormByToken();
+  const {
+    form,
+    email,
+    sharedForm,
+    onSaveProgress,
+    isLoading,
+    isFormError,
+    formError,
+  } = useFormByToken();
   const { onSubmit, isSubmitting } = useFormSubmit();
 
   useEffect(() => {
@@ -25,9 +34,11 @@ export function SharedFormLayout() {
       .forEach((item) => item.disabled === isSubmitting);
   }, [isSubmitting]);
 
-  if (isError) {
+  if (isFormError) {
     return (
-      <LoadError message={formatErrorMessage(error, 'Failed to load form')} />
+      <LoadError
+        message={formatErrorMessage(formError, 'Failed to load form')}
+      />
     );
   }
 
@@ -41,18 +52,27 @@ export function SharedFormLayout() {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col">
                 <div className="self-center">
-                  <FormInputField
-                    name="recepientEmail"
-                    label="Your Email"
-                    placeholder="Input your email"
-                    autoComplete="email"
-                    validation={convertEmailValidation(
-                      addMessages({
-                        required: true,
-                        email: true,
-                      })
-                    )}
-                  />
+                  <Field orientation="horizontal">
+                    <FormInputField
+                      name="recepientEmail"
+                      label="Your Email"
+                      placeholder="Input your email"
+                      autoComplete="email"
+                      validation={convertEmailValidation(
+                        addMessages({
+                          required: true,
+                          email: true,
+                        })
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      disabled={!email}
+                      onClick={onSaveProgress}
+                    >
+                      Save progress
+                    </Button>
+                  </Field>
                 </div>
                 {sharedForm && (
                   <Render config={config} data={sharedForm.content} />

@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
+import z from 'zod';
 
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
@@ -16,6 +17,7 @@ import { FormTokenSchema } from './model/form-token.schema';
 import {
   FormItemSchema,
   FormListResponse,
+  ProgressFormResponse,
   SubmittedFormPayload,
   UpdateFormSchema,
 } from './model/forms.schema';
@@ -162,5 +164,46 @@ export function useSubmitSharedForm() {
         `/api/forms/sharing/submit-data?token=${token}`,
         data
       ),
+  });
+}
+
+const isValidEmail = (email?: string) => {
+  try {
+    Boolean(z.email().parse(email));
+  } catch {
+    return false;
+  }
+};
+
+export function useGetFormProgressByToken(email?: string) {
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token') || '';
+
+  return useQuery({
+    queryKey: qk.formProgress(token),
+    queryFn: () =>
+      apiGet<ProgressFormResponse>(
+        `/api/forms/sharing/progress/${email}?token=${token}`
+      ),
+    enabled: Boolean(token && isValidEmail(email)),
+  });
+}
+
+export function useSaveFormProgress() {
+  const qc = useQueryClient();
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get('token') || '';
+
+  return useMutation({
+    mutationFn: (data: SubmittedFormPayload) =>
+      apiPost<ProgressFormResponse>(
+        `/api/forms/sharing/progress/${data.userEmail}?token=${token}`,
+        data
+      ),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: qk.formProgress(token) });
+      toast.success('Form progress saved');
+    },
   });
 }
