@@ -10,10 +10,18 @@ export const POST = withValidToken(
 
     const validatedPayload = submittedFormPayloadSchema.parse(payload);
 
-    await prisma.formSubmissions.create({
-      data: {
+    await prisma.formSubmissions.upsert({
+      where: {
+        formId_userEmail: { formId, userEmail: validatedPayload.userEmail },
+      },
+
+      create: {
         ...validatedPayload,
         formId,
+        submitted_at: new Date(),
+      },
+      update: {
+        ...validatedPayload,
         submitted_at: new Date(),
       },
     });
