@@ -10,23 +10,22 @@ export const POST = withValidToken(
 
     const validatedPayload = submittedFormPayloadSchema.parse(payload);
 
-    await prisma.formSubmissions.upsert({
-      where: {
-        formId_userEmail: { formId, userEmail: validatedPayload.userEmail },
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.formSubmissions.create({
+        data: {
+          ...validatedPayload,
+          formId,
+          submitted_at: new Date(),
+        },
+      });
 
-      create: {
-        ...validatedPayload,
-        formId,
-        submitted_at: new Date(),
-      },
-      update: {
-        ...validatedPayload,
-        submitted_at: new Date(),
-      },
+      await tx.formLink.delete({ where: { tokenHash } });
+      await tx.formProgress.delete({
+        where: {
+          formId_userEmail: { formId, userEmail: validatedPayload.userEmail },
+        },
+      });
     });
-
-    await prisma.formLink.delete({ where: { tokenHash } });
 
     return NextResponse.json({ ok: true });
   }

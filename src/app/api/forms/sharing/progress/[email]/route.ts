@@ -15,7 +15,7 @@ export const GET = withValidToken(
   ) => {
     const { email } = await ctx.params;
 
-    const progress = await prisma.formSubmissions.findUnique({
+    const progress = await prisma.formProgress.findUnique({
       where: {
         formId_userEmail: { formId, userEmail: email },
       },
@@ -34,14 +34,14 @@ export const PUT = withValidToken(
     { formId }
   ) => {
     const { email } = await ctx.params;
-    const payload = req.json();
+    const payload = await req.json();
 
     const validatedPayload = submittedFormPayloadSchema.parse({
       userEmail: email,
-      content: payload,
+      content: payload.content,
     });
 
-    const progress = await prisma.formSubmissions.upsert({
+    const progress = await prisma.formProgress.upsert({
       where: {
         formId_userEmail: { formId, userEmail: email },
       },

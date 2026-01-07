@@ -10,7 +10,13 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import z from 'zod';
 
-import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api/apiClient';
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+  apiPut,
+} from '@/lib/api/apiClient';
 import { queryKeys as qk } from '@/lib/api/queryKeys';
 
 import { FormTokenSchema } from './model/form-token.schema';
@@ -197,7 +203,7 @@ export function useSaveFormProgress() {
 
   return useMutation({
     mutationFn: (data: SubmittedFormPayload) =>
-      apiPost<ProgressFormResponse>(
+      apiPut<ProgressFormResponse>(
         `/api/forms/sharing/progress/${data.userEmail}?token=${token}`,
         data
       ),
