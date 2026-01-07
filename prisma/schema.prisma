@@ -109,6 +109,7 @@ model Form {
   user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
   formLink        FormLink[]
   formSubmissions FormSubmissions[]
+  formProgress    FormProgress[]
 
   @@index([userId])
   @@unique([id, userId])
@@ -142,4 +143,18 @@ model FormSubmissions {
   @@index([formId, userEmail])
   @@unique([formId, userEmail])
   @@map("form_submissions")
+}
+
+model FormProgress {
+  id            String  @id @default(cuid())
+  formId        String
+  userEmail     String
+  content       Json
+
+  form          Form    @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([userEmail])
+  @@index([formId, userEmail])
+  @@unique([formId, userEmail])
+  @@map("form_progress")
 }

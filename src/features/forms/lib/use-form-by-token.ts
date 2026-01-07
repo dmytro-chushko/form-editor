@@ -26,6 +26,8 @@ export function useFormByToken() {
     isLoading: isProgressLoading,
     isError: isProgressError,
     error: progressError,
+    isSuccess: isProgressUploaded,
+    refetch,
   } = useGetFormProgressByToken(email);
   const {
     mutateAsync: saveProgress,
@@ -42,7 +44,10 @@ export function useFormByToken() {
       content,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [email]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onUploadProgress = useCallback(() => refetch(), []);
 
   useEffect(() => {
     if (formProgress) {
@@ -52,7 +57,7 @@ export function useFormByToken() {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formProgress]);
+  }, [formProgress, isProgressUploaded]);
 
   useEffect(() => {
     if (isFormError && formError) {
@@ -87,11 +92,17 @@ export function useFormByToken() {
     saveProgressError,
   ]);
 
+  useEffect(() => {
+    if (isProgressUploaded && !formProgress)
+      toast.error('There is no saved progress');
+  }, [isProgressUploaded, formProgress]);
+
   return {
     email,
     form,
     sharedForm,
     formProgress,
+    onUploadProgress,
     onSaveProgress,
     isLoading: isFormLoading || isProgressLoading || isPending,
     isFormError,

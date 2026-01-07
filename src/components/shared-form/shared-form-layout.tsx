@@ -1,6 +1,7 @@
 'use client';
 
 import { Render } from '@measured/puck';
+import { DownloadSimpleIcon } from '@phosphor-icons/react';
 import { useEffect } from 'react';
 
 import { useFormByToken } from '@/features/forms/lib/use-form-by-token';
@@ -25,6 +26,7 @@ export function SharedFormLayout() {
     isLoading,
     isFormError,
     formError,
+    onUploadProgress,
   } = useFormByToken();
   const { onSubmit, isSubmitting } = useFormSubmit();
 
@@ -52,7 +54,7 @@ export function SharedFormLayout() {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col">
                 <div className="self-center">
-                  <Field orientation="horizontal">
+                  <Field orientation="horizontal" className="items-end">
                     <FormInputField
                       name="recepientEmail"
                       label="Your Email"
@@ -67,10 +69,19 @@ export function SharedFormLayout() {
                     />
                     <Button
                       type="button"
-                      disabled={!email}
+                      disabled={!email || !form.formState.isDirty || isLoading}
+                      loading={isLoading}
                       onClick={onSaveProgress}
                     >
                       Save progress
+                    </Button>
+                    <Button
+                      type="button"
+                      disabled={!email || isLoading}
+                      loading={isLoading}
+                      onClick={onUploadProgress}
+                    >
+                      <DownloadSimpleIcon size={32} className="size-6" />
                     </Button>
                   </Field>
                 </div>
