@@ -6,4 +6,6 @@ export const queryKeys = {
   form: (id: string) => ['form', id] as const,
   formProgress: (token: string) => ['form-progress', token] as const,
   sharedForm: (token: string) => ['shared-form', token] as const,
+  overview: (page: number, pageSize: number) =>
+    ['results', 'overview', { page, pageSize }] as const,
 };
