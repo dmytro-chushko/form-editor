@@ -8,4 +8,6 @@ export const queryKeys = {
   sharedForm: (token: string) => ['shared-form', token] as const,
   overview: (page: number, pageSize: number) =>
     ['results', 'overview', { page, pageSize }] as const,
+  formResults: (formId: string, params: Record<string, unknown>) =>
+    ['results', 'form', formId, params] as const,
 };
