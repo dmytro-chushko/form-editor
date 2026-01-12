@@ -139,21 +139,20 @@ export function DataTable<TData, TValue>({
   );
 }
 
-interface DataTablePaginationProps<TData> {
+interface DataTablePaginationProps {
   pageSize: number;
   totalCount: number;
   pageIndex: number;
   setPageIndex: (pageIndex: number) => void;
 }
 
-function DataTablePagination<TData>({
+function DataTablePagination({
   pageSize,
   totalCount,
   pageIndex,
   setPageIndex,
-}: DataTablePaginationProps<TData>) {
-  // pageIndex is 0-based in DataTable, but we display 1-based pages
-  const currentPage = pageIndex + 1;
+}: DataTablePaginationProps) {
+  const currentPage = pageIndex;
   const totalPages = Math.ceil(totalCount / pageSize);
   const pages: (number | string)[] = [];
   const maxVisible = 7;
@@ -184,8 +183,8 @@ function DataTablePagination<TData>({
         <PaginationContent className="gap-1">
           <Button
             variant="outline"
-            onClick={() => setPageIndex(0)}
-            disabled={pageIndex === 0}
+            onClick={() => setPageIndex(1)}
+            disabled={pageIndex === 1}
             className="w-20"
           >
             <ChevronsLeft className="size-7" />
@@ -193,7 +192,7 @@ function DataTablePagination<TData>({
           <Button
             variant="outline"
             onClick={() => setPageIndex(pageIndex - 1)}
-            disabled={pageIndex === 0}
+            disabled={pageIndex === 1}
             className="w-20"
           >
             <ChevronLeft className="size-7" />
@@ -206,12 +205,13 @@ function DataTablePagination<TData>({
               <Button
                 key={page}
                 variant="outline"
-                onClick={() => setPageIndex((page as number) - 1)}
+                onClick={() => setPageIndex(page as number)}
                 className={
                   currentPage === page
-                    ? 'bg-neutral-100 text-neutral-900 w-20'
+                    ? 'bg-neutral-100 w-20'
                     : 'w-20 text-neutral-600'
                 }
+                disabled={currentPage === page}
               >
                 {page}
               </Button>
@@ -221,7 +221,7 @@ function DataTablePagination<TData>({
           <Button
             variant="outline"
             onClick={() => setPageIndex(pageIndex + 1)}
-            disabled={pageIndex >= totalPages - 1}
+            disabled={pageIndex > totalPages - 1}
             className="w-20"
           >
             <ChevronRight className="size-7" />
@@ -229,7 +229,7 @@ function DataTablePagination<TData>({
           <Button
             variant="outline"
             onClick={() => setPageIndex(totalPages - 1)}
-            disabled={pageIndex >= totalPages - 1}
+            disabled={pageIndex > totalPages - 1}
             className="w-20"
           >
             <ChevronsRight className="size-7" />
