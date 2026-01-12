@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { DataTable } from '@/components/ui/data-table';
 import { useGetResultsOverview } from '@/features/results/results.api';
@@ -11,20 +11,18 @@ import { OverviewMobileCard } from './overview-mobile-card';
 export function OverviewTable() {
   const [page, setPage] = useState(1);
   const pageSize = 2;
-  const { data, isLoading, refetch } = useGetResultsOverview(page, pageSize);
+  const { data, isLoading } = useGetResultsOverview(page, pageSize);
 
   if (isLoading) return <div>Loading…</div>;
 
   if (!data || data.items.length === 0) return <div>No forms yet</div>;
-
-  // useEffect(() => {}, [page]);
 
   return (
     <div className="container mx-auto py-10">
       <DataTable
         columns={columns}
         data={data?.items}
-        pageIndex={page - 1}
+        pageIndex={page}
         setPageIndex={setPage}
         totalCount={data.total}
         pageSize={data.pageSize}
