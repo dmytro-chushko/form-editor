@@ -7,17 +7,29 @@ import { queryKeys as qk } from '@/lib/api/queryKeys';
 
 import {
   FormResultsParams,
+  ResultsOverviewParams,
   ResultsOverviewResponse,
   ResultsSubFormResponse,
 } from './model/results.schema';
 
-export function useGetResultsOverview(page = 1, pageSize = 20) {
+export function useGetResultsOverview(params: ResultsOverviewParams) {
+  const page = params.page ?? 1;
+  const pageSize = params.pageSize ?? 20;
+
+  const qs = new URLSearchParams();
+  qs.set('page', String(page));
+  qs.set('pageSize', String(pageSize));
+
+  if (params.title) qs.set('title', params.title);
+
+  if (params.from) qs.set('from', params.from);
+
+  if (params.to) qs.set('to', params.to);
+
   return useQuery({
-    queryKey: qk.overview(page, pageSize),
+    queryKey: qk.overview(page, pageSize, params.title, params.from, params.to),
     queryFn: () =>
-      apiGet<ResultsOverviewResponse>(
-        `/api/results?page=${page}&pageSize=${pageSize}`
-      ),
+      apiGet<ResultsOverviewResponse>(`/api/results?${qs.toString()}`),
     placeholderData: (previousData) => previousData,
     staleTime: 0,
   });

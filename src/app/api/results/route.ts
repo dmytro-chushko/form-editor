@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
 
 import {
+  resultOverviewParamsSchema,
   resultOverviewResSchema,
   ResultsOverviewItem,
 } from '@/features/results/model/results.schema';
@@ -17,10 +18,27 @@ export const GET = withAuth(
       Math.max(1, Number(url.searchParams.get('pageSize') ?? '20'))
     );
 
+    const title = url.searchParams.get('title') || undefined;
+    const from = url.searchParams.get('from') || undefined; // ISO string
+    const to = url.searchParams.get('to') || undefined; // ISO string
+
+    resultOverviewParamsSchema.parse({ page, pageSize, title, from, to });
+
+    const baseWhere = {
+      userId: session.user.id,
+      title: title
+        ? { contains: title, mode: 'insensitive' as const }
+        : undefined,
+      updatedAt: {
+        gte: from ? new Date(from) : undefined,
+        lte: to ? new Date(to) : undefined,
+      },
+    };
+
     const [total, forms] = await Promise.all([
       prisma.form.count({ where: { userId: session.user.id } }),
       prisma.form.findMany({
-        where: { userId: session.user.id },
+        where: baseWhere,
         select: { id: true, title: true, createdAt: true, updatedAt: true },
         orderBy: { updatedAt: 'desc' },
         skip: (page - 1) * pageSize,
