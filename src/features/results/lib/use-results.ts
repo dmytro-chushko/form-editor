@@ -25,12 +25,22 @@ export function useResults() {
     [data]
   );
 
+  const contentDataArray = data?.items.map((item) => item.content) || [];
+  const formResults = data?.items.map((item) => {
+    const { content, ...restItem } = item;
+
+    return { ...restItem, ...content };
+  });
+
   return {
-    formResults: data,
+    formResults,
+    contentDataArray,
     isLoading,
     page,
     setPage,
     totalPages,
+    pageSize,
+    totalCount: data?.total,
     email,
     setEmail,
     from,
