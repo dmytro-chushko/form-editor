@@ -13,7 +13,7 @@ export function OverviewMobileCard({
   submissionsCount,
 }: Omit<ResultsOverviewItem, 'updatedAt'>) {
   return (
-    <div key={id} className="rounded-md border p-3">
+    <div key={id} className="border-b p-3 last:border-b-0">
       <Field orientation="horizontal" className="justify-between">
         <div>
           <Field orientation="horizontal">

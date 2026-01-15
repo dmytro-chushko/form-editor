@@ -1,5 +1,7 @@
 import { useParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { useDebouncedValue } from '@/lib/hooks/use-debounce';
 
 import { useGetFormResults } from '../results.api';
 
@@ -9,15 +11,29 @@ export function useResults() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
   const [email, setEmail] = useState('');
-  const [from, setFrom] = useState<string>(''); // ISO
-  const [to, setTo] = useState<string>(''); // ISO
+  const [fromDate, setFromDate] = useState<Date | undefined>();
+  const [toDate, setToDate] = useState<Date | undefined>();
+
+  const debouncedEmail = useDebouncedValue(email, 500);
+  const debouncedFromISO = useDebouncedValue(
+    fromDate ? fromDate.toISOString() : undefined,
+    500
+  );
+  const debouncedToISO = useDebouncedValue(
+    toDate ? toDate.toISOString() : undefined,
+    500
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedEmail, debouncedFromISO, debouncedToISO]);
 
   const { data, isLoading } = useGetFormResults(formId, {
     page,
     pageSize,
-    email: email || undefined,
-    from: from || undefined,
-    to: to || undefined,
+    email: debouncedEmail || undefined,
+    from: debouncedFromISO,
+    to: debouncedToISO,
   });
 
   const totalPages = useMemo(
@@ -43,9 +59,9 @@ export function useResults() {
     totalCount: data?.total,
     email,
     setEmail,
-    from,
-    setFrom,
-    to,
-    setTo,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
   };
 }
