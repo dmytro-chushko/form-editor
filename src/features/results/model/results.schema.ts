@@ -42,7 +42,7 @@ export const resultSubFormResSchema = z.object({
 });
 
 export const formResultParams = paginationParamsSchema.extend({
-  email: z.email().optional(),
+  email: z.string().optional(),
   from: z.string().optional(),
   to: z.string().optional(),
 });

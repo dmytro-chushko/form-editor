@@ -1,5 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDownIcon } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import { ResultsSubFormItem } from '@/features/results/model/results.schema';
 
 export function columns(
@@ -8,11 +10,31 @@ export function columns(
   return [
     {
       accessorKey: 'userEmail',
-      header: 'Email',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Email
+            <ArrowUpDownIcon className="ml-2 size-4" />
+          </Button>
+        );
+      },
     },
     {
       accessorKey: 'submittedAt',
-      header: 'Submitted',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Submitted
+            <ArrowUpDownIcon className="ml-2 size-4" />
+          </Button>
+        );
+      },
     },
     ...Object.keys(content[0] || {}).map((item) => ({
       accessorKey: item,

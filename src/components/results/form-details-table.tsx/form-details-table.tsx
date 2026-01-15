@@ -1,9 +1,18 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { DataTable } from '@/components/ui/data-table';
+import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { useResults } from '@/features/results/lib/use-results';
 
 import { columns } from './form-details-columns';
+import { FormDetailsMobileCard } from './form-details-mobile-card';
 
 export function FormDetailsTable() {
   const {
@@ -16,17 +25,67 @@ export function FormDetailsTable() {
     totalCount,
     email,
     setEmail,
-    from,
-    setFrom,
-    to,
-    setTo,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
   } = useResults();
 
   return (
-    <div className="space-y-3">
-      {' '}
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+        <div className="sm:w-64">
+          <label className="block text-sm mb-1">Email</label>
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Filter by email"
+          />
+        </div>
+
+        <div className="sm:w-56">
+          <label className="block text-sm mb-1">From</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full justify-start">
+                {fromDate ? fromDate.toLocaleDateString() : 'Pick date'}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="p-0">
+              <Calendar
+                mode="single"
+                selected={fromDate}
+                onSelect={setFromDate}
+                captionLayout="dropdown"
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="sm:w-56">
+          <label className="block text-sm mb-1">To</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full justify-start">
+                {toDate ? toDate.toLocaleDateString() : 'Pick date'}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="p-0">
+              <Calendar
+                mode="single"
+                selected={toDate}
+                onSelect={setToDate}
+                captionLayout="dropdown"
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+
       {!formResults || formResults.length === 0 ? (
-        <div>No forms yet</div>
+        <div className="py-10 text-center text-muted-foreground border rounded-md">
+          No submissions found
+        </div>
       ) : (
         <DataTable
           columns={columns(contentDataArray)}
@@ -35,9 +94,7 @@ export function FormDetailsTable() {
           setPageIndex={setPage}
           totalCount={totalCount}
           pageSize={pageSize}
-          // renderMobileRow={(row: (typeof data.items)[number]) => (
-          //   <OverviewMobileCard {...row} />
-          // )}
+          renderMobileRow={(row) => <FormDetailsMobileCard {...row} />}
         />
       )}
     </div>

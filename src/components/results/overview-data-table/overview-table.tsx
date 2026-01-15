@@ -42,11 +42,11 @@ export function OverviewTable() {
     () => ({
       page,
       pageSize,
-      title: title || undefined,
-      from: fromDate ? fromDate.toISOString() : undefined,
-      to: toDate ? toDate.toISOString() : undefined,
+      title: debouncedTitle || undefined,
+      from: debouncedFromISO,
+      to: debouncedToISO,
     }),
-    [page, pageSize, title, fromDate, toDate]
+    [page, pageSize, debouncedTitle, debouncedFromISO, debouncedToISO]
   );
 
   const { data, isLoading } = useGetResultsOverview(params);

@@ -1,4 +1,5 @@
 import { OverviewTable } from '@/components/results/overview-data-table/overview-table';
+
 import { OverviewList } from '@/components/results/overview-list';
 
 export default function ResultsOverviewPage() {
