@@ -2,6 +2,7 @@ import type { Data } from '@measured/puck';
 import z from 'zod';
 
 import type { Components, RootProps } from '@/features/puck/types';
+import { paginationParamsSchema } from '@/lib/validation/paagination';
 
 // Strongly-typed Puck content
 export type FormContent = Data<Components, RootProps>;
@@ -84,16 +85,35 @@ export const submittedFormResSchema = submittedFormPayloadSchema
   })
   .nullable();
 
+export const getFormListParamsSchema = paginationParamsSchema.extend({
+  title: z.string().optional(),
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
+});
+
 export const savedProgressResSchema = submittedFormPayloadSchema.extend({});
 
 export type SendFormSchema = z.infer<typeof sendFormSchema>;
 
 export type FormItemSchema = z.infer<typeof formItemSchema>;
 
-export const formListResponse = z.array(formItemSchema);
+export const formListResponse = z.object({
+  items: z.array(formItemSchema),
+  total: z.number(),
+  page: z.number(),
+  pageSize: z.number(),
+});
 
 export type FormListResponse = z.infer<typeof formListResponse>;
 
 export type SubmittedFormPayload = z.infer<typeof submittedFormPayloadSchema>;
 
 export type ProgressFormResponse = z.infer<typeof submittedFormResSchema>;
+
+export type FormListParams = Omit<
+  z.input<typeof getFormListParamsSchema>,
+  'from' | 'to'
+> & {
+  from?: string;
+  to?: string;
+};

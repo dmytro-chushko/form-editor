@@ -2,15 +2,22 @@ import z from 'zod';
 
 import { paginationParamsSchema } from '@/lib/validation/paagination';
 
-export const resultOverviewParamsSchema = z
+export const resultParamsSchema = z
   .object({
     page: z.number(),
     pageSize: z.number(),
-    title: z.string(),
-    from: z.string(),
-    to: z.string(),
+    from: z.coerce.date(),
+    to: z.coerce.date(),
   })
   .partial();
+
+export const resultOverviewParamsSchema = resultParamsSchema.extend({
+  title: z.string().optional(),
+});
+
+export const resultDetailsParamsSchema = resultParamsSchema.extend({
+  email: z.string().optional(),
+});
 
 export const resultOverviewItemSchema = z.object({
   id: z.string(),
@@ -47,7 +54,13 @@ export const formResultParams = paginationParamsSchema.extend({
   to: z.string().optional(),
 });
 
-export type ResultsOverviewParams = z.infer<typeof resultOverviewParamsSchema>;
+export type ResultsOverviewParams = Omit<
+  z.input<typeof resultOverviewParamsSchema>,
+  'from' | 'to'
+> & {
+  from?: string;
+  to?: string;
+};
 export type ResultsOverviewItem = z.infer<typeof resultOverviewItemSchema>;
 export type ResultsOverviewResponse = z.infer<typeof resultOverviewResSchema>;
 export type ResultsSubFormItem = z.infer<typeof resultSubFormItemSchema>;

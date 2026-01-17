@@ -22,6 +22,7 @@ import { queryKeys as qk } from '@/lib/api/queryKeys';
 import { FormTokenSchema } from './model/form-token.schema';
 import {
   FormItemSchema,
+  FormListParams,
   FormListResponse,
   ProgressFormResponse,
   SubmittedFormPayload,
@@ -35,15 +36,34 @@ export function useCreateForm() {
     mutationFn: (data?: { title?: string; description?: string }) =>
       apiPost<{ id: string }>('/api/forms', data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.forms(1, 20) });
     },
   });
 }
 
-export function useGetFormList() {
+export function useGetFormList(params: FormListParams) {
+  const page = params.page ?? 1;
+  const pageSize = params.pageSize ?? 20;
+
+  const qs = new URLSearchParams();
+  qs.set('page', String(page));
+  qs.set('pageSize', String(pageSize));
+
+  if (params.title) qs.set('email', params.title);
+
+  if (params.from) qs.set('from', params.from);
+
+  if (params.to) qs.set('to', params.to);
+
   return useQuery({
-    queryKey: qk.forms,
-    queryFn: () => apiGet<FormListResponse>('/api/forms'),
+    queryKey: qk.forms(
+      page,
+      pageSize,
+      params.title ?? '',
+      params.from ?? '',
+      params.to ?? ''
+    ),
+    queryFn: () => apiGet<FormListResponse>(`/api/forms?${qs.toString()}`),
   });
 }
 
@@ -65,7 +85,7 @@ export function useUpdateForm() {
     mutationFn: (data: UpdateFormSchema) =>
       apiPatch<FormItemSchema>(`/api/forms/${id}`, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.forms() });
       qc.invalidateQueries({ queryKey: qk.form(id) });
       toast.success('Form saved');
     },
@@ -78,8 +98,7 @@ export function useDeleteForm() {
   return useMutation({
     mutationFn: (formId: string) => apiDelete(`/api/forms/${formId}`),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.forms });
-      qc.refetchQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.forms() });
       toast.success('Form deleted');
     },
   });
@@ -98,7 +117,7 @@ export function useTogglePublish() {
       formId: string;
     }) => apiPatch<FormItemSchema>(`/api/forms/${formId}`, { isPublished }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.forms() });
       qc.invalidateQueries({ queryKey: qk.form(id) });
     },
   });
@@ -111,7 +130,7 @@ export function useCopyForm() {
     mutationFn: (formId: string) =>
       apiPost<FormItemSchema>(`/api/forms/${formId}/copy`),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.forms });
+      qc.invalidateQueries({ queryKey: qk.forms() });
       toast.success('Form copied');
     },
   });

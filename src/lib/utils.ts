@@ -83,3 +83,29 @@ export function stripFileFields<T extends Record<string, unknown>>(
     return acc;
   }, {});
 }
+
+export function getPaginationAndFilterParams(
+  url: URL,
+  filterParamsArray: string[]
+) {
+  const page = Math.max(1, Number(url.searchParams.get('page') ?? '1'));
+  const pageSize = Math.min(
+    100,
+    Math.max(1, Number(url.searchParams.get('pageSize') ?? '20'))
+  );
+
+  const filters = filterParamsArray.reduce(
+    (acc, key) => {
+      const value = url.searchParams.get(key);
+
+      if (value) {
+        acc[key] = value;
+      }
+
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+
+  return { page, pageSize, filters };
+}
