@@ -1,25 +1,58 @@
 import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
+import z from 'zod';
 
 import {
   createFormSchema,
   formItemSchema,
-  formListResponse,
+  getFormListParamsSchema,
 } from '@/features/forms/model/forms.schema';
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
+import { getPaginationAndFilterParams } from '@/lib/utils';
 
 export const GET = withAuth(
   async (req: NextRequest, _ctx, { session }: { session: Session }) => {
-    const forms = await prisma.form.findMany({
-      where: { userId: session.user.id },
-      orderBy: { updatedAt: 'desc' },
+    const url = new URL(req.url);
+
+    const {
+      page,
+      pageSize,
+      filters: { title, from, to },
+    } = getPaginationAndFilterParams(url, ['title', 'from', 'to']);
+
+    getFormListParamsSchema.parse({ page, pageSize, title, from, to });
+
+    const where = {
+      userId: session.user.id,
+      title: title
+        ? { contains: title, mode: 'insensitive' as const }
+        : undefined,
+      updatedAt: {
+        gte: from ? new Date(from) : undefined,
+        lte: to ? new Date(to) : undefined,
+      },
+    };
+
+    const [total, forms] = await Promise.all([
+      prisma.form.count({ where }),
+      prisma.form.findMany({
+        where,
+        orderBy: { updatedAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+
+    const items = z.array(formItemSchema).parse(forms);
+
+    return NextResponse.json({
+      items,
+      total,
+      page,
+      pageSize,
     });
-
-    const validatedResponse = formListResponse.parse(forms);
-
-    return NextResponse.json(validatedResponse);
   }
 );
 

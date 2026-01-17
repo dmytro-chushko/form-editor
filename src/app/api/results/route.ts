@@ -8,19 +8,17 @@ import {
 } from '@/features/results/model/results.schema';
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
+import { getPaginationAndFilterParams } from '@/lib/utils';
 
 export const GET = withAuth(
   async (req: NextRequest, _ctx, { session }: { session: Session }) => {
     const url = new URL(req.url);
-    const page = Math.max(1, Number(url.searchParams.get('page') ?? '1'));
-    const pageSize = Math.min(
-      100,
-      Math.max(1, Number(url.searchParams.get('pageSize') ?? '20'))
-    );
 
-    const title = url.searchParams.get('title') || undefined;
-    const from = url.searchParams.get('from') || undefined; // ISO string
-    const to = url.searchParams.get('to') || undefined; // ISO string
+    const {
+      page,
+      pageSize,
+      filters: { title, from, to },
+    } = getPaginationAndFilterParams(url, ['title', 'from', 'to']);
 
     resultOverviewParamsSchema.parse({ page, pageSize, title, from, to });
 

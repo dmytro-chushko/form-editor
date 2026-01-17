@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
 
 import {
+  resultDetailsParamsSchema,
   ResultsSubFormItem,
   ResultsSubFormResponse,
   resultSubFormResSchema,
 } from '@/features/results/model/results.schema';
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
+import { getPaginationAndFilterParams } from '@/lib/utils';
 
 export const GET = withAuth(
   async (
@@ -18,14 +20,13 @@ export const GET = withAuth(
     const { formId } = await ctx.params;
     const url = new URL(req.url);
 
-    const page = Math.max(1, Number(url.searchParams.get('page') ?? '1'));
-    const pageSize = Math.min(
-      100,
-      Math.max(1, Number(url.searchParams.get('pageSize') ?? '20'))
-    );
-    const email = url.searchParams.get('email') || undefined;
-    const from = url.searchParams.get('from');
-    const to = url.searchParams.get('to');
+    const {
+      page,
+      pageSize,
+      filters: { email, from, to },
+    } = getPaginationAndFilterParams(url, ['email', 'from', 'to']);
+
+    resultDetailsParamsSchema.parse({ page, pageSize, email, from, to });
 
     const owns = await prisma.form.findFirst({
       where: { id: formId, userId: session.user.id },

@@ -26,7 +26,7 @@ import {
 } from '../ui/table';
 import { TooltipWrapper } from '../ui/tooltip';
 
-export function FormTable({ forms }: { forms: FormListResponse }) {
+export function FormTable({ forms }: { forms: FormListResponse['items'] }) {
   const router = useRouter();
   const { onDelete, onTogglePublish, onCopy } = useFormCommon();
   const { open } = useModal();

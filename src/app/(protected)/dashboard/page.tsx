@@ -1,4 +1,4 @@
-import { FormList } from '@/components/dashboard/FormList';
+import { FormList } from '@/components/dashboard/form-list/form-list';
 import { auth } from '@/lib/auth';
 
 export default async function DashboardPage() {
