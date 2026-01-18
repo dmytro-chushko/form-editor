@@ -1,5 +1,7 @@
 'use client';
 
+import { format } from 'date-fns';
+
 import { Field } from '@/components/ui/field';
 import { validateResultData } from '@/features/results/lib/validate-result-data';
 
@@ -17,13 +19,19 @@ export function FormDetailsMobileCard({
             <Field
               key={item}
               orientation="horizontal"
-              className="not-last:border-b not-last:border-b-muted not-last:pb-2 justify-between "
+              className=" not-last:pb-2 justify-between "
             >
               <div className="text-sm font-bold">
                 {item[0].toUpperCase()}
                 {item.slice(1)}:
               </div>
-              <div className="text-sm">{validateResultData(rest[item])}</div>
+              {item === 'submittedAt' ? (
+                <div className="text-sm">
+                  {format(validateResultData(rest[item]), 'do MMMM yyyy')}
+                </div>
+              ) : (
+                <div className="text-sm">{validateResultData(rest[item])}</div>
+              )}
             </Field>
           ))}
       </Field>

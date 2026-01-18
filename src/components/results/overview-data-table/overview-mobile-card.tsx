@@ -1,5 +1,6 @@
 'use client';
 
+import { format } from 'date-fns';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ export function OverviewMobileCard({
   submissionsCount,
 }: Omit<ResultsOverviewItem, 'updatedAt'>) {
   return (
-    <div key={id} className="border-b p-3 last:border-b-0">
+    <div key={id} className="rounded-md border p-3">
       <Field orientation="horizontal" className="justify-between">
         <div>
           <Field orientation="horizontal">
@@ -22,7 +23,7 @@ export function OverviewMobileCard({
           </Field>
           <Field orientation="horizontal">
             <div className="text-sm font-bold">Created:</div>
-            <div className="text-xs text-muted-foreground">{createdAt}</div>
+            <div className="text-sm">{format(createdAt, 'do MMMM yyyy')}</div>
           </Field>
           <Field orientation="horizontal">
             <div className="text-sm font-bold">Submissions:</div>

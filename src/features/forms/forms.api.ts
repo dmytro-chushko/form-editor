@@ -36,7 +36,7 @@ export function useCreateForm() {
     mutationFn: (data?: { title?: string; description?: string }) =>
       apiPost<{ id: string }>('/api/forms', data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.forms(1, 20) });
+      qc.invalidateQueries({ queryKey: qk.forms() });
     },
   });
 }
@@ -49,7 +49,7 @@ export function useGetFormList(params: FormListParams) {
   qs.set('page', String(page));
   qs.set('pageSize', String(pageSize));
 
-  if (params.title) qs.set('email', params.title);
+  if (params.title) qs.set('title', params.title);
 
   if (params.from) qs.set('from', params.from);
 

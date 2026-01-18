@@ -1,5 +1,6 @@
 import { PencilSimpleIcon, ShareFatIcon } from '@phosphor-icons/react';
 import { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
 import {
   ArrowUpDownIcon,
   CheckCircleIcon,
@@ -46,6 +47,13 @@ export function useFormListColumns() {
             Created
             <ArrowUpDownIcon className="ml-2 size-4" />
           </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-sm">
+            {format(row.original.createdAt, 'do MMMM yyyy')}
+          </span>
         );
       },
     },

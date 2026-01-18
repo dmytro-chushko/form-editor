@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
 import { ArrowUpDownIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,15 @@ export function columns(
             Submitted
             <ArrowUpDownIcon className="ml-2 size-4" />
           </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return row.original.submittedAt ? (
+          <span className="text-sm text-muted-foreground">
+            {format(row.original.submittedAt, 'do MMMM yyyy')}
+          </span>
+        ) : (
+          <span>-</span>
         );
       },
     },

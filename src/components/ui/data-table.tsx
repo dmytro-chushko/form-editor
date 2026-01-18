@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useIsMobile } from '@/lib/hooks/use-mobile';
 
 import { Button } from './button';
 import {
@@ -161,6 +162,8 @@ function DataTablePagination({
   pageIndex,
   setPageIndex,
 }: DataTablePaginationProps) {
+  const isMobile = useIsMobile();
+
   const currentPage = pageIndex;
   const totalPages = Math.ceil(totalCount / pageSize);
   const pages: (number | string)[] = [];
@@ -190,59 +193,85 @@ function DataTablePagination({
     <div className="flex flex-col gap-5 p-6 rounded-lg">
       <Pagination>
         <PaginationContent className="gap-1">
-          <Button
-            variant="outline"
-            onClick={() => setPageIndex(1)}
-            disabled={pageIndex === 1}
-            className="w-20"
-          >
-            <ChevronsLeft className="size-7" />
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPageIndex(pageIndex - 1)}
-            disabled={pageIndex === 1}
-            className="w-20"
-          >
-            <ChevronLeft className="size-7" />
-          </Button>
-
-          {pages.map((page, index) =>
-            page === '...' ? (
-              <PaginationEllipsis key={index} />
-            ) : (
+          {isMobile ? (
+            <>
               <Button
-                key={page}
                 variant="outline"
-                onClick={() => setPageIndex(page as number)}
-                className={
-                  currentPage === page
-                    ? 'bg-neutral-100 w-20'
-                    : 'w-20 text-neutral-600'
-                }
-                disabled={currentPage === page}
+                onClick={() => setPageIndex(pageIndex - 1)}
+                disabled={pageIndex === 1}
+                className="w-20"
               >
-                {page}
+                <ChevronLeft className="size-7" />
               </Button>
-            )
-          )}
+              <span>
+                {currentPage} / {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                onClick={() => setPageIndex(pageIndex + 1)}
+                disabled={pageIndex > totalPages - 1}
+                className="w-20"
+              >
+                <ChevronRight className="size-7" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setPageIndex(1)}
+                disabled={pageIndex === 1}
+                className="w-20"
+              >
+                <ChevronsLeft className="size-7" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setPageIndex(pageIndex - 1)}
+                disabled={pageIndex === 1}
+                className="w-20"
+              >
+                <ChevronLeft className="size-7" />
+              </Button>
 
-          <Button
-            variant="outline"
-            onClick={() => setPageIndex(pageIndex + 1)}
-            disabled={pageIndex > totalPages - 1}
-            className="w-20"
-          >
-            <ChevronRight className="size-7" />
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPageIndex(totalPages - 1)}
-            disabled={pageIndex > totalPages - 1}
-            className="w-20"
-          >
-            <ChevronsRight className="size-7" />
-          </Button>
+              {pages.map((page, index) =>
+                page === '...' ? (
+                  <PaginationEllipsis key={index} />
+                ) : (
+                  <Button
+                    key={page}
+                    variant="outline"
+                    onClick={() => setPageIndex(page as number)}
+                    className={
+                      currentPage === page
+                        ? 'bg-neutral-100 w-20'
+                        : 'w-20 text-neutral-600'
+                    }
+                    disabled={currentPage === page}
+                  >
+                    {page}
+                  </Button>
+                )
+              )}
+
+              <Button
+                variant="outline"
+                onClick={() => setPageIndex(pageIndex + 1)}
+                disabled={pageIndex > totalPages - 1}
+                className="w-20"
+              >
+                <ChevronRight className="size-7" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setPageIndex(totalPages - 1)}
+                disabled={pageIndex > totalPages - 1}
+                className="w-20"
+              >
+                <ChevronsRight className="size-7" />
+              </Button>
+            </>
+          )}
         </PaginationContent>
       </Pagination>
     </div>

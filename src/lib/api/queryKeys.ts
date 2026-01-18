@@ -8,12 +8,22 @@ export const queryKeys = {
     title?: string,
     from?: string,
     to?: string
-  ) =>
-    [
-      'forms',
-      { page, pageSize, title: title ?? '', from: from ?? '', to: to ?? '' },
-    ] as const,
-  form: (id: string) => ['form', id] as const,
+  ) => {
+    const key: any[] = ['forms', 'list'];
+
+    if (page !== undefined || pageSize !== undefined || title !== undefined) {
+      key.push({
+        page,
+        pageSize,
+        title: title ?? '',
+        from: from ?? '',
+        to: to ?? '',
+      });
+    }
+
+    return key;
+  },
+  form: (id: string) => ['forms', 'detail', id] as const,
   formProgress: (token: string) => ['form-progress', token] as const,
   sharedForm: (token: string) => ['shared-form', token] as const,
   overview: (
