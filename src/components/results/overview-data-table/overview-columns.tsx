@@ -1,6 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
 import { ArrowUpDownIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -33,6 +34,13 @@ export const columns: ColumnDef<ResultsOverviewItem>[] = [
           Created
           <ArrowUpDownIcon className="ml-2 size-4" />
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <span className="text-sm">
+          {format(row.original.createdAt, 'do MMMM yyyy')}
+        </span>
       );
     },
   },

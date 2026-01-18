@@ -1,5 +1,6 @@
 'use client';
 
+import { format } from 'date-fns';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,7 @@ export function OverviewMobileCard({
           </Field>
           <Field orientation="horizontal">
             <div className="text-sm font-bold">Created:</div>
-            <div className="text-xs text-muted-foreground">{createdAt}</div>
+            <div className="text-sm">{format(createdAt, 'do MMMM yyyy')}</div>
           </Field>
           <Field orientation="horizontal">
             <div className="text-sm font-bold">Submissions:</div>
