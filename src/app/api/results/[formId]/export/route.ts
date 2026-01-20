@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
+import * as XLSX from 'xlsx';
 
 import { withAuth } from '@/lib/error/http';
 import prisma from '@/lib/prisma';
@@ -18,6 +19,7 @@ export const GET = withAuth(
     const {
       filters: { email, from, to },
     } = getPaginationAndFilterParams(url, ['email', 'from', 'to']);
+    const format = url.searchParams.get('format') === 'csv' ? 'csv' : 'xlsx';
 
     // Перевірка власності форми
     const owns = await prisma.form.findFirst({
@@ -46,42 +48,29 @@ export const GET = withAuth(
       return new NextResponse('No data to export', { status: 400 });
     }
 
-    // 1. Збираємо всі унікальні ключі з JSON (content) для заголовків колонок
-    const dynamicKeys = new Set<string>();
-    submissions.forEach((s) => {
-      const content = s.content as Record<string, any>;
-      Object.keys(content).forEach((k) => dynamicKeys.add(k));
-    });
+    // Підготовка даних для Excel/CSV
+    const dataToExport = submissions.map((s) => ({
+      Email: s.userEmail,
+      'Submitted At': s.submitted_at?.toLocaleString() || '',
+      ...(s.content as Record<string, any>),
+    }));
 
-    const headers = ['Email', 'Submitted At', ...Array.from(dynamicKeys)];
+    // Генерація за допомогою XLSX
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Submissions');
 
-    // 2. Формуємо рядки CSV
-    const csvRows = [
-      headers.join(','), // Заголовки
-      ...submissions.map((s) => {
-        const content = s.content as Record<string, any>;
-        const row = [
-          s.userEmail,
-          s.submitted_at?.toISOString() || '',
-          ...Array.from(dynamicKeys).map((key) => {
-            const val = content[key];
-            // Екрануємо коми та лапки для CSV
-            const strVal = val === null || val === undefined ? '' : String(val);
+    const bookType = format === 'csv' ? 'csv' : 'xlsx';
+    const buf = XLSX.write(workbook, { type: 'buffer', bookType });
 
-            return `"${strVal.replace(/"/g, '""')}"`;
-          }),
-        ];
+    const fileName = `${owns.title.replace(/\s+/g, '_')}-results.${format}`;
 
-        return row.join(',');
-      }),
-    ];
-
-    const csvContent = csvRows.join('\n');
-    const fileName = `export-${owns.title.replace(/\s+/g, '_')}-${new Date().toISOString().split('T')[0]}.csv`;
-
-    return new NextResponse(csvContent, {
+    return new NextResponse(buf, {
       headers: {
-        'Content-Type': 'text/csv',
+        'Content-Type':
+          format === 'csv'
+            ? 'text/csv'
+            : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': `attachment; filename="${fileName}"`,
       },
     });

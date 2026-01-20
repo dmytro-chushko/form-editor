@@ -1,5 +1,6 @@
 'use client';
 
+import { DownloadIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { exportResults } from '@/features/results/lib/export-results';
 import { useGetResultsOverview } from '@/features/results/results.api';
+import { ResultExports } from '@/features/results/ui/result-exports';
 import { useDebouncedValue } from '@/lib/hooks/use-debounce';
 
 import { columns } from './overview-columns';
@@ -51,57 +54,79 @@ export function OverviewTable() {
 
   const { data, isLoading } = useGetResultsOverview(params);
 
+  const handleExport = (format: 'xlsx' | 'csv') => {
+    exportResults(
+      '/api/results/export',
+      {
+        title: debouncedTitle,
+        from: debouncedFromISO,
+        to: debouncedToISO,
+      },
+      format
+    );
+  };
+
   if (isLoading) return <div>Loading…</div>;
 
   return (
     <div className="container mx-auto py-10 space-y-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
-        <div className="sm:w-64">
-          <label className="block text-sm mb-1">Title</label>
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Filter by title"
-          />
-        </div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <div className="sm:w-64">
+            <label className="block text-sm mb-1">Title</label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Filter by title"
+            />
+          </div>
 
-        <div className="sm:w-56">
-          <label className="block text-sm mb-1">From</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-start">
-                {fromDate ? fromDate.toLocaleDateString() : 'Pick date'}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0">
-              <Calendar
-                mode="single"
-                selected={fromDate}
-                onSelect={setFromDate}
-                captionLayout="dropdown"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+          <div className="sm:w-56">
+            <label className="block text-sm mb-1">From</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start">
+                  {fromDate ? fromDate.toLocaleDateString() : 'Pick date'}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0">
+                <Calendar
+                  mode="single"
+                  selected={fromDate}
+                  onSelect={setFromDate}
+                  captionLayout="dropdown"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
 
-        <div className="sm:w-56">
-          <label className="block text-sm mb-1">To</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-start">
-                {toDate ? toDate.toLocaleDateString() : 'Pick date'}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0">
-              <Calendar
-                mode="single"
-                selected={toDate}
-                onSelect={setToDate}
-                captionLayout="dropdown"
-              />
-            </PopoverContent>
-          </Popover>
+          <div className="sm:w-56">
+            <label className="block text-sm mb-1">To</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start">
+                  {toDate ? toDate.toLocaleDateString() : 'Pick date'}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0">
+                <Calendar
+                  mode="single"
+                  selected={toDate}
+                  onSelect={setToDate}
+                  captionLayout="dropdown"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
+        <ResultExports
+          exportRoute="/api/results/export"
+          filters={{
+            title: debouncedTitle,
+            from: debouncedFromISO,
+            to: debouncedToISO,
+          }}
+        />
       </div>
       {!data || data.items.length === 0 ? (
         <div>No forms yet</div>
