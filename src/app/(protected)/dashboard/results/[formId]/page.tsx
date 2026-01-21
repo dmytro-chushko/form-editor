@@ -9,7 +9,6 @@ export default function FormResultsPage() {
         <BackButton backTo="/dashboard/results" />
         <h1 className=" text-2xl font-semibold">Form results</h1>
       </Field>
-
       <FormDetailsTable />
     </div>
   );

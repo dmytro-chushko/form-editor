@@ -15,7 +15,6 @@ export const GET = withAuth(
     const { formId } = await ctx.params;
     const url = new URL(req.url);
 
-    // Використовуємо ті ж фільтри, що і в основній таблиці
     const {
       filters: { email, from, to },
     } = getPaginationAndFilterParams(url, ['email', 'from', 'to']);
@@ -31,7 +30,6 @@ export const GET = withAuth(
       return NextResponse.json({ message: 'Not found' }, { status: 404 });
     }
 
-    // Отримуємо ВСІ записи без пагінації
     const submissions = await prisma.formSubmissions.findMany({
       where: {
         formId,
@@ -48,14 +46,12 @@ export const GET = withAuth(
       return new NextResponse('No data to export', { status: 400 });
     }
 
-    // Підготовка даних для Excel/CSV
     const dataToExport = submissions.map((s) => ({
       Email: s.userEmail,
       'Submitted At': s.submitted_at?.toLocaleString() || '',
       ...(s.content as Record<string, any>),
     }));
 
-    // Генерація за допомогою XLSX
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Submissions');
