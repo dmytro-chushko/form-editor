@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 
+import { AppSidebar } from '@/components/app-sidebar/ui/app-sidebar';
 import Header from '@/components/layouts/Header';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/lib/auth';
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -18,7 +20,14 @@ export default async function DashbordLayout({
   return (
     <>
       <Header title="Form Builder" />
-      <main className="p-4">{children}</main>
+
+      <SidebarProvider className="min-h-[calc(100svh-var(--header-height))] ">
+        <AppSidebar />
+        <main className="p-4 min-w-0">
+          <SidebarTrigger className="hidden md:block" />
+          {children}
+        </main>
+      </SidebarProvider>
     </>
   );
 }
