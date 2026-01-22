@@ -1,12 +1,16 @@
 'use client';
 
+import { SignOutIcon } from '@phosphor-icons/react';
 import { UserCircleIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 
+import { ROUTES } from '@/lib/constants/routes';
+
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { Button } from '../ui/button';
+import { SidebarTrigger } from '../ui/sidebar';
 
 type DesktopHeaderProps = {
   title?: string;
@@ -38,14 +42,15 @@ export default function DesktopHeader({ title, menu }: DesktopHeaderProps) {
           <ThemeToggle />
           {data && (
             <div className="flex gap-2">
-              <Button
-                size="icon"
-                onClick={() => router.push('/profile')}
-                aria-label="profile-page"
-              >
-                <UserCircleIcon size={32} />
+              <Button size="icon" aria-label="profile-page" asChild>
+                <Link href={ROUTES.Profile}>
+                  <UserCircleIcon size={32} />
+                </Link>
               </Button>
-              <Button onClick={() => signOut()}>Sign out</Button>
+              <Button onClick={() => signOut()}>
+                <SignOutIcon size={32} />
+                Sign out
+              </Button>
             </div>
           )}
         </div>

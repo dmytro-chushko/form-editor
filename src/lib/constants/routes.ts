@@ -5,5 +5,7 @@ export const ROUTES = {
   VerifyRequest: 'verify-request',
   VerifySuccess: 'verify-success',
   VerifyFaild: 'verify-faild',
-  Results: '/dashboard/results',
+  Results: '/results',
+  Profile: '/profile',
+  Forms: '/forms',
 };

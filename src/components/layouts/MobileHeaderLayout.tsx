@@ -1,12 +1,15 @@
 'use client';
 
+import { SignOutIcon } from '@phosphor-icons/react';
 import { UserCircleIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 
+import { navItems } from '../app-sidebar/model/nav';
 import { ThemeToggle } from '../theme/ThemeToggle';
 
 type MobileHeaderLayoutProps = {
@@ -20,7 +23,7 @@ export default function MobileHeaderLayout({
 }: MobileHeaderLayoutProps) {
   const [open, setOpen] = useState(false);
   const { data } = useSession();
-  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const body = document.body;
@@ -33,6 +36,10 @@ export default function MobileHeaderLayout({
 
     return () => body.classList.remove('overflow-hidden');
   }, [open]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <div className="relative">
@@ -84,13 +91,32 @@ export default function MobileHeaderLayout({
           <div className="flex flex-col items-center justify-center gap-6">
             <div className="p-4">{menu}</div>
             <ThemeToggle />
+            <ul className="flex flex-col gap-4">
+              {navItems &&
+                navItems.length > 0 &&
+                navItems.map((item) => (
+                  <li key={item.url}>
+                    <Button className="w-full" asChild>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </Button>
+                  </li>
+                ))}
+            </ul>
             {data && (
               <div className="flex flex-col gap-4">
-                <Button onClick={() => router.push('/profile')}>
-                  Profile
-                  <UserCircleIcon size={32} />
+                <Button asChild>
+                  <Link href="/profile">
+                    <UserCircleIcon size={32} />
+                    Profile
+                  </Link>
                 </Button>
-                <Button onClick={() => signOut()}>Sign out</Button>
+                <Button onClick={() => signOut()}>
+                  <SignOutIcon size={32} />
+                  Sign out
+                </Button>
               </div>
             )}
           </div>

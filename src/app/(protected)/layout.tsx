@@ -23,7 +23,7 @@ export default async function DashbordLayout({
 
       <SidebarProvider className="min-h-[calc(100svh-var(--header-height))] ">
         <AppSidebar />
-        <main className="p-4 min-w-0">
+        <main className="p-4 min-w-0 grow">
           <SidebarTrigger className="hidden md:block" />
           {children}
         </main>

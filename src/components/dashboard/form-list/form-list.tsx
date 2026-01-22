@@ -34,15 +34,11 @@ export function FormList() {
     toDate,
     setToDate,
   } = useFormList();
-  const router = useRouter();
 
   return (
     <div className="space-y-4">
       <Field orientation="horizontal">
         <CreateForm />
-        <Button type="button" onClick={() => router.push('dashboard/results')}>
-          Results
-        </Button>
       </Field>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
         <div className="sm:w-64">
