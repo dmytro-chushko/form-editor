@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 
 import { useFormItem } from '@/features/forms/lib/use-form-item';
 import { config } from '@/features/puck/puck.config';
+import { ROUTES } from '@/lib/constants/routes';
 
 import BackButton from '../ui/back-button';
 import { Field } from '../ui/field';
@@ -29,16 +30,19 @@ export default function FormEditor() {
     <div>...loading</div>
   ) : (
     <div
-      className="p-6 space-y-4
+      className="flex flex-col h-full w-full
+      md:p-6 space-y-4
     [--puck-color-white:--background]
     [--puck-color-black:--foreground]
     [--puck-color-grey-09:var(--border)!important]
     [--puck-color-grey-11:--accent]
-    [--puck-color-grey-12:--muted] 
+    [--puck-color-grey-12:--muted]
+    [&_option]:!text-black
+    [&_option]:dark:!text-black 
     "
     >
       <Field orientation="horizontal" className="items-center">
-        <BackButton backTo="/dashboard" />
+        <BackButton backTo={ROUTES.Dashboard} />
         <h1 className="text-2xl font-semibold">Form editor</h1>
       </Field>
 

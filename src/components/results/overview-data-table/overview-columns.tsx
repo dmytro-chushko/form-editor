@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { ResultsOverviewItem } from '@/features/results/model/results.schema';
+import { ROUTES } from '@/lib/constants/routes';
 
 export const columns: ColumnDef<ResultsOverviewItem>[] = [
   {
@@ -55,7 +56,7 @@ export const columns: ColumnDef<ResultsOverviewItem>[] = [
     cell: ({ row }) => {
       return (
         <Button asChild size="sm" variant="outline">
-          <Link href={`/dashboard/results/${row.original.id}`}>View</Link>
+          <Link href={`${ROUTES.Results}/${row.original.id}`}>View</Link>
         </Button>
       );
     },

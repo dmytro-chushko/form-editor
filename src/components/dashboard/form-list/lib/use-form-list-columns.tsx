@@ -16,6 +16,7 @@ import { TooltipWrapper } from '@/components/ui/tooltip';
 import { useFormCommon } from '@/features/forms/lib/use-form-common';
 import { FormItemSchema } from '@/features/forms/model/forms.schema';
 import { useModal } from '@/features/modals/lib/use-modal';
+import { ROUTES } from '@/lib/constants/routes';
 
 export function useFormListColumns() {
   const { onDelete, onTogglePublish, onCopy } = useFormCommon();
@@ -91,7 +92,7 @@ export function useFormListColumns() {
           <ButtonGroup>
             <TooltipWrapper capture="Edit">
               <Button asChild size="icon">
-                <Link href={`/dashboard/forms/${row.original.id}/edit`}>
+                <Link href={`${ROUTES.Forms}/${row.original.id}/edit`}>
                   <PencilSimpleIcon size={32} />
                 </Link>
               </Button>
