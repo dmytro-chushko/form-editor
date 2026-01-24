@@ -12,6 +12,7 @@ import { config } from '@/features/puck/puck.config';
 import { formatErrorMessage } from '@/lib/utils';
 
 import { FormInputField } from '../form/FormInputField';
+import { SharedFormSkeleton } from '../ui/app-skeletons';
 import { Button } from '../ui/button';
 import { Field } from '../ui/field';
 import { Form } from '../ui/form';
@@ -44,9 +45,11 @@ export function SharedFormLayout() {
     );
   }
 
-  return isLoading && !sharedForm ? (
-    <div>...loading</div>
-  ) : (
+  if (isLoading && !sharedForm) {
+    return <SharedFormSkeleton />;
+  }
+
+  return (
     <Field className="gap-4 container mx-auto">
       <div className="relative">
         <div className="p-3">

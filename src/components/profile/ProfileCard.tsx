@@ -8,12 +8,14 @@ import EmailChangeForm from '@/components/profile/EmailChangeForm';
 import PasswordChangeForm from '@/components/profile/PasswordChangeForm';
 import { useProfileQuery } from '@/features/profile/profile.api';
 
+import { ProfileCardSkeleton } from '../ui/app-skeletons';
+
 export default function ProfileCard() {
   const { data, isLoading, error } = useProfileQuery();
   const user = data?.user;
 
   if (isLoading) {
-    return <div className="mt-4 text-sm text-gray-600">Loading profile...</div>;
+    return <ProfileCardSkeleton />;
   }
 
   if (error) {
