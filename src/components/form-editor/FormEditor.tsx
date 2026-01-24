@@ -9,6 +9,7 @@ import { useFormItem } from '@/features/forms/lib/use-form-item';
 import { config } from '@/features/puck/puck.config';
 import { ROUTES } from '@/lib/constants/routes';
 
+import { FormEditorSkeleton } from '../ui/app-skeletons';
 import BackButton from '../ui/back-button';
 import { Field } from '../ui/field';
 import { Form } from '../ui/form';
@@ -26,9 +27,11 @@ export default function FormEditor() {
     if (currentForm) setIsFormLoaded(true);
   }, [currentForm]);
 
-  return !isFormLoaded ? (
-    <div>...loading</div>
-  ) : (
+  if (!isFormLoaded) {
+    return <FormEditorSkeleton />;
+  }
+
+  return (
     <div
       className="flex flex-col h-full w-full
       md:p-6 space-y-4

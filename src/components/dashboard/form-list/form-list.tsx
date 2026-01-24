@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { DataTable } from '@/components/ui/data-table';
@@ -14,6 +12,7 @@ import {
 } from '@/components/ui/popover';
 import { useFormList } from '@/features/forms/lib/use-form-list';
 
+import { ResultsTableSkeleton } from '../../ui/app-skeletons';
 import { CreateForm } from '../CreateForm';
 
 import { FormListMobileCard } from './form-list-mobile-card';
@@ -33,7 +32,12 @@ export function FormList() {
     setFromDate,
     toDate,
     setToDate,
+    isLoading,
   } = useFormList();
+
+  if (isLoading) {
+    return <ResultsTableSkeleton />;
+  }
 
   return (
     <div className="space-y-4">

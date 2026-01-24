@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Toaster } from 'sonner';
 
 import { ModalProvider } from './modal-provider';
+import { ThemeProvider } from './theme-provider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [client] = React.useState(() => new QueryClient());
@@ -13,14 +14,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <QueryClientProvider client={client}>
-        <ModalProvider>{children}</ModalProvider>
-        <Toaster
-          richColors
-          closeButton
-          expand
-          position="top-right"
-          theme="system"
-        />
+        <ThemeProvider>
+          <ModalProvider>{children}</ModalProvider>
+          <Toaster
+            richColors
+            closeButton
+            expand
+            position="top-right"
+            theme="system"
+          />
+        </ThemeProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

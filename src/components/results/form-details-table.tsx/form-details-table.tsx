@@ -14,6 +14,8 @@ import {
 import { useResults } from '@/features/results/lib/use-results';
 import { ResultExports } from '@/features/results/ui/result-exports';
 
+import { ResultsTableSkeleton } from '../../ui/app-skeletons';
+
 import { columns } from './form-details-columns';
 import { FormDetailsMobileCard } from './form-details-mobile-card';
 
@@ -34,6 +36,10 @@ export function FormDetailsTable() {
     toDate,
     setToDate,
   } = useResults();
+
+  if (isLoading) {
+    return <ResultsTableSkeleton />;
+  }
 
   return (
     <div className="space-y-6">

@@ -1,6 +1,5 @@
 'use client';
 
-import { DownloadIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -12,10 +11,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { exportResults } from '@/features/results/lib/export-results';
 import { useGetResultsOverview } from '@/features/results/results.api';
 import { ResultExports } from '@/features/results/ui/result-exports';
 import { useDebouncedValue } from '@/lib/hooks/use-debounce';
+
+import { ResultsTableSkeleton } from '../../ui/app-skeletons';
 
 import { columns } from './overview-columns';
 import { OverviewMobileCard } from './overview-mobile-card';
@@ -54,19 +54,13 @@ export function OverviewTable() {
 
   const { data, isLoading } = useGetResultsOverview(params);
 
-  const handleExport = (format: 'xlsx' | 'csv') => {
-    exportResults(
-      '/api/results/export',
-      {
-        title: debouncedTitle,
-        from: debouncedFromISO,
-        to: debouncedToISO,
-      },
-      format
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-10">
+        <ResultsTableSkeleton />
+      </div>
     );
-  };
-
-  if (isLoading) return <div>Loading…</div>;
+  }
 
   return (
     <div className="container mx-auto py-10 space-y-8">
