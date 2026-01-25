@@ -12,9 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitHub({ allowDangerousEmailAccountLinking: true }),
   ],
   trustHost: true,
-  // debug: process.env.NODE_ENV !== 'production',
   cookies: {
-    // Узгоджуємо ім'я cookie з тим, що ми ставимо в custom login API
     sessionToken: {
       name:
         process.env.NODE_ENV === 'production'
