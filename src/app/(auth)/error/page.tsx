@@ -1,9 +1,3 @@
-'use client';
-
-import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
-
 function mapNextAuthError(err?: string | null) {
   switch (err) {
     case 'OAuthSignin':
@@ -26,14 +20,12 @@ function mapNextAuthError(err?: string | null) {
   }
 }
 
-export default function AuthErrorPage() {
-  const params = useSearchParams();
-  const err = params.get('error');
-
-  useEffect(() => {
-    const message = mapNextAuthError(err);
-    toast.error(message);
-  }, [err]);
+export default async function AuthErrorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error: string | null }>;
+}) {
+  const err = (await searchParams).error;
 
   const message = mapNextAuthError(err);
 

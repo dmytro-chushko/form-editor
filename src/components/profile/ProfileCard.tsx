@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { Suspense } from 'react';
 
 import AvatarUploader from '@/components/profile/AvatarUploader';
 import EditableField from '@/components/profile/EditableField';
@@ -8,7 +9,10 @@ import EmailChangeForm from '@/components/profile/EmailChangeForm';
 import PasswordChangeForm from '@/components/profile/PasswordChangeForm';
 import { useProfileQuery } from '@/features/profile/profile.api';
 
-import { ProfileCardSkeleton } from '../ui/app-skeletons';
+import {
+  EmailChangeFormSkeleton,
+  ProfileCardSkeleton,
+} from '../ui/app-skeletons';
 
 export default function ProfileCard() {
   const { data, isLoading, error } = useProfileQuery();
@@ -73,7 +77,9 @@ export default function ProfileCard() {
       </div>
 
       <PasswordChangeForm />
-      <EmailChangeForm />
+      <Suspense fallback={<EmailChangeFormSkeleton />}>
+        <EmailChangeForm />
+      </Suspense>
     </div>
   );
 }
