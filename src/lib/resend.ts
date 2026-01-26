@@ -1,11 +1,20 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+
+  if (!key) {
+    throw new Error('RESEND_API_KEY environment variable is required');
+  }
+
+  return new Resend(key);
+}
 
 export default async function sendVerificationEmail(
   email: string,
   verifyUrl: string
 ) {
+  const resend = getResend();
   await resend.emails.send({
     from: 'onboarding@resend.dev',
     to: email,
@@ -15,6 +24,7 @@ export default async function sendVerificationEmail(
 }
 
 export async function sendPasswordResetEmail(email: string, resetUrl: string) {
+  const resend = getResend();
   await resend.emails.send({
     from: 'onboarding@resend.dev',
     to: email,
@@ -27,6 +37,7 @@ export async function sendSharedFormLink(
   email: string,
   sharedFormLink: string
 ) {
+  const resend = getResend();
   await resend.emails.send({
     from: 'onboarding@resend.dev',
     to: email,
