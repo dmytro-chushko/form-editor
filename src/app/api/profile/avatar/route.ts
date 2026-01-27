@@ -7,9 +7,8 @@ import { getSupabaseAdmin } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
 
-const BUCKET = process.env.SUPABASE_BUCKET || 'avatars';
-
 export const PATCH = withAuth(async (req, { session }) => {
+  const BUCKET = process.env.SUPABASE_BUCKET || 'avatars';
   const body = (await req.json()) as { image?: string; objectPath?: string };
   let imageUrl = body.image;
 

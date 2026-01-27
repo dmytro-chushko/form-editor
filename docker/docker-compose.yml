@@ -27,7 +27,6 @@ services:
       dockerfile: ./docker/node/Dockerfile
       secrets:
         - database_url
-        - resend_api_key
     restart: always
     command: sh -c "npm run start"
     ports:
@@ -49,5 +48,3 @@ volumes:
 secrets:
   database_url:
     environment: DATABASE_URL
-  resend_api_key:
-    environment: RESEND_API_KEY
