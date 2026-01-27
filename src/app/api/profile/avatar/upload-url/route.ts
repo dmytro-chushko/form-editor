@@ -5,9 +5,8 @@ import { getSupabaseAdmin } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
 
-const BUCKET = process.env.SUPABASE_BUCKET || 'dev-dc-portfolio-bucket';
-
 export const POST = withAuth(async (req, { session }) => {
+  const BUCKET = process.env.SUPABASE_BUCKET || 'dev-dc-portfolio-bucket';
   const { filename, contentType, directory } = (await req.json()) as {
     filename?: string;
     contentType?: string;

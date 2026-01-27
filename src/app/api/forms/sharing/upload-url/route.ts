@@ -4,9 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withValidToken } from '@/lib/error/http';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 
-const BUCKET = process.env.SUPABASE_BUCKET || 'dev-dc-portfolio-bucket';
-
 export const POST = withValidToken(async (req: NextRequest) => {
+  const BUCKET = process.env.SUPABASE_BUCKET || 'dev-dc-portfolio-bucket';
   const { fileName, contentType, directory } = (await req.json()) as {
     fileName?: string;
     contentType?: string;
