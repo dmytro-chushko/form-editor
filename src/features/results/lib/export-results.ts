@@ -11,6 +11,5 @@ export async function exportResults(
 
   const url = `${endpoint}?${qs.toString()}`;
 
-  // Використовуємо нативний window.location для ініціації завантаження файлу браузером
   window.location.href = url;
 }

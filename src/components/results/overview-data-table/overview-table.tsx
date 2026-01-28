@@ -22,7 +22,7 @@ import { OverviewMobileCard } from './overview-mobile-card';
 
 export function OverviewTable() {
   const [page, setPage] = useState(1);
-  const pageSize = 2;
+  const pageSize = 20;
   const [title, setTitle] = useState('');
   const [fromDate, setFromDate] = useState<Date | undefined>();
   const [toDate, setToDate] = useState<Date | undefined>();
