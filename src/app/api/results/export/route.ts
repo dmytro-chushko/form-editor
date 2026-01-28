@@ -14,7 +14,6 @@ export const GET = withAuth(
     } = getPaginationAndFilterParams(url, ['title', 'from', 'to']);
     const format = url.searchParams.get('format') === 'csv' ? 'csv' : 'xlsx';
 
-    // Отримуємо ВСІ дані без пагінації для експорту
     const forms = await prisma.form.findMany({
       where: {
         userId: session.user.id,
@@ -36,7 +35,6 @@ export const GET = withAuth(
 
     const byId = new Map(counts.map((c) => [c.formId, c._count.formId]));
 
-    // Підготовка даних для Excel
     const dataToExport = forms.map((f) => ({
       'Form Title': f.title,
       Submissions: byId.get(f.id) ?? 0,
@@ -44,7 +42,6 @@ export const GET = withAuth(
       'Last Update': f.updatedAt.toLocaleDateString(),
     }));
 
-    // Генерація файлу за допомогою XLSX
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Results');

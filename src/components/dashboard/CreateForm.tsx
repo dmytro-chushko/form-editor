@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 import { useCreateForm } from '@/features/forms/forms.api';
+import { ROUTES } from '@/lib/constants/routes';
 
 import { Button } from '../ui/button';
 
@@ -16,7 +17,7 @@ export function CreateForm() {
   const handleClick = useCallback(async () => {
     try {
       const response = await mutateAsync({ title: 'Untitled' });
-      router.push(`dashboard/forms/${response.id}/edit`);
+      router.push(`${ROUTES.Forms}/${response.id}/edit`);
     } catch (err: any) {
       toast.error(err?.message || 'Could not create form');
     }

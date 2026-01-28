@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Form Builder
 
-## Getting Started
+A Next.js application for building, publishing, and collecting submissions for custom forms. It includes an authenticated admin area with a drag-and-drop editor and a public-facing form experience.
 
-First, run the development server:
+## Features
+
+- Authenticated admin area with form creation and editing
+- Public shareable forms for submissions
+- Results dashboard and export
+- Email notifications for verification and sharing
+- File uploads backed by Supabase storage
+
+## Tech stack and how it is used
+
+- Next.js 15 (App Router) for routing, server components, and API route handlers
+- React 19 for UI composition
+- TypeScript for type safety across the codebase
+- Tailwind CSS v4 and shadcn/ui (Radix primitives) for UI components and styling
+- Prisma + PostgreSQL for database access and migrations
+- Auth.js (next-auth) with Prisma adapter for session-based auth
+- Puck Editor for drag-and-drop form configuration
+- TanStack Query for client-side data fetching and caching
+- TanStack Table for data tables
+- React Hook Form + Zod for form handling and validation
+- Resend for transactional email delivery
+- Supabase storage for file uploads
+- ESLint + Prettier + Husky/lint-staged for code quality
+- Docker + Docker Compose for containerized deployment
+
+## Project structure
+
+- `src/app` — routes and API handlers (App Router)
+- `src/components` — UI and feature components
+- `src/features` — domain modules (forms, results, profile, puck)
+- `src/lib` — shared utilities and service clients
+- `docker/` — Dockerfile and compose configuration
+
+## Requirements
+
+- Node.js 20+
+- npm
+- Docker Desktop (for containerized deployment)
+- Make (optional, for `make` targets on Windows via Git Bash)
+
+## Environment variables
+
+Create a local `.env` file at the project root. Required keys used in this project:
+
+- `DATABASE_URL`
+- `NEXTAUTH_URL`
+- `NEXTAUTH_SECRET`
+- `AUTH_GOOGLE_ID`
+- `AUTH_GOOGLE_SECRET`
+- `AUTH_GITHUB_ID`
+- `AUTH_GITHUB_SECRET`
+- `SESSION_COOKIE_NAME`
+- `AUTH_SECRET`
+- `RESEND_API_KEY`
+- `EMAIL_SMTP_HOST`
+- `EMAIL_SMTP_PORT`
+- `EMAIL_SMTP_USER`
+- `EMAIL_SMTP_PASS`
+- `FROM_EMAIL`
+- `SUPABASE_URL`
+- `SUPABASE_ANON_API_KEY`
+- `SUPABASE_BUCKET`
+- `ENCRYPTION_KEY`
+
+Keep `.env` out of version control.
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app runs on `http://localhost:3003`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Docker deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The Docker build uses BuildKit secrets for `DATABASE_URL` to run `prisma generate` during build.
 
-## Learn More
+Build and run with Make:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+make build
+make up-runtime
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Common targets:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+make up        # start services
+make down      # stop services
+make logs      # follow logs (all services)
+make migrate   # run Prisma migrations in container
+```
 
-## Deploy on Vercel
+If you do not have `make`, use Docker Compose directly:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+docker compose -f docker/docker-compose.yml --env-file .env build
+docker compose -f docker/docker-compose.yml --env-file .env up -d
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Troubleshooting
+
+- Missing env errors during build: ensure `.env` exists and `DATABASE_URL` is set.
+- BuildKit secrets: Docker Desktop must support BuildKit for build-time secrets.
+- Check container logs: `make logs` or `docker compose ... logs -f app`.
