@@ -54,7 +54,9 @@ export function useFormItem(): UseFormItem {
   } = useUpdateForm();
 
   useEffect(() => {
-    if (currentForm) setContent(currentForm.content);
+    if (currentForm) {
+      setContent(currentForm.content);
+    }
   }, [currentForm]);
 
   useEffect(() => {

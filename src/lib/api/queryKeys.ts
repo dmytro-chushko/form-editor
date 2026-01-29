@@ -24,7 +24,8 @@ export const queryKeys = {
     return key;
   },
   form: (id: string) => ['forms', 'detail', id] as const,
-  formProgress: (token: string) => ['form-progress', token] as const,
+  formProgress: (token: string, email?: string) =>
+    ['form-progress', token, email ?? ''] as const,
   sharedForm: (token: string) => ['shared-form', token] as const,
   overview: (
     page: number,

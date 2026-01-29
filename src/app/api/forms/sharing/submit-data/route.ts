@@ -20,9 +20,10 @@ export const POST = withValidToken(
       });
 
       await tx.formLink.delete({ where: { tokenHash } });
-      await tx.formProgress.delete({
+      await tx.formProgress.deleteMany({
         where: {
-          formId_userEmail: { formId, userEmail: validatedPayload.userEmail },
+          formId,
+          userEmail: validatedPayload.userEmail,
         },
       });
     });

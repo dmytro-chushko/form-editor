@@ -20,7 +20,10 @@ export default function PuckButton({
   buttonText,
   puckRef,
 }: PuckButtonProps) {
-  const { reset } = useFormContext();
+  const {
+    reset,
+    formState: { isSubmitting },
+  } = useFormContext();
 
   return (
     <div ref={puckRef} className={cn(fullWidth && 'flex-1')}>
@@ -28,6 +31,7 @@ export default function PuckButton({
         className={cn(fullWidth && 'w-full')}
         type={buttonType}
         variant={variant}
+        disabled={isSubmitting}
         size={size}
         {...(buttonType === 'button' && { onClick: () => reset() })}
       >
