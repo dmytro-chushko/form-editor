@@ -23,8 +23,12 @@ export default function PuckInput({
     <div
       ref={puckRef}
       className="flex-1"
-      onKeyDownCapture={(e) => e.stopPropagation()}
-      onKeyUpCapture={(e) => e.stopPropagation()}
+      onKeyDownCapture={(e) => {
+        e.stopPropagation();
+      }}
+      onKeyUpCapture={(e) => {
+        e.stopPropagation();
+      }}
     >
       <FormInputField
         name={name}

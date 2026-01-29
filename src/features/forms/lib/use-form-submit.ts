@@ -37,11 +37,11 @@ export function useFormSubmit() {
         formPayload = { ...formPayload, [fileKye]: fileUrl };
       }
 
-      const { recepientEmail, ...restOfPayload } = formPayload;
+      const { recipientEmail, ...restOfPayload } = formPayload;
 
       try {
         submittedFormPayloadSchema.parse({
-          userEmail: recepientEmail,
+          userEmail: recipientEmail,
           content: restOfPayload,
         });
       } catch (err) {
@@ -51,7 +51,7 @@ export function useFormSubmit() {
       }
 
       const res = await submitForm({
-        userEmail: recepientEmail,
+        userEmail: recipientEmail,
         content: restOfPayload,
       });
 

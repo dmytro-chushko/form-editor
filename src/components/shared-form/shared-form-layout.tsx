@@ -2,7 +2,6 @@
 
 import { Render } from '@measured/puck';
 import { DownloadSimpleIcon } from '@phosphor-icons/react';
-import { useEffect } from 'react';
 
 import { useFormByToken } from '@/features/forms/lib/use-form-by-token';
 import { useFormSubmit } from '@/features/forms/lib/use-form-submit';
@@ -27,15 +26,9 @@ export function SharedFormLayout() {
     isLoading,
     isFormError,
     formError,
-    onUploadProgress,
+    onDownloadProgress,
   } = useFormByToken();
   const { onSubmit, isSubmitting } = useFormSubmit();
-
-  useEffect(() => {
-    document
-      .querySelectorAll('button')
-      .forEach((item) => item.disabled === isSubmitting);
-  }, [isSubmitting]);
 
   if (isFormError) {
     return (
@@ -59,10 +52,9 @@ export function SharedFormLayout() {
                 <div className="self-center">
                   <Field orientation="horizontal" className="items-end">
                     <FormInputField
-                      name="recepientEmail"
+                      name="recipientEmail"
                       label="Your Email"
                       placeholder="Input your email"
-                      autoComplete="email"
                       validation={convertEmailValidation(
                         addMessages({
                           required: true,
@@ -72,7 +64,12 @@ export function SharedFormLayout() {
                     />
                     <Button
                       type="button"
-                      disabled={!email || !form.formState.isDirty || isLoading}
+                      disabled={
+                        !email ||
+                        !form.formState.isDirty ||
+                        isLoading ||
+                        isSubmitting
+                      }
                       loading={isLoading}
                       onClick={onSaveProgress}
                     >
@@ -80,16 +77,18 @@ export function SharedFormLayout() {
                     </Button>
                     <Button
                       type="button"
-                      disabled={!email || isLoading}
+                      disabled={!email || isLoading || isSubmitting}
                       loading={isLoading}
-                      onClick={onUploadProgress}
+                      onClick={onDownloadProgress}
                     >
                       <DownloadSimpleIcon size={32} className="size-6" />
                     </Button>
                   </Field>
                 </div>
                 {sharedForm && (
-                  <Render config={config} data={sharedForm.content} />
+                  <>
+                    <Render config={config} data={sharedForm.content} />
+                  </>
                 )}
               </div>
             </form>

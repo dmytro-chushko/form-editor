@@ -359,13 +359,11 @@ export const config: PuckConfig = {
             return (
               <Slot
                 className={cn(
-                  'w-full min-h-10',
-                  direction === 'column' ? 'flex-col' : 'flex-row'
+                  'w-full min-h-10 flex',
+                  direction === 'column' ? 'flex-col' : 'flex-col md:flex-row',
+                  wrap ? 'flex-wrap' : 'flex-nowrap'
                 )}
                 style={{
-                  display: 'flex',
-                  flexDirection: direction === 'column' ? 'column' : 'row',
-                  flexWrap: wrap ? 'wrap' : 'nowrap',
                   gap: typeof gap === 'number' ? `${gap}px` : gap,
                   justifyContent: justify,
                   alignItems: align,

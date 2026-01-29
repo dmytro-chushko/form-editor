@@ -13,6 +13,7 @@ export const defaultFormContent: FormContent = {
 };
 
 const puckComponentDataSchema = z.object({
+  id: z.string().optional(),
   type: z.string(),
   props: z.record(z.string(), z.any()).default({}),
 });

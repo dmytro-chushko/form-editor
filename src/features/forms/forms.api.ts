@@ -205,7 +205,7 @@ export function useGetFormProgressByToken(email?: string) {
   const token = searchParams.get('token') || '';
 
   return useQuery({
-    queryKey: qk.formProgress(token),
+    queryKey: qk.formProgress(token, email),
     queryFn: () =>
       apiGet<ProgressFormResponse>(
         `/api/forms/sharing/progress/${email}?token=${token}`
@@ -226,8 +226,10 @@ export function useSaveFormProgress() {
         `/api/forms/sharing/progress/${data.userEmail}?token=${token}`,
         data
       ),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: qk.formProgress(token) });
+    onSuccess: (variables) => {
+      qc.invalidateQueries({
+        queryKey: qk.formProgress(token, variables?.userEmail),
+      });
       toast.success('Form progress saved');
     },
   });

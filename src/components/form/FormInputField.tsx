@@ -39,22 +39,24 @@ export function FormInputField({
       control={form?.control}
       name={name}
       rules={validation}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              value={field.value || ''}
-              type={type}
-              placeholder={placeholder}
-              autoComplete={autoComplete}
-              disabled={disabled}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                value={field.value || ''}
+                type={type}
+                placeholder={placeholder}
+                autoComplete={autoComplete}
+                disabled={disabled}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 }

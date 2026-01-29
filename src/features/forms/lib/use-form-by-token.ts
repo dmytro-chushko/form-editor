@@ -47,7 +47,7 @@ export function useFormByToken() {
   }, [email]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onUploadProgress = useCallback(() => refetch(), []);
+  const onDownloadProgress = useCallback(() => refetch(), []);
 
   useEffect(() => {
     if (formProgress) {
@@ -102,7 +102,7 @@ export function useFormByToken() {
     form,
     sharedForm,
     formProgress,
-    onUploadProgress,
+    onDownloadProgress,
     onSaveProgress,
     isLoading: isFormLoading || isProgressLoading || isPending,
     isFormError,
