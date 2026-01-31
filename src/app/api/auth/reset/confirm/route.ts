@@ -29,16 +29,13 @@ export const POST = withErrors(async (req: Request) => {
   const passwordHash = await hash(password, 10);
 
   await prisma.$transaction(async (tx) => {
-    // Update user password
     await tx.user.update({
       where: { id: resetRecord.userId },
       data: { passwordHash },
     });
-    // Delete all password reset tokens for this user
     await tx.passwordReset.deleteMany({
       where: { userId: resetRecord.userId },
     });
-    // Invalidate sessions (force re-login)
     await tx.session.deleteMany({ where: { userId: resetRecord.userId } });
   });
 

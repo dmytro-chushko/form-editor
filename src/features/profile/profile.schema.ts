@@ -14,25 +14,21 @@ export const profileResponseSchema = z.object({
 });
 export type ProfileResponse = z.infer<typeof profileResponseSchema>;
 
-export const updateNameSchema = z
-  .object({
-    firstName: z
-      .string()
-      .trim()
-      .min(1, 'First name is required')
-      .max(64, 'Too long')
-      .optional(),
-    lastName: z
-      .string()
-      .trim()
-      .min(1, 'Last name is required')
-      .max(64, 'Too long')
-      .optional(),
-  })
-  .refine((v) => !!v.firstName || !!v.lastName, {
-    message: 'Nothing to update',
-    path: ['firstName'],
-  });
+export const updateNameSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(1, 'First name is required')
+    .max(64, 'Too long')
+    .optional(),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, 'Last name is required')
+    .max(64, 'Too long')
+    .optional(),
+});
+
 export type UpdateNameInput = z.infer<typeof updateNameSchema>;
 
 export const avatarUploadRequestSchema = z.object({
