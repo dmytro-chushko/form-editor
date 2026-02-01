@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 import { navItems } from '../app-sidebar/model/nav';
-import { ThemeToggle } from '../theme/ThemeToggle';
+import { ThemeToggle } from '../theme/theme-toggle';
 
 type MobileHeaderLayoutProps = {
   title?: string;

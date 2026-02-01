@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { SignInForm } from '@/components/auth/SignInForm';
+import { SignInForm } from '@/components/auth/signIn-form';
 import { auth } from '@/lib/auth';
 import { ROUTES } from '@/lib/constants/routes';
 

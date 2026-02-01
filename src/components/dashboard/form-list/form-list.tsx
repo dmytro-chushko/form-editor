@@ -13,7 +13,7 @@ import {
 import { useFormList } from '@/features/forms/lib/use-form-list';
 
 import { ResultsTableSkeleton } from '../../ui/app-skeletons';
-import { CreateForm } from '../CreateForm';
+import { CreateForm } from '../create-form';
 
 import { FormListMobileCard } from './form-list-mobile-card';
 import { useFormListColumns } from './lib/use-form-list-columns';

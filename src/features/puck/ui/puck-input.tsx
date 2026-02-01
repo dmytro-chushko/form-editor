@@ -1,4 +1,4 @@
-import { FormInputField } from '@/components/form/FormInputField';
+import { FormInputField } from '@/components/form/form-input-field';
 
 import { addMessages } from '../lib/add-messages';
 import { convertEmailValidation } from '../lib/comvert-emal-validation';

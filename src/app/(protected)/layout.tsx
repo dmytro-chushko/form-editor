@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { AppSidebar } from '@/components/app-sidebar/ui/app-sidebar';
-import Header from '@/components/layouts/Header';
+import Header from '@/components/layouts/header';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/lib/auth';
 import { ROUTES } from '@/lib/constants/routes';

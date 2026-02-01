@@ -51,7 +51,7 @@ export const POST = withErrors(async (req: Request) => {
     process.env.NEXTAUTH_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
     'http://localhost:3000';
-  const resetUrl = `${base}/auth/reset-password?token=${encodeURIComponent(token)}`;
+  const resetUrl = `${base}/reset-password?token=${encodeURIComponent(token)}`;
   await sendPasswordResetEmail(email, resetUrl);
 
   return NextResponse.json({ ok: true });
