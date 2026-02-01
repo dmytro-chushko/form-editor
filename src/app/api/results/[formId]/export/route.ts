@@ -20,7 +20,6 @@ export const GET = withAuth(
     } = getPaginationAndFilterParams(url, ['email', 'from', 'to']);
     const format = url.searchParams.get('format') === 'csv' ? 'csv' : 'xlsx';
 
-    // Перевірка власності форми
     const owns = await prisma.form.findFirst({
       where: { id: formId, userId: session.user.id },
       select: { title: true },

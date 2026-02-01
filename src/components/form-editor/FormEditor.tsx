@@ -35,7 +35,7 @@ export default function FormEditor() {
     <div
       className="flex flex-col h-full w-full
       md:p-6 space-y-4
-    [--puck-color-white:--background]
+    [--puck-color-white:var(--background)]
     [--puck-color-black:--foreground]
     [--puck-color-grey-09:var(--border)!important]
     [--puck-color-grey-11:--accent]

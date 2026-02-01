@@ -10,6 +10,7 @@ import { FormInputField } from '@/components/form/FormInputField';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useSignUpMutation } from '@/features/auth/api';
+import { ROUTES } from '@/lib/constants/routes';
 import { signUpSchema, type SignUpValues } from '@/lib/validation/auth';
 
 type Props = { onSuccess?: () => void };
@@ -51,7 +52,7 @@ export function SignUpForm({ onSuccess }: Props) {
         <p className="text-sm">
           We have sent a confirmation email to your address.
         </p>
-        <a className="text-blue-600" href="/auth/sign-in">
+        <a className="text-blue-600" href={ROUTES.SignIn}>
           Back to sign in
         </a>
       </div>
