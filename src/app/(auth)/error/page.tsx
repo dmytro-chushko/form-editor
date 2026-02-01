@@ -33,7 +33,7 @@ export default async function AuthErrorPage({
     <main className="mx-auto max-w-md p-6">
       <h1 className="text-2xl font-semibold">Sign in error</h1>
       <p className="mt-2 text-gray-600">{message}</p>
-      <a className="mt-4 inline-block text-blue-600" href="/auth/sign-in">
+      <a className="mt-4 inline-block text-blue-600" href="/sign-in">
         Back to sign in
       </a>
     </main>

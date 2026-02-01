@@ -8,9 +8,8 @@ import { signOut, useSession } from 'next-auth/react';
 
 import { ROUTES } from '@/lib/constants/routes';
 
-import { ThemeToggle } from '../theme/ThemeToggle';
+import { ThemeToggle } from '../theme/theme-toggle';
 import { Button } from '../ui/button';
-import { SidebarTrigger } from '../ui/sidebar';
 
 type DesktopHeaderProps = {
   title?: string;

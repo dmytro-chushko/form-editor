@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { SignUpForm } from '@/components/auth/SignUpForm';
+import { SignUpForm } from '@/components/auth/signup-form';
 import { auth } from '@/lib/auth';
 import { ROUTES } from '@/lib/constants/routes';
 

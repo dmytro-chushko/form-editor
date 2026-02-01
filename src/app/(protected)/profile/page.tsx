@@ -1,4 +1,4 @@
-import ProfileCard from '@/components/profile/ProfileCard';
+import ProfileCard from '@/components/profile/profile-card';
 import { auth } from '@/lib/auth';
 
 export default async function ProfilePage() {

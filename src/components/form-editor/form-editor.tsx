@@ -14,8 +14,8 @@ import BackButton from '../ui/back-button';
 import { Field } from '../ui/field';
 import { Form } from '../ui/form';
 
-import FormPreview from './FormPreview';
-import HeaderActions from './HeaderActions';
+import FormPreview from './form-preview';
+import HeaderActions from './header-actions';
 
 export default function FormEditor() {
   const [isFormLoaded, setIsFormLoaded] = useState<boolean>(false);

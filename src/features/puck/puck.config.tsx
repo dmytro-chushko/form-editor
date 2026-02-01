@@ -5,17 +5,17 @@ import { cn } from '../../lib/utils';
 
 import { PUCK_CATEGORIES } from './model/puck-categories';
 import { Components, RootProps } from './types';
-import PuckButton from './ui/PuckButton';
-import PuckCheckbox from './ui/PuckCheckbox';
-import PuckContainer from './ui/PuckContainer';
-import PuckFileBlock from './ui/PuckFileBlock';
-import PuckFlex from './ui/PuckFlex';
-import PuckHeading from './ui/PuckHeading';
-import PuckInput from './ui/PuckInput';
-import PuckParagraph from './ui/PuckParagraph';
-import PuckRadio from './ui/PuckRadio';
-import PuckSelect from './ui/PuckSelect';
-import PuckTextarea from './ui/PuckTextarea';
+import PuckButton from './ui/puck-button';
+import PuckCheckbox from './ui/puck-checkbox';
+import PuckContainer from './ui/puck-container';
+import PuckFileBlock from './ui/puck-file-block';
+import PuckFlex from './ui/puck-flex';
+import PuckHeading from './ui/puck-heading';
+import PuckInput from './ui/puck-input';
+import PuckParagraph from './ui/puck-paragraph';
+import PuckRadio from './ui/puck-radio';
+import PuckSelect from './ui/puck-select';
+import PuckTextarea from './ui/puck-textarea';
 
 export type PuckConfig = Config<Components, RootProps>;
 

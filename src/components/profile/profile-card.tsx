@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import { Suspense } from 'react';
 
-import AvatarUploader from '@/components/profile/AvatarUploader';
-import EditableField from '@/components/profile/EditableField';
-import EmailChangeForm from '@/components/profile/EmailChangeForm';
-import PasswordChangeForm from '@/components/profile/PasswordChangeForm';
+import AvatarUploader from '@/components/profile/avatar-uploader';
+import EditableField from '@/components/profile/editable-field';
+import EmailChangeForm from '@/components/profile/email-change-form';
+import PasswordChangeForm from '@/components/profile/password-change-form';
 import { useProfileQuery } from '@/features/profile/profile.api';
 
 import {

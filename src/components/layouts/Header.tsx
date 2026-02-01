@@ -1,5 +1,5 @@
-import DesktopHeader from './DesktopHeader';
-import MobileHeaderLayout from './MobileHeaderLayout';
+import DesktopHeader from './desktop-header';
+import MobileHeaderLayout from './mobile-header-layout';
 
 type HeaderProps = {
   title?: string;

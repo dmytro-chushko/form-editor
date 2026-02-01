@@ -10,7 +10,7 @@ import {
   FormContentSchema,
 } from '@/features/forms/model/forms.schema';
 
-import ActionsDropDownMenu from './ActionsDropdownMenu';
+import ActionsDropDownMenu from './actions-dropdown-menu';
 
 interface HeaderActionsPros {
   isPublished: boolean;

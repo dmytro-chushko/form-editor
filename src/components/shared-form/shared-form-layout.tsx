@@ -10,7 +10,7 @@ import { convertEmailValidation } from '@/features/puck/lib/comvert-emal-validat
 import { config } from '@/features/puck/puck.config';
 import { formatErrorMessage } from '@/lib/utils';
 
-import { FormInputField } from '../form/FormInputField';
+import { FormInputField } from '../form/form-input-field';
 import { SharedFormSkeleton } from '../ui/app-skeletons';
 import { Button } from '../ui/button';
 import { Field } from '../ui/field';

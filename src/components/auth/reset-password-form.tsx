@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { FormInputField } from '@/components/form/FormInputField';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useResetPasswordMutation } from '@/features/auth/api';
@@ -46,7 +46,7 @@ export function ResetPasswordForm({ token }: Props) {
     return (
       <p className="text-sm">
         Your password has been reset. You can now{' '}
-        <a className="text-blue-600" href="/auth/sign-in">
+        <a className="text-blue-600" href="/sign-in">
           sign in
         </a>
         .

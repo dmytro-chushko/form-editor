@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { FormInputField } from '@/components/form/FormInputField';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useSignInMutation } from '@/features/auth/api';
@@ -58,7 +58,7 @@ export function SignInForm({
             autoComplete="current-password"
           />
           <div className="flex justify-end">
-            <a className="text-sm text-blue-600" href="/auth/forgot-password">
+            <a className="text-sm text-blue-600" href="/forgot-password">
               Forgot password?
             </a>
           </div>

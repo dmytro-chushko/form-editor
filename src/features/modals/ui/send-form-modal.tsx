@@ -3,7 +3,7 @@
 import { LinkIcon } from '@phosphor-icons/react';
 import { Controller } from 'react-hook-form';
 
-import { FormInputField } from '@/components/form/FormInputField';
+import { FormInputField } from '@/components/form/form-input-field';
 import { Button } from '@/components/ui/button';
 import { DateWithTime } from '@/components/ui/date-with-time';
 import {
