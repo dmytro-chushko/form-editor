@@ -15,6 +15,7 @@ import { Field } from '@/components/ui/field';
 import { useFormCommon } from '@/features/forms/lib/use-form-common';
 import { FormItemSchema } from '@/features/forms/model/forms.schema';
 import { useModal } from '@/features/modals/lib/use-modal';
+import { ROUTES } from '@/lib/constants/routes';
 
 type FormListMobileCardProps = Pick<
   FormItemSchema,
@@ -54,14 +55,14 @@ export function FormListMobileCard({
           </div>
         </Field>
         <ButtonGroup>
-          <Button asChild size="icon" className="size-14">
-            <Link href={`/dashboard/forms/${id}/edit`}>
+          <Button asChild size="icon" className="size-12">
+            <Link href={`${ROUTES.Forms}/${id}/edit`}>
               <PencilSimpleIcon size={32} />
             </Link>
           </Button>
           <Button
             size="icon"
-            className="size-14"
+            className="size-12"
             onClick={() => onTogglePublish(id, !isPublished)}
           >
             {!isPublished ? (
@@ -70,18 +71,18 @@ export function FormListMobileCard({
               <MinusCircleIcon size={32} className="text-red-600" />
             )}
           </Button>
-          <Button size="icon" className="size-14" onClick={() => onCopy(id)}>
+          <Button size="icon" className="size-12" onClick={() => onCopy(id)}>
             <CopyIcon size={32} />
           </Button>
           <Button
             size="icon"
-            className="size-14"
+            className="size-12"
             disabled={!isPublished}
             onClick={() => open('send-form', { formId: id })}
           >
             <ShareFatIcon size={32} />
           </Button>
-          <Button size="icon" className="size-14" onClick={() => onDelete(id)}>
+          <Button size="icon" className="size-12" onClick={() => onDelete(id)}>
             <XCircleIcon size={32} />
           </Button>
         </ButtonGroup>

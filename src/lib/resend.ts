@@ -19,7 +19,7 @@ export default async function sendVerificationEmail(
     from: 'onboarding@resend.dev',
     to: email,
     subject: 'Verify your email',
-    html: `Натисніть <a href="${verifyUrl}">тут</a> щоб підтвердити email (діє 24 години).`,
+    html: `Click <a href="${verifyUrl}">here</a> to confirm email The link will expire in 24 hours.`,
   });
 }
 
