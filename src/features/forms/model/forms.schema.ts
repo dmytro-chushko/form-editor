@@ -4,7 +4,6 @@ import z from 'zod';
 import type { Components, RootProps } from '@/features/puck/types';
 import { paginationParamsSchema } from '@/lib/validation/paagination';
 
-// Strongly-typed Puck content
 export type FormContent = Data<Components, RootProps>;
 
 export const defaultFormContent: FormContent = {

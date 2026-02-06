@@ -138,10 +138,6 @@ export function DataTable<TData, TValue>({
           pageIndex={pageIndex}
           setPageIndex={(newIndex) => {
             setPageIndex(newIndex);
-
-            // if (onFiltersChange) {
-            //   onFiltersChange({ ...externalFilters, page: newIndex });
-            // }
           }}
         />
       )}
