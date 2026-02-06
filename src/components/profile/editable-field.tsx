@@ -42,7 +42,6 @@ export default function EditableField({
     mode: 'onBlur',
   });
 
-  // sync external value changes
   useEffect(() => {
     if (field === 'firstName') form.reset({ firstName: value ?? '' });
     else form.reset({ lastName: value ?? '' });
@@ -82,7 +81,6 @@ export default function EditableField({
     } catch (e: any) {
       const message = e?.message || 'Failed to save';
       toast.error(message);
-      // keep editing so user can correct
       form.setFocus(field as any);
     }
   }

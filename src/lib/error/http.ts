@@ -22,7 +22,6 @@ export function withErrors(handler: Handler): Handler {
     try {
       return await handler(req, ctx);
     } catch (e: unknown) {
-      // TODO: integrate logger later
       // Prisma ORM errors
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         // Map common Prisma error codes to HTTP statuses
